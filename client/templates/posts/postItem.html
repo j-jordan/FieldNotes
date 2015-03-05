@@ -1,0 +1,33 @@
+<template name="postItem">
+ <div class="row">
+    <div class="col-md-1">
+        <div class="row">UP</div>
+        <div class="row">DOWN</div>
+    </div>    
+    <div class="col-md-7">
+      <div class="panel panel-primary text-left">
+        <div class="panel-heading">
+          <a href="" class="panel-title">{{post_title}}</a>
+        </div>
+        <div class="panel-body">
+          <div class="row text-left">
+            <div class="col-md-12">
+              <small>submitted at CREATED_AT by {{userID}}</small>
+            </div>
+          </div>          
+          <div class="row">
+            <div class="col-md-4">
+              <a href="">comments</a>
+            </div>
+            <div class="col-md-4">
+              <a href="">{{qual_rating}}</a>
+            </div>
+            <div class="col-md-4">
+              <a href="{{DOI}}">{{DOI}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- 2nd column -->        
+  </div> <!-- snapshot -->
+</template>

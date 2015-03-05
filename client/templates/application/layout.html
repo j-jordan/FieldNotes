@@ -1,0 +1,64 @@
+<template name="layout">
+  <div class="navbar navbar-default navbar-inverse navbar-static-top">
+    <style>
+      .body{padding-top:70px}
+    </style>
+    <div class="container">
+      <div class="navbar-header">
+        <form class="navbar-form navbar-left" role="search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
+              <button class="btn btn-default glyphicon glyphicon-home" type="button"
+              draggable="true"></button>
+            </span>
+          </div>
+        </form>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="">
+            <input type="text" class="form-control" placeholder="Username">
+          </li>
+          <li class="" draggable="true">
+            <input type="password" class="form-control" placeholder="Password">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div> <!-- /Nav bar -->
+   <div class="jumbotron"> <!-- JUMBO TRON -->
+    <h1 class="text-right">FieldNotes</h1>
+    <p>
+      <ul class="nav nav-tabs nav-justified">
+        <li role="presentation"><a href="">Home</a></li>
+        <li role="presentation"><a href="">Submit</a></li>
+        <li role="presentation"><a href="">Dictionary</a></li>
+        <li role="presentation"><a href="">Account</a></li>        
+      </ul>
+      <ul class="nav nav-tabs nav-justified">
+        <li role="presentation"><a href="">Sub-category 1</a></li>
+        <li role="presentation"><a href="">Sub-category 2</a></li>
+        <li role="presentation"><a href="">Sub-category 3</a></li>
+        <li role="presentation"><a><span class="glyphicon glyphicon-chevron-down"></span></a></li>
+        <li role="presentation" class="text-right"><button>New</button></li>
+      </ul>
+      <ul class="nav nav-tabs nav-justified">
+        <li role="presentation">Filter:<select><option>Summaries</option><option>Papers</option></select></li>
+      </ul>
+    </p>
+  </div> <!-- /JUMBO TRON -->
+  <section>
+      <div class="container">
+          {{> yield}}
+      </div>
+      <button class="btn btn-info">NEXT</button>
+      PAGINATION
+  </section>
+</template>

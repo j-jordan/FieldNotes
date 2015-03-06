@@ -1,0 +1,89 @@
+<template name="submitPage">
+   	<div class="container">
+	   	<div class="col-md-6">
+		   	<form>
+	   			<div class="row">
+	   				<div class="col-md-3">
+   						<label for="title">Title:</label>
+	   				</div>
+	   				<div class="col-md-9">
+			  			<input type="text" id="title" name="title" value="" class="form-control" placeholder="Title">
+	   				</div>
+	   			</div>
+	   			<div class="row">
+					<div class="col-md-12">	
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Summary:
+							</div>	
+							<div class="panel-body">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur, ipsum vel egestas commodo, massa magna congue velit, non facilisis turpis elit id turpis. Mauris ligula nisl, malesuada ut dolor non, faucibus elementum urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean vel magna fringilla, interdum lectus eget, ultricies nibh. In rutrum leo lacus, sit amet faucibus tortor tempor id. In vel lacus ipsum. Duis ultricies et justo a egestas. 
+							</div>
+						</div>
+					</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-3">
+		   				<label for="title">DOI Link</label>
+	   				</div>
+	   				<div class="col-md-9">
+		  				<input type="text" name="doi" value="" class="form-control" placeholder="**insert DOI example here**">
+	   				</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-3">
+		   				<label for="title">Category</label>
+	   				</div>
+	   				<div class="col-md-9">
+			  			<div class="dropdown">
+						  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
+						    Categories
+						    <span class="caret"></span>
+						  </button>	
+			  				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+			  					<li role="presentation" class="dropdown-header">Select a category</li>
+			  					<li role="presentation">Option 1</li>
+			  					<li role="presentation">Option 12</li>
+			  					<li role="presentation">Option 13</li>
+			  				</ul>
+		  				</div>
+	   				</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-3">
+						<label>Terms Used</label>	   						
+	   				</div>
+	   				<div class="col-md-9">
+						<button>Add New Term</button>		   					
+	   				</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-12">
+   						<ul>
+							<li>B-Tree</li>
+							<li>Vector</li>
+							<li>Map</li>
+							<li>Vertex Cut</li>
+						</ul>
+   					</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-3">
+						<label>Terms Defined</label>	   						
+	   				</div>
+	   				<div class="col-md-9">
+		   				<button>Add New Definition</button>		   					
+	   				</div>
+	   			</div>
+	   			<div class="row">
+   					<div class="col-md-3">
+		   				<label for="tags">Tags: (comma seperated)</label>
+	   				</div>
+	   				<div class="col-md-9">
+		  				<input type="text" name="tags" value="" class="form-control" placeholder="" aria-describedby="basic-addon1">
+	   				</div>		   				
+	   			</div>
+			</form>			
+		</div>
+	</div>
+</template>

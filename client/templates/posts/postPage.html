@@ -1,5 +1,54 @@
 <template name="postPage">
-	<div class="">
-		{{> postItem}}
-	</div>
+		 <div class="row">
+        <div class="col-md-3">
+          <label>DOI: </label> {{doi}}
+        </div>
+        <div class="col-md-3">
+          <label>DATE PUBLISHED:</label> {{publish_date}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label>User Poster: </label> {{ findUser userID }}
+        </div>
+        <div class="col-md-3">
+          <label>Publisher: </label> PUBLISHER
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label>Author: </label> {{ author }}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label for="summaries">Summary: </label>
+        </div>
+        <div class="col-md-3">
+          Not the only summary! <button>More</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          {{findSummaries _id}}
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-md-6">
+          <label>Comments:</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          Need to do research on how to implement comment hierarchy Author:  Thom Yorke
+
+        </div>
+      </div>
 </template>

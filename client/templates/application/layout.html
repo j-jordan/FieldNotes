@@ -9,7 +9,7 @@
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Search">
             <span class="input-group-btn">
-              <button class="btn btn-default glyphicon glyphicon-home" type="button"
+              <button class="btn btn-default glyphicon glyphicon-search" type="button"
               draggable="true"></button>
             </span>
           </div>
@@ -37,10 +37,10 @@
     <h1 class="text-right">FieldNotes</h1>
     <p>
       <ul class="nav nav-tabs nav-justified">
-        <li role="presentation"><a href="">Home</a></li>
-        <li role="presentation"><a href="">Submit</a></li>
-        <li role="presentation"><a href="">Dictionary</a></li>
-        <li role="presentation"><a href="">Account</a></li>        
+        <li role="presentation"><a href="{{pathFor 'postsList'}}">Home</a></li>
+        <li role="presentation"><a href="{{pathFor 'submitPage'}}">Submit</a></li>
+        <li role="presentation"><a href="{{pathFor 'dictionaryPage'}}">Dictionary</a></li>
+        <li role="presentation"><a href="{{pathFor 'account'}}">Account</a></li>        
       </ul>
       <ul class="nav nav-tabs nav-justified">
         <li role="presentation"><a href="">Sub-category 1</a></li>

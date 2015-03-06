@@ -1,0 +1,52 @@
+<template name="definitionModal">
+	<div class="container">		
+		<div class="row">
+				<div class="col-md-6" id="titleID">
+					<h2>Definition for: {{dictionary term}}</h2>
+				</div>
+				<div class="col-mid-6">
+					<h2>5 Star Rating</h2>
+				</div>
+		</div><!-- /row -->
+		<div class="row">
+			<div class="col-md-7">
+				<div class="row">
+					<div class="col-md-12">	
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Definition:
+							</div>	
+							<div class="panel-body">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur, ipsum vel egestas commodo, massa magna congue velit, non facilisis turpis elit id turpis. Mauris ligula nisl, malesuada ut dolor non, faucibus elementum urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean vel magna fringilla, interdum lectus eget, ultricies nibh. In rutrum leo lacus, sit amet faucibus tortor tempor id. In vel lacus ipsum. Duis ultricies et justo a egestas. Praesent hendrerit finibus tempor. Duis eget nisl nulla. Praesent non felis quis lacus tincidunt scelerisque. Fusce dictum vestibulum elit, eget cursus eros laoreet id. Vivamus lobortis imperdiet aliquet. Donec ac risus a nisl fermentum iaculis. Sed tempor est in enim auctor bibendum. Praesent a dui dolor.
+							</div>
+						</div>
+					</div>
+				</div><!-- /row -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<label for="complexityID">Complexity:  </label>
+			</div>
+			<div class="col-md-9">						
+				<input type="text" id="complexityID" disabled="true" value="NP-Complete">
+			</div>
+		</div><!-- /row -->
+		<div class="row">
+			<div class="col-md-3">
+				<label for="lowerBoundID">Lower Bound: </label>
+			</div>
+			<div class="col-md-9">						
+				<input type="text" id="lowerBoundID" disabled="true" value="">
+			</div>
+		</div><!-- /row -->
+		<div class="row">
+			<div class="col-md-3">
+				<label for="definitionID">Rate this definition: </label>
+			</div>
+			<div class="col-md-9">						
+				<span id="definitionID">5 Star Rating</span>
+			</div>
+		</div><!-- /row -->
+	</div><!-- /container -->
+</template>

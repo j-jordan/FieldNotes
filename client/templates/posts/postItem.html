@@ -12,18 +12,21 @@
         <div class="body">
           <div class="row text-left">
             <div class="col-md-12">
-              <small>submitted at CREATED_AT by {{userID}}</small>
+              <small>submitted at CREATED_AT by {{getUserName userID}}</small>
             </div>
           </div>          
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <a href="">comments</a>
             </div>
-            <div class="col-md-4">
-              <a href="">{{qual_rating}}</a>
+            <div class="col-md-1">
+              <span>Rating: </span>
+            </div>
+            <div class="col-md-1">
+              <a href="">{{quality_rating}}</a>
             </div>
             <div class="col-md-4">
-              <a href="{{DOI}}">{{DOI}}</a>
+              <a href="">{{doi}}</a>
             </div>
           </div>
         </div>

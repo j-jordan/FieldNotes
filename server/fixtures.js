@@ -1,12 +1,3 @@
-var UsersData = Users.find().fetch();
-var CommentsData = Comments.find().fetch();
-var PostsData = Posts.find().fetch();
-var TermsData = Terms.find().fetch();
-var SummaryData = Summaries.find().fetch();
-var AdminLabelsData = Adminlabels.find().fetch();
-
-
-
 if(Users.find().count() === 0) {
 	Users.insert({
 		email : 'user1@Users.com',	
@@ -27,6 +18,8 @@ if(Users.find().count() === 0) {
     	date_joined : "3/1/2015"
     });
 }
+var UsersData = Users.find().fetch();
+
 
 if(Terms.find().count() === 0) {
 	Terms.insert({
@@ -46,36 +39,73 @@ if(Terms.find().count() === 0) {
 		definition : '+1'
 	});
 }
+var TermsData = Terms.find().fetch();
+
+
+if(Categories.find().count() === 0) {
+	Categories.insert({
+		category_name: 'Algorithms',
+		parentID : 0
+	});
+	Categories.insert({
+		category_name : 'NP',
+		parentID : Categories.find().fetch()[0]['_id']
+	});
+	Categories.insert({
+		category_name : 'Artificial Intelligence',
+		parentID : Categories.find().fetch()[0]['_id']
+	});
+	Categories.insert({
+		category_name : 'Data Structures',
+		parentID : 0
+	});
+	Categories.insert({
+		category_name : 'Discrete Math',
+		parentID : 0
+	});
+	Categories.insert({
+		category_name : 'Trees',
+		parentID : Categories.find().fetch()[3]['_id']
+	});
+}
+var CategoriesData = Categories.find().fetch();
+
 
 if(Posts.find().count() === 0) {
 	Posts.insert({
-		userID : '0',
+		userID : UsersData[0]['_id'],
 		title : "This and That, Algorithms united.",
 		pop_rating : '29',
 		quality_rating : '4',
 		doi : '12423' ,
 		author : "Thom Yorke",
-		publish_date : "7/4/2010"
+		publish_date : "7/4/2010",
+		categoryID : Categories.find().fetch()[0]['_id']
 	});
 	Posts.insert({
-		userID : '1',
+		userID : UsersData[1]['_id'],
 		title : "Why Discreet Math changed my life.",
 		pop_rating : '67',
 		quality_rating : '3',
 		doi : '6789' ,
 		author : "Elon Musk",
-		publish_date : "7/5/2010"
+		publish_date : "7/5/2010",
+		categoryID : Categories.find().fetch()[4]['_id']
 	});
 	Posts.insert({
-		userID : '2',
+		userID : UsersData[2]['_id'],
 		title : "GLICKO: made easy.",
 		pop_rating : '29',
 		quality_rating : '4',
 		doi : '12423' ,
 		author : "Jane Goodall",
-		publish_date : "7/2/2010"
+		publish_date : "7/2/2010",
+		categoryID : Categories.find().fetch()[1]['_id']
+
 	});
 }
+var PostsData = Posts.find().fetch();
+
 
 if(Comments.find().count() === 0) {
 	Comments.insert({
@@ -88,7 +118,7 @@ if(Comments.find().count() === 0) {
 	});
 	Comments.insert({
     	userID : UsersData[1]['_id'],
-    	parentID : CommentsData[0]['_id'],
+    	parentID : Comments.find().fetch()[0]['_id'],
     	postID : PostsData[0]['_id'],
     	rating : '1',
     	text : "N0pe. You think these sources are scholarly?",
@@ -96,7 +126,7 @@ if(Comments.find().count() === 0) {
 	});	
 	Comments.insert({
     	userID : UsersData[0]['_id'],
-    	parentID : CommentsData[1]['_id'],
+    	parentID : Comments.find().fetch()[1]['_id'],
     	postID : PostsData[0]['_id'],
     	rating : '5',
     	text : "Science has put Wikipedia to the test, it is the irrefutable all-source. You can't escape it.",
@@ -104,7 +134,7 @@ if(Comments.find().count() === 0) {
 	});
 	Comments.insert({
         userID : UsersData[2]['_id'],
-    	parentID : CommentsData[0]['_id'],
+    	parentID : Comments.find().fetch()[0]['_id'],
     	postID : PostsData[0]['_id'],
     	rating : '4',
     	text : "You are right. Hail Wiki.",
@@ -119,6 +149,8 @@ if(Comments.find().count() === 0) {
     	date : "3/3/2015"
 	});
 }
+var CommentsData = Comments.find().fetch();
+
 
 if(Summaries.find().count() === 0) {
 	Summaries.insert({
@@ -137,6 +169,8 @@ if(Summaries.find().count() === 0) {
 		rating : '1'
 	});
 }
+var SummaryData = Summaries.find().fetch();
+
 
 if(Adminlabels.find().count() === 0) {
 	Adminlabels.insert({
@@ -148,6 +182,8 @@ if(Adminlabels.find().count() === 0) {
 		description : 'Running time is required for this term to be added to this dictionary'
 	});
 }
+var AdminLabelsData = Adminlabels.find().fetch();
+
 
 /****************
 *               *

@@ -43,9 +43,9 @@
         <li role="presentation"><a href="{{pathFor 'account'}}">Account</a></li>        
       </ul>
       <ul class="nav nav-tabs nav-justified">
-        <li role="presentation"><a href="">Sub-category 1</a></li>
-        <li role="presentation"><a href="">Sub-category 2</a></li>
-        <li role="presentation"><a href="">Sub-category 3</a></li>
+      {{#each categories}}
+        <li role="presentation"><a href="">{{category_name}}</a></li>
+      {{/each}}
         <li role="presentation"><a><span class="glyphicon glyphicon-chevron-down"></span></a></li>
         <li role="presentation" class="text-right"><button>New</button></li>
       </ul>

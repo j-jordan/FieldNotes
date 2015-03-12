@@ -2,7 +2,7 @@
 
 Template.postPage.helpers({
     'findUser': function(userID) {
-    	return Users.find().fetch()[userID]['username'];
+    	return Users.find({_id : userID}).fetch()[0]['username'];
     },
 
     'findSummaries': function(postID) {
@@ -10,4 +10,3 @@ Template.postPage.helpers({
 		return Summaries.find({_id: summaryID}).fetch()[0]['text'];
     }
 });
-[0]

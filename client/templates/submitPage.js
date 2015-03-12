@@ -53,7 +53,7 @@ Template.submitPage.events({
 		var terms_defined = $(e.target).find('[name=terms_used]');
 		var terms_used = $(e.target).find('[name=terms_defined]');
 
-		//Redirect to the postpage 
+		//Redirect to the postpage  
 		Router.go('postPage',post);
 	}
 });

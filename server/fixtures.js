@@ -20,27 +20,45 @@ if(Users.find().count() === 0) {
 }
 var UsersData = Users.find().fetch();
 
+if(Dictionary.find().count() === 0) {
+	Dictionary.insert({
+		name: 'Algorithms'
+	});
+	Dictionary.insert({
+		name: 'Data Structures'
+	});
+	Dictionary.insert({
+		name: 'Artificial Intelligence'
+	});
+	Dictionary.insert({
+		name: 'Discrete Math'
+	});
+}
+var DictionaryData = Dictionary.find().fetch();
 
 if(Terms.find().count() === 0) {
 	Terms.insert({
 		term_name : 'Binary Tree',
-		definition : 'A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.'
+		definition : 'A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.',
+		dictionaryID : Dictionary.find().fetch()[0]['_id']
 	});
 	Terms.insert({
 		term_name : 'Variable',
-		definition : 'Something used to hold a value.'
+		definition : 'Something used to hold a value.',
+		dictionaryID : Dictionary.find().fetch()[1]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by contradiction',
-		definition : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.'
+		definition : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.',
+		dictionaryID : Dictionary.find().fetch()[3]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by induction',
-		definition : '+1'
+		definition : '+1',
+		dictionaryID : Dictionary.find().fetch()[2]['_id']
 	});
 }
 var TermsData = Terms.find().fetch();
-
 
 if(Categories.find().count() === 0) {
 	Categories.insert({
@@ -234,11 +252,11 @@ if(Post_terms_used.find().count() === 0) {
 //admin fields pivot table
 if(Admin_term_fields.find().count() === 0) {
 	Admin_term_fields.insert({
-		termID : TermsData[0]['_id'],
+		dictionaryID : DictionaryData[0]['_id'],
 		AdminlabelsID : AdminLabelsData[0]['_id']
 	});
 	Admin_term_fields.insert({
-		termID : TermsData[0]['_id'],
+		dictionaryID : DictionaryData[0]['_id'],
 		AdminlabelsID : AdminLabelsData[1]['_id']
 	});	
 }

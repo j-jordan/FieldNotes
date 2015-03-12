@@ -1,30 +1,54 @@
 <template name="dictionaryPage">
 	<div class="container">
+		<div class="row">		
+			<div class="col-md-12">
+				<div>
+					<h2>{{name}} Dictionary</h2>
+				</div>
+			</div>
+		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="input-group input-group-lg">
 					<input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon">
 					<span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
 				</div>
 			</div>
+			<div class="col-md-7">
+				<div class="dropdown">
+
+				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				    Sort by
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: high to low</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: low to high</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: high to low</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: low to high</a></li>
+				  </ul>
+				</div>
+			</div>
 		</div>
+		<div class="row"><p></p></div>
 		<div class="row">
 			<div class="col-md-12">
-				<p></p>
-				<a class="btn btn-primary" href="{{pathFor 'newDictionary'}}">Create a new dictionary</a>
+					<button type="button" class="btn btn-info">Click here to enter a new term</button>
 			</div>
 		</div>
-			
+		<div class="row"><p></p></div>
 		<div class="row">
-			<div class="col-md-6">
-				<h5>Pick a dictionary to explore it further, or use the search field to find the definition you are looking for.</h5>
-				<h4>List of available dictionaries:</h4>
-				<ul>		
-					<li><a href="#">Algorithms</a></li>
-					<li><a href="#">Problems</a></li>
-					<li><a href="#">Artificial Intelligence</a></li>
+			<div class="col-md-5">
+				<ul class="list-group">
+					{{#each terms _id}}
+						<!-- <li class="list-group-item">
+							<span class="badge"><span class="glyphicon glyphicon-ok"></span></span>
+							{{term_name}}
+						</li> -->			
+						<a href="{{pathFor 'termPage'}}">{{term_name}}</a>			
+					{{/each}}
 				</ul>
-			</div>
+			</div>		
 		</div>
 	</div>
 </template>

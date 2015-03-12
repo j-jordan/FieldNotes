@@ -1,0 +1,51 @@
+<template name='termPage'>
+	<div class="container">		
+		<div class="row">
+				<div class="col-md-6" id="titleID">
+					<h2>Definition for: {{term_name}}</h2>
+				</div>
+				<div class="col-mid-6">
+					<h2>5 Star Rating</h2>
+				</div>
+		</div><!-- /row -->
+		<div class="row">
+			<div class="col-md-7">
+				<div class="row">
+					<div class="col-md-12">	
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Definition:
+							</div>	
+							<div class="panel-body">{{definition}}
+							</div>
+						</div>
+					</div>
+				</div><!-- /row -->
+			</div>
+		</div>
+		{{getDynamicFields dictionaryID}}
+		{{#each labels}}
+			{{> dynamicField}}
+		{{/each}}
+		<div class="row">
+			<div class="col-md-3">
+				<label for="definitionID">Rate this definition: </label>
+			</div>
+			<div class="col-md-9">						
+				<span id="definitionID">5 Star Rating</span>
+			</div>
+		</div><!-- /row -->
+	</div><!-- /container -->
+</template>
+
+
+<template name="dynamicField">
+		<div class="row">
+			<div class="col-md-3">
+				<label for="complexityID">{{label}}</label>
+			</div>
+			<div class="col-md-9">						
+				<input type="text" id="complexityID" disabled="true" value="">
+			</div>
+		</div><!-- /row -->
+</template>

@@ -1,4 +1,8 @@
 <template name="postsList">
+<div class="row">
+	<a class="btn btn-default" href="{{pathFor 'summaryList'}}">Summaries</a>
+</div>
+
   {{#each Post}}
       {{> postItem}}
   {{/each}}

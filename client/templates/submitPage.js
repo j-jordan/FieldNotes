@@ -36,7 +36,7 @@ Template.submitPage.events({
 			author: $(e.target).find('[name=author]').val(),
 			publish_date: $(e.target).find('[name=publish_date]').val(),
 			publisher: $(e.target).find('[name=publisher]').val(),
-			category_id: Categories.findOne({category_name: 'Algorithms'}, {fields: {_id: 1}})   // use $(e.target).find('[name=category]').val() when category dropdown works
+			categoryID: Categories.findOne({category_name: 'Algorithms'}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
 		};
 
 		post._id = Posts.insert(post);

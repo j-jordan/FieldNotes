@@ -1,0 +1,26 @@
+<template name="summaryItem">
+ <div class="row">
+    <div class="col-md-1">
+        <div class="row">UP</div>
+        <div class="row">DOWN</div>
+    </div>    
+    <div class="col-md-7">
+      <div class="panel panel-primary text-left">
+        <div class="panel-heading">
+          <a href="{{pathFor 'postPage'}}" class="panel-title">{{title _id}}</a>
+        </div>
+        <div class="body">
+          <div class="row text-left">
+            <div class="col-md-12">
+              {{text}}
+              <br>
+              <small>submitted at CREATED_AT by {{userName userID}}</small>              
+            </div>
+          </div>          
+          <div class="row">
+          </div>
+        </div>
+      </div>
+    </div> <!-- 2nd column -->        
+  </div> <!-- snapshot -->
+</template>

@@ -44,14 +44,12 @@
       </ul>
       <ul class="nav nav-tabs nav-justified">
       {{#each categories}}
-        <li role="presentation"><a href="">{{category_name}}</a></li>
+        <li role="presentation"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
       {{/each}}
         <li role="presentation"><a><span class="glyphicon glyphicon-chevron-down"></span></a></li>
         <li role="presentation" class="text-right"><button>New</button></li>
       </ul>
-      <ul class="nav nav-tabs nav-justified">
-        <li role="presentation">Filter:<select><option>Summaries</option><option>Papers</option></select></li>
-      </ul>
+     
     </p>
   </div> <!-- /JUMBO TRON -->
   <section>

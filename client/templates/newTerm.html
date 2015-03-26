@@ -1,0 +1,44 @@
+<template name="newTerm">
+	<div class="container">
+		<div class="row">		
+			<div class="col-md-12">
+				<div>
+					<h2>New Dictionary Term</h2>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+				<div class="col-md-3">
+	   				<label for="name">Entry Name: </label>
+		   		</div>
+		   		<div class="col-md-9">
+				  	<input type="text" id="title" name="name" value="" class="form-control" placeholder="Name">
+		   		</div>	
+		</div>
+		<div class="row"><p></p></div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						Definition:
+					</div>	
+					<div class="panel-body">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row"><p></p></div>
+		<div class="row">
+			<div class="col-md-12">
+				<p>Required Information: *</p>
+			</div>
+		</div>
+		{{getDynamicFields _id}}
+		{{#each dynamFields}}
+			{{> dynamicField}}
+		{{/each}}
+		<!-- LOOP THROUGH THE DYNAMIC FIELDS FOR THIS DICTIONARY -->
+		<div><input	type='submit' value='Submit' class='btn btn-primary'/></div>
+	</div>
+</template>

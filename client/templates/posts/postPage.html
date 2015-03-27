@@ -30,11 +30,18 @@
         <div class="col-md-3">
           <a class="btn btn-default" href="{{pathFor 'submitSummary'}}">Submit summary </a>
         </div>
+        
+        <div class="col-md-3">
+          <a class="summary-button btn btn-default" id="showAllSummeries">Show all Summaries</a>
+        </div>
+
       </div>
 
       <div class="row">
         <div class="col-md-12">
-          {{findSummaries _id}}
+          {{#each findSummaries _id}}
+              {{text}}
+          {{/each}}
         </div>
       </div>
       <br>
@@ -47,7 +54,7 @@
 
       <div class="row">
         <div class="col-md-6">
-          Need to do research on how to implement comment hierarchy Author:  Thom Yorke
+          {{> commentsBox id=_id}}  
         </div>
       </div>
 </template>

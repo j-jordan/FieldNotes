@@ -11,3 +11,17 @@ Template.newTerm.helpers({
 		return dynamicFields;
 	}
 });
+
+Template.newTerm.events({
+	'submit form': function(e){
+		e.preventDefault();		
+
+		var term = {
+			term_name: $(e.target).find('[name=term_name]').val(),
+			defintion: $(e.target).find('[name=definition]').val(),
+			dictionaryID: this._id
+		};
+
+		term._id = Terms.insert(term);
+	}
+});

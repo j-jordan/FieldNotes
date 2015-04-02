@@ -1,4 +1,5 @@
 <template name="newDictionary">
+	<form>
 	<div class="container">
 		<div class="row">		
 			<div class="col-md-12">
@@ -12,8 +13,8 @@
 	   				<label for="dictionaryname">Dictionary Name: </label>
 		   		</div>
 		   		<div class="col-md-6">
-				  	<input type="text" id="dictionaryname" name="dictionaryname" value="" class="form-control" placeholder="Name">
-		   		</div>	
+				  	<input type="text" id="dictionaryname" name="title" value="" class="form-control" placeholder="Name">
+		   		</div>
 		</div>
 		<div class="row"><p></p></div>
 		<div class="row">
@@ -60,5 +61,10 @@
 				<button type="button" class="btn btn-success"><a href="#" class="glyphicon glyphicon-minus"></a></button>
 			</div>
 		</div>
+		<p></p>
+		<div>
+			<button class="btn btn-primary" type="submit">Create a Dictionary</button>
+		</div>
 	</div>
+	</form>
 </template>

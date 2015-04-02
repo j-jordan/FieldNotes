@@ -28,7 +28,7 @@ Template.submitPage.events({
 
 		//Insert the new post
 		var post = {
-			userID: 'eumshRhAB92SsrZ9N',//use Meteor.user()._id once users are implemented correctly,
+			userID: Meteor.user()._id,
 			title: $(e.target).find('[name=title]').val(),
 			pop_rating: '',
 			quality_rating: '',
@@ -61,5 +61,9 @@ Template.submitPage.events({
 Template.submitPage.helpers({
 	'submitPageCategoryOptions': function() {
 		return Categories.find({parentID: 0});
+	},
+
+	'categories': function() {
+		return Categories.find();
 	}
 });

@@ -9,5 +9,6 @@ autopublish
 insecure
 iron:router
 reactive-var
-arkham:comments-ui
-useraccounts:bootstrap
+ian:accounts-ui-bootstrap-3
+accounts-password
+alanning:roles

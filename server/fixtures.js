@@ -1,24 +1,50 @@
-if(Users.find().count() === 0) {
-	Users.insert({
-		email : 'user1@Users.com',	
-		password : "password",
-		username : "alanTurn323",
-		date_joined : "3/1/2015"
+if(Meteor.users.find().count() === 0) {
+	
+	var jeremy = Accounts.createUser({
+		username: 'jeremy',
+		email: 'jjordan@gmail.com',
+		password: 'password',
+		profile : {
+			name: 'jeremy'
+		}
 	});
-	Users.insert({
-        email : 'user2@Users.com',      
-    	password : "password",
-    	username : "gHopper1944",
-    	date_joined : "3/1/2015"
-    });
-	Users.insert({
-    	email : 'user3@Users.com',      
-    	password : "password",
-        username : "BabbageC415",
-    	date_joined : "3/1/2015"
-    });
+
+	Roles.setUserRoles(jeremy,'admin');
+
+	var dillon = Accounts.createUser({
+		username: 'dillon',
+		email: 'dillon@gmail.com',
+		password: 'password',
+		profile : {
+			name: 'dillon'
+		}
+	});
+
+	Roles.setUserRoles(dillon,'admin');
+
+	var kendall = Accounts.createUser({
+		username: 'kendall',
+		email: 'kendall@gmail.com',
+		password: 'password',
+		profile : {
+			name: 'kendall'
+		}
+	});
+
+	Roles.setUserRoles(kendall,'admin');
+
+	var guest = Accounts.createUser({
+		username: 'guest',
+		email: 'guest@gmail.com',
+		password: 'password',
+		profile : {
+			name: 'guest'
+		}
+	});
+
+	Roles.setUserRoles(guest,'guest');
 }
-var UsersData = Users.find().fetch();
+var UsersData = Meteor.users.find().fetch();
 
 if(Dictionary.find().count() === 0) {
 	Dictionary.insert({
@@ -275,4 +301,4 @@ if(Post_summary.find().count() === 0) {
 		postID : PostsData[1]['_id'],
 		summaryID : SummaryData[2]['_id']
 	});
-} 
+}

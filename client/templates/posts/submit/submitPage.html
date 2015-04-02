@@ -2,14 +2,6 @@
    	<div class="container">
 	   	<div class="col-md-6">
 		   	<form>
-		   		<div class="row">
-		   			<div class="col-md-3">
-			   			<select id="paperOrSummary">
-			   				<option>Paper</option>
-			   				<option>Summary</option>		   				
-			   			</select>
-			   		</div>
-		   		</div>
 	   			<div class="row">
 	   				<div class="col-md-3">
    						<label for="title">Title:</label>
@@ -49,10 +41,9 @@
    								<span class="caret"></span>
    							</button>
    							<ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
-   								<li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
-   								<li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
-   								<li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
-   								<li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
+   								{{#each categories}}
+   									<li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ category_name }}</a></li>
+   								{{/each}}
 							</ul>
    						</div>
 
@@ -84,7 +75,7 @@
    						<ul>
    							<!-- {{#each submitPostTerms 'used'}}
 								{{> termUsed}}
-							{{/each}} -->							
+							{{/each}}	-->					
 						</ul>
    					</div>
 	   			</div>
@@ -100,7 +91,7 @@
    					<div class="col-md-12">
    						<ul>
    							<!-- {{#each submitPostTerms 'defined'}}
-								{{> termUsed}}
+								{{> termDefined}}
 							{{/each}} -->	
 						</ul>
    					</div>

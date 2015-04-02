@@ -1,7 +1,7 @@
 <template name="layout">
-  <div class="navbar navbar-default navbar-inverse navbar-static-top">
+  <div class="navbar navbar-default navbar-inverse navbar-static-top" id="navbar">
     <style>
-      .body{padding-top:70px}
+      .body{padding-top:7px}
     </style>
     <div class="container">
       <div class="navbar-header">
@@ -23,18 +23,24 @@
       </div>
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li class="">
-            <input type="text" class="form-control" placeholder="Username">
-          </li>
-          <li class="" draggable="true">
-            <input type="password" class="form-control" placeholder="Password">
-          </li>
+          {{> loginButtons align="right"}}
         </ul>
       </div>
     </div>
   </div> <!-- /Nav bar -->
-   <div class="jumbotron"> <!-- JUMBO TRON -->
+   <div class="jumbotron" id="jumbo"> <!-- JUMBO TRON -->
+   <style>
+      #jumbo {
+        padding: 10px;
+      }
+      #navbar {
+        border-bottom: 0px;
+        margin-bottom: 0px;
+      }
+   </style>
+   <span style="color:#3854A8; font-family:Trebuchet MS;">
     <h1 class="text-right">FieldNotes</h1>
+    </span>
     <p>
       <ul class="nav nav-tabs nav-justified">
         <li role="presentation"><a href="{{pathFor 'postsList'}}">Home</a></li>
@@ -56,7 +62,5 @@
       <div class="container">
           {{> yield}}
       </div>
-      <button class="btn btn-info">NEXT</button>
-      PAGINATION
   </section>
 </template>

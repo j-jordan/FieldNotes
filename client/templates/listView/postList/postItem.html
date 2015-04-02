@@ -1,10 +1,28 @@
+
 <template name="postItem">
  <div class="row">
-    <div class="col-md-1">
-        <div class="row">UP</div>
-        <div class="row">DOWN</div>
-    </div>    
-    <div class="col-md-7">
+    <style>
+      #voteArrows{
+        padding-top: 15px;
+        padding-left: 85px;
+        padding-right: 0px;
+      }
+      .glyphicon.glyphicon-arrow-up{
+        font-size: 32px;
+      }
+      .glyphicon.glyphicon-arrow-down{
+        font-size: 32px;
+      }
+    </style>
+    <div class="col-md-1" id="voteArrows">
+        <div class="row">
+          <span class="glyphicon glyphicon-arrow-up"></span>
+        </div>
+        <div class="row">
+          <span class="glyphicon glyphicon-arrow-down"></span>
+        </div>
+    </div>  
+    <div class="col-md-8">
       <div class="panel panel-primary text-left">
         <div class="panel-heading">
           <a href="{{pathFor 'postPage'}}" class="panel-title">{{title}}</a>
@@ -12,7 +30,7 @@
         <div class="body">
           <div class="row text-left">
             <div class="col-md-12">
-              <small>submitted at CREATED_AT by {{getUserName userID}}</small>
+              <small>Submitted ten seconds ago by {{getUserName userID}}</small>
             </div>
           </div>          
           <div class="row">
@@ -31,6 +49,6 @@
           </div>
         </div>
       </div>
-    </div> <!-- 2nd column -->        
+    </div> <!-- 2nd column -->     
   </div> <!-- snapshot -->
 </template>

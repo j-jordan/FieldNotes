@@ -11,7 +11,7 @@ Template.postPage.events({
 
 Template.postPage.helpers({
     'findUser': function(userID) {
-    	return Users.findOne({_id : userID}).username;
+        return Meteor.users.findOne(userID).username;
     },
 
 
@@ -28,5 +28,9 @@ Template.postPage.helpers({
     		var summaryID = Post_summary.findOne({postID: pageID}).summaryID;
 			return Summaries.find({_id: summaryID});
     	}
+    },
+
+    comments: function() {
+        return Comments.find({postID: this._id});
     } 
 });

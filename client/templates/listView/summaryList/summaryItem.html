@@ -1,9 +1,26 @@
 <template name="summaryItem">
+  <style>
+    #voteArrows{
+      padding-top: 15px;
+      padding-left: 85px;
+      padding-right: 0px;
+    }
+    .glyphicon.glyphicon-arrow-up{
+      font-size: 32px;
+    }
+    .glyphicon.glyphicon-arrow-down{
+      font-size: 32px;
+    }
+  </style>
  <div class="row">
-    <div class="col-md-1">
-        <div class="row">UP</div>
-        <div class="row">DOWN</div>
-    </div>    
+    <div class="col-md-1" id="voteArrows">
+        <div class="row">
+          <span class="glyphicon glyphicon-arrow-up"></span>
+        </div>
+        <div class="row">
+          <span class="glyphicon glyphicon-arrow-down"></span>
+        </div>
+    </div>   
     <div class="col-md-7">
       <div class="panel panel-primary text-left">
         <div class="panel-heading">

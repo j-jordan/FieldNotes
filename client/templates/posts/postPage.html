@@ -40,7 +40,7 @@
       <div class="row">
         <div class="col-md-12">
           {{#each findSummaries _id}}
-              {{text}}
+              {{> summaryTemplate}}
           {{/each}}
         </div>
       </div>
@@ -54,7 +54,16 @@
 
       <div class="row">
         <div class="col-md-6">
-          {{> commentsBox id=_id}}  
+          {{#each comments}}
+              {{> commentItem}}
+          {{/each}}
         </div>
+      </div>
+      <div class="row">
+      <!-- {{#if currentUser}} -->
+        {{> commentSubmit}}    
+      <!-- {{else}} -->
+        <!-- <p>Please log in to leave a comment</p> -->
+      <!-- {{/if}} -->
       </div>
 </template>

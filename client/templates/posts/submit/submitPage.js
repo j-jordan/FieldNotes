@@ -36,7 +36,7 @@ Template.submitPage.events({
 			author: $(e.target).find('[name=author]').val(),
 			publish_date: $(e.target).find('[name=publish_date]').val(),
 			publisher: $(e.target).find('[name=publisher]').val(),
-			categoryID: Categories.findOne({category_name: 'Algorithms'}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
+			categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
 		};
 
 		post._id = Posts.insert(post);
@@ -55,6 +55,12 @@ Template.submitPage.events({
 
 		//Redirect to the postpage  
 		Router.go('postPage',post);
+	},
+
+	'click .dropdown-menu li a': function(e) {
+		Session.set('categoryName',this.category_name);
+		
+		$('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>');
 	}
 });
 
@@ -67,3 +73,16 @@ Template.submitPage.helpers({
 		return Categories.find();
 	}
 });
+
+//Returns the data for the autocomplete search function
+Template.search.helpers({
+	'terms': function(){
+		return Terms.find().fetch().map(function(it){ return it.term_name; });	
+	}
+});
+
+//Tell iron:router to wait until the template is rendered to inject data 
+//otherwise the autocomplete typeahead won't work
+Template.search.rendered = function() {
+  Meteor.typeahead.inject();
+};

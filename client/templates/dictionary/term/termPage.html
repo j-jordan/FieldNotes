@@ -1,51 +1,61 @@
 <template name='termPage'>
-	<div class="container">		
-		<div class="row">
-				<div class="col-md-6" id="titleID">
-					<h2>Definition for: {{term_name}}</h2>
+	<div class="container">
+		<form>
+			<div class="row">				
+				<div class="col-md-9">
+					<div name="uneditableField">
+						<div class="col-md-12" id="titleID">
+							<h2>Definition(s) for:    {{term_name}}</h2>
+						</div>
+					</div>
+					<div name="editableInputField" hidden>
+						<div class="col-md-3">
+							<h3>Definition(s) For:</h3>
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="term_name" name="term_name" value="{{ term_name }}"/>
+						</div>
+					</div>
 				</div>
-				<div class="col-mid-6">
-					<h2>5 Star Rating</h2>
+				<div class="col-md-3">
+					<div name="editTermButton" {{isAdmin}}>
+						<button class="editTermButton btn btn-warning" type="button" style="float: right">Edit Term
+		          		<span class="glyphicon glyphicon-pencil"></span></button>
+					</div>
+				</div>				
+			</div><!-- /row -->
+			<div class="row">
+				<div class="col-md-5">
+					<a class="btn btn-default" href="{{ pathFor 'submitDefinition'}}">Click here to submit a new defintion</a>
 				</div>
-		</div><!-- /row -->
-		<div class="row">
-			<div class="col-md-7">
+			</div>
+			{{#each getDefinitions _id}}
+	          	{{> definitionTemplate}} 
+	      	{{/each}}
+
+			{{getDynamicFields dictionaryID}}
+			{{getLabelValue _id}}
+			
+			{{#each labels}}
 				<div class="row">
-					<div class="col-md-12">	
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								Definition:
-							</div>	
-							<div class="panel-body">{{definition}}
-							</div>
+					<input type="hidden" name="adminLabelID" value="{{_id}}"/>
+					<div class="col-md-3">
+						<label for="complexityID">{{label}}</label>
+					</div>
+					<div name="labelDesc" >
+						<div class="col-md-9">
+							<span type="text" id="complexityID">{{labelDescription _id}}</span>
+						</div>
+					</div>
+					<div name="editableInputField" hidden>
+						<div class="col-md-9">
+							<input type="text" id="complexityID" name="labelValue" value="{{labelDescription _id}}" />
 						</div>
 					</div>
 				</div><!-- /row -->
-			</div>
-		</div>
-		{{getDynamicFields dictionaryID}}
-		{{#each labels}}
-			{{> dynamicField}}
-		{{/each}}
-		<div class="row">
-			<div class="col-md-3">
-				<label for="definitionID">Rate this definition: </label>
-			</div>
-			<div class="col-md-9">						
-				<span id="definitionID">5 Star Rating</span>
-			</div>
-		</div><!-- /row -->
+				<!--{{> dynamicFieldWithValue term_name}} -->
+			{{/each}}
+		</form>
 	</div><!-- /container -->
 </template>
 
-
-<template name="dynamicField">
-		<div class="row">
-			<div class="col-md-3">
-				<label for="complexityID">{{label}}</label>
-			</div>
-			<div class="col-md-9">						
-				<input type="text" id="complexityID" value="">
-			</div>
-		</div><!-- /row -->
-</template>

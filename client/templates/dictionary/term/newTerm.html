@@ -4,21 +4,21 @@
 		<div class="row">		
 			<div class="col-md-12">
 				<div>
-					<h2>New Dictionary Term</h2>
+					<h2>New Dictionary Term for {{name}}</h2>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-				<div class="col-md-3">
+				<div class="col-md-2">
 	   				<label for="name">Entry Name: </label>
 		   		</div>
-		   		<div class="col-md-9">
+		   		<div class="col-md-5">
 				  	<input type="text" id="title" name="term_name" value="" class="form-control" placeholder="Name">
 		   		</div>
 		</div>
 		<div class="row"><p></p></div>
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-7">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						Definition:
@@ -36,11 +36,12 @@
 			</div>
 		</div>
 		{{getDynamicFields _id}}
+		
 		{{#each dynamFields}}
 			{{> dynamicField}}
 		{{/each}}
 		<!-- LOOP THROUGH THE DYNAMIC FIELDS FOR THIS DICTIONARY -->
-		<div><button type='submit' class='btn btn-primary'>Submit</button></div>
+		<div><input type='submit' class='btn btn-primary'/></div>
 	</div>
 	</form>
 </template>

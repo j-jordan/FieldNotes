@@ -4,30 +4,45 @@
     <style>
       #voteArrows{
         padding-top: 15px;
-        padding-left: 85px;
-        padding-right: 0px;
+        padding-left: 100px;
+        padding-right: 25px;
+        border-left: 75px;
+        font-size: 32px;
       }
       .glyphicon.glyphicon-arrow-up{
-        font-size: 32px;
+        
+        vertical-align: middle;
       }
       .glyphicon.glyphicon-arrow-down{
-        font-size: 32px;
+       
+        vertical-align: middle;
       }
     </style>
     <div class="col-md-1" id="voteArrows">
         <div class="row">
-          <span class="glyphicon glyphicon-arrow-up"></span>
+          <button name="upArrow{{_id}}" class="btn-default">
+            <span name="upArrowButton" class="upArrowButton glyphicon glyphicon-arrow-up"></span>
+          </button>
         </div>
         <div class="row">
-          <span class="glyphicon glyphicon-arrow-down"></span>
+          <button name="downArrow{{_id}}" class="btn-default">
+            <span name="downArrowButton" class="downArrowButton glyphicon glyphicon-arrow-down"></span>
+          </button>
         </div>
     </div>  
     <div class="col-md-8">
-      <div class="panel panel-primary text-left">
+      <div class="panel panel-primary ">
         <div class="panel-heading">
           <a href="{{pathFor 'postPage'}}" class="panel-title">{{title}}</a>
+          <span style="float: right">Rating: {{pop_rating}}</span>
         </div>
         <div class="body">
+        <div class="row text-center">
+          <span>{{getTopSummary _id}}</span>
+        </div>
+
+        <div class="row"><p>&nbsp;</p></div>
+
           <div class="row text-left">
             <div class="col-md-12">
               <small>Submitted ten seconds ago by {{getUserName userID}}</small>
@@ -40,10 +55,10 @@
             <div class="col-md-1">
               <span>Rating: </span>
             </div>
-            <div class="col-md-1">
-              <a href="">{{quality_rating}}</a>
+            <div class="col-md-3">
+              {{> uneditableRateItTemplate}}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <a href="">{{doi}}</a>
             </div>
           </div>

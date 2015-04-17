@@ -1,69 +1,131 @@
 <template name="postPage">
-		 <div class="row">
-        <div class="col-md-3">
-          <label>DOI: </label> {{doi}}
-        </div>
-        <div class="col-md-3">
-          <label>DATE PUBLISHED:</label> {{publish_date}}
-        </div>
+  <style>
+    input[class="form-control"]{
+      float: right;
+    }
+  </style>
+<form>
+  <div class="row">
+    <div class="col-md-5">
+      <h2>{{title}}</h2>
+    </div>
+    <div class="col-md-7" {{isAdmin}}>
+          <button class="editPostButton btn btn-warning" type="button" style="float: right">Edit Post
+          <span class="glyphicon glyphicon-pencil"></span></button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="doi">DOI: </label>
+        <input class="form-control" disabled type="text"  name="editableInputField" id="doi" value="{{doi}}"/>
       </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="publish_date">DATE PUBLISHED:</label>
+        <input class="form-control" disabled type="text"  name="editableInputField" id="publish_date" 
+          value="{{publish_date}}"/>
+      </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <label for="">Rate this paper: </label>
+        <div>{{> rateitTemplate}}</div>
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-3">
-          <label>User Poster: </label> {{ findUser userID }}
-        </div>
-        <div class="col-md-3">
-          <label>Publisher: </label> {{ publisher }}
-        </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="userPoster">User Poster: </label>
+        <input class="form-control" disabled type="text" id="userPoster"
+          value="{{ findUser userID }}"/>
       </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="publisher">Publisher: </label>
+        <input class="form-control" disabled type="text" name="editableInputField" id="publisher"
+            value="{{ publisher }}" />
+      </div>      
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-3"> 
-          <label>Author: </label> {{ author }}
-        </div>
+  <div class="row">
+    <div class="col-md-4"> 
+      <div class="form-inline form-group">
+        <label for="author">Author: </label>
+        <input class="form-control" disabled type="text" name="editableInputField" id="author" 
+          value="{{ author }}"/>
       </div>
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-3">
-          <label for="summaries">Summary: </label>
-        </div>
-        <div class="col-md-3">
-          <a class="btn btn-default" href="{{pathFor 'submitSummary'}}">Submit summary </a>
-        </div>
-        
-        <div class="col-md-3">
-          <a class="summary-button btn btn-default" id="showAllSummeries">Show all Summaries</a>
-        </div>
+  <div class="row">
+    <div class="col-md-4">
+      <label>Terms used in this paper: </label>
+    </div>
+    <div class="col-md-4">
+      <label>Terms defined in this paper:</label>
+    </div>
+  </div>
 
-      </div>
+  <div class="row">
+    <div class="col-md-4">
+      {{#each terms_used _id}}
+        <li> {{term_name}} </li>
+      {{/each}}
+    </div>
+    <div class="col-md-4">
+      {{#each terms_defined _id}}
+        <li> {{term_name}} </li>
+      {{/each}}
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          {{#each findSummaries _id}}
-              {{> summaryTemplate}}
-          {{/each}}
-        </div>
-      </div>
-      <br>
+  <div class="row">
+    <div class="col-md-1">
+      <label for="summaries">Summary: </label>
+    </div>    
+    <div class="col-md-3">
+      <a class="btn btn-default" style="float: right" name="submitDefinition" 
+      href="{{#if loggedIn}}{{pathFor 'submitSummary'}}{{/if}}"
+      disabled="{{#if loggedIn}}{{else}}true{{/if}}">Submit summary </a>
+    </div>    
+    <div class="col-md-4">
+      <button class="summary-button btn btn-default" style="float: right" id="showAllSummaries">Show all Summaries</button>
+    </div>
+  </div>
+</form>
+   <br>
 
-      <div class="row">
-        <div class="col-md-6">
-          <label>Comments:</label>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#each findSummaries _id}}
+          {{> summaryTemplate}}
+      {{/each}}
+    </div>
+  </div>
+  <br>
 
-      <div class="row">
-        <div class="col-md-6">
-          {{#each comments}}
-              {{> commentItem}}
-          {{/each}}
-        </div>
-      </div>
-      <div class="row">
-      <!-- {{#if currentUser}} -->
-        {{> commentSubmit}}    
-      <!-- {{else}} -->
-        <!-- <p>Please log in to leave a comment</p> -->
-      <!-- {{/if}} -->
-      </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label>Comments:</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      {{#each comments}}
+          {{> commentItem}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="row">
+  <!-- {{#if currentUser}} -->
+    {{> commentSubmit}}    
+  <!-- {{else}} -->
+    <!-- <p>Please log in to leave a comment</p> -->
+  <!-- {{/if}} -->
+  </div>
 </template>

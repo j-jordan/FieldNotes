@@ -65,22 +65,18 @@ var DictionaryData = Dictionary.find().fetch();
 if(Terms.find().count() === 0) {
 	Terms.insert({
 		term_name : 'Binary Tree',
-		definition : 'A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.',
 		dictionaryID : Dictionary.find().fetch()[0]['_id']
 	});
 	Terms.insert({
 		term_name : 'Variable',
-		definition : 'Something used to hold a value.',
 		dictionaryID : Dictionary.find().fetch()[1]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by contradiction',
-		definition : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.',
 		dictionaryID : Dictionary.find().fetch()[3]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by induction',
-		definition : '+1',
 		dictionaryID : Dictionary.find().fetch()[2]['_id']
 	});
 }
@@ -119,8 +115,9 @@ if(Posts.find().count() === 0) {
 	Posts.insert({
 		userID : UsersData[0]['_id'],
 		title : "This and That, Algorithms united.",
-		pop_rating : '29',
-		quality_rating : '4',
+		pop_rating : 29,
+		quality_rating : 4,
+		numRaters : 20,
 		doi : '12423' ,
 		author : "Thom Yorke",
 		publish_date : "7/4/2010",
@@ -129,8 +126,9 @@ if(Posts.find().count() === 0) {
 	Posts.insert({
 		userID : UsersData[1]['_id'],
 		title : "Why Discreet Math changed my life.",
-		pop_rating : '67',
-		quality_rating : '3',
+		pop_rating : 67,
+		quality_rating : 3,
+		numRaters : 15,
 		doi : '6789' ,
 		author : "Elon Musk",
 		publish_date : "7/5/2010",
@@ -139,8 +137,9 @@ if(Posts.find().count() === 0) {
 	Posts.insert({
 		userID : UsersData[2]['_id'],
 		title : "GLICKO: made easy.",
-		pop_rating : '29',
-		quality_rating : '4',
+		pop_rating : 29,
+		quality_rating : 4,
+		numRaters : 10,
 		doi : '12423' ,
 		author : "Jane Goodall",
 		publish_date : "7/2/2010",
@@ -156,7 +155,7 @@ if(Comments.find().count() === 0) {
 		userID : UsersData[0]['_id'],
 		parentID : '0', //No parent
 		postID : PostsData[0]['_id'],
-		rating : '4',
+		pop_rating : 4,
 		text : "This is the coolest paper ever. amirite?",
 		date : "3/2/2015"
 	});
@@ -164,7 +163,7 @@ if(Comments.find().count() === 0) {
     	userID : UsersData[1]['_id'],
     	parentID : Comments.find().fetch()[0]['_id'],
     	postID : PostsData[0]['_id'],
-    	rating : '1',
+    	pop_rating : 1,
     	text : "N0pe. You think these sources are scholarly?",
     	date : "3/2/2015"
 	});	
@@ -172,7 +171,7 @@ if(Comments.find().count() === 0) {
     	userID : UsersData[0]['_id'],
     	parentID : Comments.find().fetch()[1]['_id'],
     	postID : PostsData[0]['_id'],
-    	rating : '5',
+    	pop_rating : 5,
     	text : "Science has put Wikipedia to the test, it is the irrefutable all-source. You can't escape it.",
     	date : "3/2/2015"
 	});
@@ -180,7 +179,7 @@ if(Comments.find().count() === 0) {
         userID : UsersData[2]['_id'],
     	parentID : Comments.find().fetch()[0]['_id'],
     	postID : PostsData[0]['_id'],
-    	rating : '4',
+    	pop_rating : 4,
     	text : "You are right. Hail Wiki.",
     	date : "3/2/2015"
 	});
@@ -188,7 +187,7 @@ if(Comments.find().count() === 0) {
     	userID : UsersData[2]['_id'],
     	parentID : '0', //No parent
     	postID : PostsData[0]['_id'],
-    	rating : '3',
+    	pop_rating : 3,
     	text : "This is what I've been looking for.",
     	date : "3/3/2015"
 	});
@@ -200,20 +199,58 @@ if(Summaries.find().count() === 0) {
 	Summaries.insert({
 		userID : UsersData[0]['_id'],
 		text : "In general, this paper explains the connection between this and that.",
-		rating : '3' 
+		quality_rating : 3,
+		numRaters : 2
 	});
 	Summaries.insert({	
 		userID : UsersData[1]['_id'],
         text : "3 Dimensional Shadow: A shadow cast by a 4 dimensional object.",
-        rating : '4.3'
+        quality_rating : 4.3,
+		numRaters : 4
 	}); 	
 	Summaries.insert({
 		userID : UsersData[2]['_id'],
 		text: "THIS IS A SUMMARY.",
-		rating : '1'
+		quality_rating : 1,
+		numRaters : 6
 	});
 }
 var SummaryData = Summaries.find().fetch();
+
+if(Definitions.find().count() === 0) {
+	Definitions.insert({
+		userID : UsersData[0]['_id'],
+		text : "A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.",
+		quality_rating : 5,
+		numRaters : 10
+	});
+	Definitions.insert({
+		userID : UsersData[2]['_id'],
+		text : "1s and 0s that grow trunks ad leaves",
+		quality_rating : 1,
+		numRaters : 5
+	});
+	Definitions.insert({
+		userID : UsersData[1]['_id'],
+		text : 'Something used to hold a value.',
+		quality_rating : 5,
+		numRaters : 2
+	});
+	Definitions.insert({
+		userID : UsersData[0]['_id'],
+		text : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.',
+		quality_rating : 4,
+		numRaters : 6
+	});
+	Definitions.insert({
+		userID : UsersData[0]['_id'],
+		text : '+1',
+		quality_rating : 3,
+		numRaters : 1
+	});
+}
+
+var DefinitionData = Definitions.find().fetch();
 
 
 if(Adminlabels.find().count() === 0) {
@@ -300,5 +337,42 @@ if(Post_summary.find().count() === 0) {
 	Post_summary.insert({
 		postID : PostsData[1]['_id'],
 		summaryID : SummaryData[2]['_id']
+	});
+}
+
+//Term's definition pivot
+if(Term_definition.find().count() === 0) {
+	Term_definition.insert({
+		termID : TermsData[0]['_id'],
+		definitionID : DefinitionData[0]['_id']
+	});
+	Term_definition.insert({
+		termID : TermsData[0]['_id'],
+		definitionID : DefinitionData[1]['_id']
+	});
+	Term_definition.insert({
+		termID : TermsData[1]['_id'],
+		definitionID : DefinitionData[2]['_id']
+	});
+	Term_definition.insert({
+		termID : TermsData[2]['_id'],
+		definitionID : DefinitionData[3]['_id']
+	});
+	Term_definition.insert({
+		termID : TermsData[3]['_id'],
+		definitionID : DefinitionData[4]['_id']
+	});
+}
+
+if(Term_label_values.find().count() === 0) {
+	Term_label_values.insert({
+		termID : TermsData[0]['_id'],
+		adminlabelsID : AdminLabelsData[0]['_id'],
+		value : "n^2"
+	});
+	Term_label_values.insert({
+		termID : TermsData[0]['_id'],
+		adminlabelsID : AdminLabelsData[1]['_id'],
+		value : "log(n)"
 	});
 }

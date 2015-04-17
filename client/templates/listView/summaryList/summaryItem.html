@@ -14,12 +14,16 @@
   </style>
  <div class="row">
     <div class="col-md-1" id="voteArrows">
-        <div class="row">
-          <span class="glyphicon glyphicon-arrow-up"></span>
+        <!-- <div class="row">
+           <button name="upArrow{{_id}}" class="btn-default">
+            <span name="upArrowButton" class="upArrowButton glyphicon glyphicon-arrow-up"></span>
+          </button>
         </div>
         <div class="row">
-          <span class="glyphicon glyphicon-arrow-down"></span>
-        </div>
+          <button name="downArrow{{_id}}" class="btn-default">
+            <span name="downArrowButton" class="downArrowButton glyphicon glyphicon-arrow-down"></span>
+          </button>
+        </div> -->
     </div>   
     <div class="col-md-7">
       <div class="panel panel-primary text-left">
@@ -27,17 +31,24 @@
           <a href="{{pathFor 'postPage'}}" class="panel-title">{{title _id}}</a>
         </div>
         <div class="body">
-          <div class="row text-left">
+          <div class="row text-center">
             <div class="col-md-12">
               {{text}}
-              <br>
-              <small>submitted at CREATED_AT by {{userName userID}}</small>              
             </div>
-          </div>          
-          <div class="row">
-          </div>
+              <div class="row"><p>&nbsp;</p></div>
+
+                           
+            <div class="row ">
+              <div class="col-md-3">
+                {{> uneditableRateItTemplate}}
+              </div>
+              <div class="col-md-9 text-left">
+                <small>&nbsp;&nbsp;&nbsp;&nbsp;Submitted ten seconds ago by {{userName userID}}</small>
+              </div>
+            </div>          
         </div>
       </div>
-    </div> <!-- 2nd column -->        
+    </div> <!-- 2nd column -->     
   </div> <!-- snapshot -->
+  </div>
 </template>

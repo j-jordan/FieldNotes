@@ -10,6 +10,29 @@
 			  			<input type="text" id="title" name="title" value="" class="form-control" placeholder="Title">
 	   				</div>
 	   			</div>
+
+	   			<br>
+
+	   			<div class="row">
+					<div class="col-md-3">
+		   				<label for="title">Category:</label>
+	   				</div>
+	   				<div class="col-md-9">
+   						<div class="dropdown">
+   							<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" >
+   								Select a Category<span class="caret"></span>
+   							</button>
+   							<ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
+   								{{#each categories}}
+   									<li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{category_name}}">{{ category_name }}</a></li>
+   								{{/each}}
+							</ul>
+   						</div>
+	   				</div>
+	   			</div>
+
+	   			<br>
+	   			   	
 	   			<div class="row">
 					<div class="col-md-12">	
 						<div class="panel panel-primary">
@@ -17,11 +40,12 @@
 								Summary:
 							</div>
 							<div class="panel-body">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur, ipsum vel egestas commodo, massa magna congue velit, non facilisis turpis elit id turpis. Mauris ligula nisl, malesuada ut dolor non, faucibus elementum urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean vel magna fringilla, interdum lectus eget, ultricies nibh. In rutrum leo lacus, sit amet faucibus tortor tempor id. In vel lacus ipsum. Duis ultricies et justo a egestas. 
+								<textarea rows = "6" cols= "70" name="summary" value=""></textarea>>
 							</div>
 						</div>
 					</div>
 	   			</div>
+
 	   			<div class="row">
    					<div class="col-md-3">
 		   				<label for="title">DOI Link:</label>
@@ -30,44 +54,15 @@
 		  				<input type="text" name="doi" value="" class="form-control" placeholder="**insert DOI example here**">
 	   				</div>
 	   			</div>
-	   			<div class="row">
-   					<div class="col-md-3">
-		   				<label for="title">Category:</label>
-	   				</div>
-	   				<div class="col-md-9">
-   						<div class="dropdown">
-   							<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenu1" aria-expanded="true">
-   								Select a Category
-   								<span class="caret"></span>
-   							</button>
-   							<ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
-   								{{#each categories}}
-   									<li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ category_name }}</a></li>
-   								{{/each}}
-							</ul>
-   						</div>
 
-
-			  			<!-- <div class="dropdown">
-						  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
-						    Select a Category
-						    <span class="caret"></span>
-						  </button>	
-		  				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-		  				  	<li role="presentation" class="dropdown-header">Select a Category</li>
-		  					{{#each submitPageCategoryOptions}}
-		  						<li><a role="menuitem" tabindex="-1">{{ category_name }}</a></li>
-		  					{{/each}}
-		  				  </ul>
-		  				</div> -->
-	   				</div>
-	   			</div>
+	   			<div class="row"><p>&nbsp;</p></div>
+	   			
 	   			<div class="row">
-   					<div class="col-md-3">
+   					<div class="col-md-4">
 						<label>Terms Used:</label>	   						
 	   				</div>
-	   				<div class="col-md-9">
-						<button>Add New Term</button>		   					
+	   				<div class="col-md-7">
+						{{> search}}		   					
 	   				</div>
 	   			</div>
 	   			<div class="row">
@@ -80,10 +75,10 @@
    					</div>
 	   			</div>
 	   			<div class="row">
-   					<div class="col-md-3">
+   					<div class="col-md-4">
 						<label>Terms Defined:</label>	   						
 	   				</div>
-	   				<div class="col-md-9">
+	   				<div class="col-md-7">
 		   				<button>Add New Definition</button>		   					
 	   				</div>
 	   			</div>
@@ -96,6 +91,9 @@
 						</ul>
    					</div>
 	   			</div>
+
+	   			<div class="row"><p>&nbsp;</p></div>
+
 	   			<div class="row">
    					<div class="col-md-3">
 		   				<label for="author">Author: </label>
@@ -120,8 +118,19 @@
 	   					<input type="text" name="publish_date" value="" class="form-control" placeholder="" aria-describedby="basic-addon1">
 	   				</div>
 	   			</div>
+	   			
+	   			<div class="row"><p>&nbsp;</p></div>
+
 	   			<div><input	type='submit' value='Submit' class='btn btn-primary'/></div>
 			</form>			
 		</div>
 	</div>
+</template>
+
+<!-- Autocomplete typeahead. Might want to use meteor-jquery-rateit atmosphere package instead. -->
+<template name="search">
+  <input class="form-control typeahead" name="search" type="text"
+       placeholder="Search for terms"
+       autocomplete="off" spellcheck="off"
+       data-source="terms"/>
 </template>

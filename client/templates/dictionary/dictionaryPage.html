@@ -1,16 +1,24 @@
 <template name="dictionaryPage">
 	<div class="container">
+	<form>
 		<div class="row">		
 			<div class="col-md-12">
 				<div>
-					<h2>{{name}} Dictionary</h2>
+						<div class="form-inline form-group" style="font-weight: 32">
+							<div class="row" name="dictName">
+								<h2>{{name}} Dictionary</h2>
+							</div>
+							<div class="row" name="editableInputField" active hidden>
+								<input class="form-control" id="name" value="{{ name }}"/>
+							</div>
+						</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-5">
 				<div class="input-group input-group-lg">
-					<input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon">
+				<input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon">
 					<span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
 				</div>
 			</div>
@@ -31,9 +39,13 @@
 			</div>
 		</div>
 		<div class="row"><p></p></div>
-		<div class="row">
-			<div class="col-md-12">
+		<div class="row" {{isAdmin}}>
+			<div class="col-md-4">
 					<a href="{{pathFor 'newTerm'}}" class="btn btn-info">Click here to enter a new term</a>
+			</div>
+			<div class="col-md-4">
+					<button class="editTermsButton btn btn-warning" type="button" style="float: right">Edit Title and Terms
+	          		<span class="glyphicon glyphicon-pencil"></span></button>
 			</div>
 		</div>
 		<div class="row"><p></p></div>
@@ -45,10 +57,19 @@
 							<span class="badge"><span class="glyphicon glyphicon-ok"></span></span>
 							{{term_name}}
 						</li> -->			
-						<li><a href="{{pathFor 'termPage'}}">{{term_name}}</a></li>
+						<!-- <li><a href="{{pathFor 'termPage'}}">{{term_name}}</a></li> -->
+						<div class="form-inline form-group" style="font-weight: 32">
+									<div class="row" name="termLink">
+	     								<a href="{{pathFor 'termPage'}}">{{term_name}}</a>
+	     							</div>
+	     							<div class="row" name="editableInputField" hidden>
+	        							<input class="form-control" id="name" value="{{ term_name }}" disabled/><button class="btn btn-sm btn-danger deleteTerm" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
+	        						</div>
+						</div>
 					{{/each}}
 				</ul>
 			</div>		
 		</div>
+	</form>
 	</div>
 </template>

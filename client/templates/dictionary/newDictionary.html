@@ -13,54 +13,39 @@
 	   				<label for="dictionaryname">Dictionary Name: </label>
 		   		</div>
 		   		<div class="col-md-6">
-				  	<input type="text" id="dictionaryname" name="title" value="" class="form-control" placeholder="Name">
+				  	<input type="text" id="dictionaryname" ng-model="nameValue" name="title" value="" class="form-control" placeholder="Name">
 		   		</div>
 		</div>
 		<div class="row"><p></p></div>
 		<div class="row">
 			<div class="col-md-4">
-				<label>Name</label>
+				<label>Term Label</label>
 			</div>
 			<div class="col-md-4">
-				<label>Type</label>
+				<label>Term Description</label>
 			</div>
 			<div class="col-md-4">
 
 			</div>
 		</div>
-		<div class="row">
+		{{#each getArray}}
+		<div class="row" id="row{{index}}">
 			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Variable Name">
+				<input type="text" id="" name="dynamicVarName[]" value="" class="form-control" placeholder="Variable Name">
 			</div>
 			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Default set to string">
+				<input type="text" id="" name="variableType[]" value="" class="form-control" placeholder="Default set to string">
 			</div>
 			<div class="col-md-1 text-right">
-				<button type="button" class="btn btn-danger"><a href="#" class="glyphicon glyphicon-minus"></a></button>
+				<button type="button" class='{{#if isLastRow index }} btn btn-success {{else}} btn btn-danger{{/if}}'
+			 id='{{#if isLastRow index }}increaseRow{{else}}deleteRow{{/if}}' name="testButton">
+					<a 
+						class='{{#if isLastRow index }} glyphicon glyphicon-plus {{else}} glyphicon glyphicon-minus{{/if}}'>
+					</a>
+				</button>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Varaible Name">
-			</div>
-			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Default set to string">
-			</div>
-			<div class="col-md-1 text-right">
-				<button type="button" class="btn btn-danger"><a href="#" class="glyphicon glyphicon-minus"></a></button>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Varaible Name">
-			</div>
-			<div class="col-md-4">
-				<input type="text" id="" name="" value="" class="form-control" placeholder="Default set to string">
-			</div>
-			<div class="col-md-1 text-right">
-				<button type="button" class="btn btn-success"><a href="#" class="glyphicon glyphicon-minus"></a></button>
-			</div>
-		</div>
+		{{/each}}
 		<p></p>
 		<div>
 			<button class="btn btn-primary" type="submit">Create a Dictionary</button>

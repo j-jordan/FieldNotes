@@ -2,6 +2,7 @@ Template.dictionaries.helpers({
 	'dictionaries': function(){
 		return Dictionary.find();
 	},
+    
 	'isAdmin' : function(){
 		if(Meteor.user()){
 			if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
@@ -13,19 +14,35 @@ Template.dictionaries.helpers({
 	}
 });
 
-Template.newDictionary.events({
-	'submit form': function(e){
-		e.preventDefault();
+Template.dictionaries.events({
+   "click .editDictionariesButton": function(event) {
 
-		console.log($(e.target).find('[name=title]').val());
+        $editableButton = $('.editDictionariesButton');
 
-		var dictionary = {
+        $editableButton.toggleClass('edit');
 
-			name: $(e.target).find('[name=title]').val()
+        if($editableButton.hasClass('edit')){
+            $('[name=dictLink]').attr('hidden','true');
+            $('[name=editableInputField').removeAttr('hidden');
 
-		};
+            $editableButton.removeClass('btn-warning')
+            $editableButton.addClass('btn-success');
+            $editableButton.html('Save changes <span class="glyphicon glyphicon-pencil"></span>');
+            
+        } else {
+        	$('[name=dictLink').removeAttr('hidden');
+            $('[name=editableInputField]').attr('hidden','true');
 
+            $editableButton.removeClass('btn-success');
+            $editableButton.addClass('btn-warning');
+            $editableButton.html('Remove Dictionary <span class="glyphicon glyphicon-pencil"></span>');
+        }
 
-		dictionary._id = Dictionary.insert(dictionary);
-	}
+    }, 
+
+    'click .deleteDictionary': function(e){
+        if(confirm("Are you sure you want to delete this dictionary?")){
+            Dictionary.remove(this._id);
+        }
+    }
 });

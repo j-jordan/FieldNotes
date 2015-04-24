@@ -11,6 +11,7 @@ Template.postPage.events({
         var $summaryButton = $('.summary-button');
 
         summeriesShown = !summeriesShown;
+
         showAllSummaries.set(summeriesShown);  
 
         $summaryButton.toggleClass('show');
@@ -78,6 +79,7 @@ Template.postPage.events({
     'rated': function(event,value){
 
             if(! $('[id=rateitDiv'+this._id+']').hasClass("summaryRating")){
+
                 var postID = this._id;
 
                 var foundPost = Posts.findOne(postID);

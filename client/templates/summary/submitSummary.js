@@ -15,7 +15,8 @@ Template.submitSummary.events({
 		var summary = {
 			userID: Meteor.user()._id,
 			text: $(e.target).find('[name=summary]').val(),
-			rating: ''
+			quality_rating : 0,
+			numRaters : 0
 		};
 
 		summary._id = Summaries.insert(summary);

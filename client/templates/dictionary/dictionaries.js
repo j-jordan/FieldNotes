@@ -4,11 +4,12 @@ Template.dictionaries.helpers({
 	},
     
 	'isAdmin' : function(){
-		if(Meteor.user()){
-			if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
-				return 'hidden';
-			}
-		} else {
+	if(Meteor.user()){
+		if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
+			return 'hidden';
+		}
+	} 
+    else {
 			return 'hidden';
 		}
 	}

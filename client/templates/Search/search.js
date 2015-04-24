@@ -1,0 +1,1 @@
+Template.searchTemplate.indexes = ['posts','dictionary','terms'];

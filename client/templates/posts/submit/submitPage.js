@@ -14,51 +14,62 @@
 Template.submitPage.events({
 	'submit form': function(e) {
 
+		var validated = true;
+
+		$(e.target).find('.required').map(function(index, object){			
+			if(this.value === '')
+				validated = false;
+		})
+
 		//Stop the browser from submitting the form.
 		e.preventDefault();
 
-		//Insert the new summary
-		var summary = {
-			userID: '',
-			text: 'this is test summary text',//$(e.target).find('[name=summary]').val(),
-			rating: ''
-		};
+		if(validated){
+			//Insert the new summary
+			var summary = {
+				userID: Meteor.user()._id,
+				text: $(e.target).find('[name=summary]').val(),
+				rating: 0
+			};
 
-		summary._id = Summaries.insert(summary);
+			summary._id = Summaries.insert(summary);
 
-		//Insert the new post
-		var post = {
-			userID: Meteor.user()._id,
-			title: $(e.target).find('[name=title]').val(),
-			pop_rating: '',
-			quality_rating: '',
-			doi: $(e.target).find('[name=doi]').val(),
-			author: $(e.target).find('[name=author]').val(),
-			publish_date: $(e.target).find('[name=publish_date]').val(),
-			publisher: $(e.target).find('[name=publisher]').val(),
-			categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
-		};
+			//Insert the new post
+			var post = {
+				userID: Meteor.user()._id,
+				title: $(e.target).find('[name=title]').val(),
+				pop_rating: 0,
+				quality_rating: 0,
+				doi: $(e.target).find('[name=doi]').val(),
+				author: $(e.target).find('[name=author]').val(),
+				publish_date: $(e.target).find('[name=publish_date]').val(),
+				publisher: $(e.target).find('[name=publisher]').val(),
+				categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
+			};
 
-		post._id = Posts.insert(post);
+			post._id = Posts.insert(post);
 
-		//Insert post/summary entry into pivot table
-		var post_sum = {
-			postID: post._id,
-			summaryID: summary._id
+			//Insert post/summary entry into pivot table
+			var post_sum = {
+				postID: post._id,
+				summaryID: summary._id
+			}
+
+			post_sum._id = Post_summary.insert(post_sum);
+
+			//Find any terms that already exist		
+			var terms_defined = $(e.target).find('[name=terms_used]');
+			var terms_used = $(e.target).find('[name=terms_defined]');
+
+			//Redirect to the postpage  
+			Router.go('postPage',post);
+		} else {
+			alert("Please fill in all required fields.");
 		}
-
-		post_sum._id = Post_summary.insert(post_sum);
-
-		//Find any terms that already exist		
-		var terms_defined = $(e.target).find('[name=terms_used]');
-		var terms_used = $(e.target).find('[name=terms_defined]');
-
-		//Redirect to the postpage  
-		Router.go('postPage',post);
 	},
 
 	'click .dropdown-menu li a': function(e) {
-		Session.set('categoryName',this.category_name);
+  		Session.set('categoryName',this.category_name);
 		
 		$('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>');
 	}
@@ -71,7 +82,13 @@ Template.submitPage.helpers({
 
 	'categories': function() {
 		return Categories.find();
-	}
+	},
+	'loggedIn': function(){
+        if(Meteor.user())
+            return true;
+        else 
+            return false;
+    },
 });
 
 //Returns the data for the autocomplete search function

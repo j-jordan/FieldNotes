@@ -7,7 +7,7 @@
    						<label for="title">Title:</label>
 	   				</div>
 	   				<div class="col-md-9">
-			  			<input type="text" id="title" name="title" value="" class="form-control" placeholder="Title">
+			  			<input type="text" id="title" name="title" value="" class="form-control required" placeholder="Title">
 	   				</div>
 	   			</div>
 
@@ -24,7 +24,7 @@
    							</button>
    							<ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
    								{{#each categories}}
-   									<li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{category_name}}">{{ category_name }}</a></li>
+									<li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{category_name}}">{{ category_name }}</a></li>
    								{{/each}}
 							</ul>
    						</div>
@@ -40,7 +40,7 @@
 								Summary:
 							</div>
 							<div class="panel-body">
-								<textarea rows = "6" cols= "70" name="summary" value=""></textarea>>
+								<textarea class="required" rows = "6" cols= "70" name="summary" value=""></textarea>>
 							</div>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 		   				<label for="title">DOI Link:</label>
 	   				</div>
 	   				<div class="col-md-9">
-		  				<input type="text" name="doi" value="" class="form-control" placeholder="**insert DOI example here**">
+		  				<input type="text" name="doi" value="" class="form-control required" placeholder="**insert DOI example here**">
 	   				</div>
 	   			</div>
 
@@ -99,7 +99,7 @@
 		   				<label for="author">Author: </label>
 	   				</div>
 	   				<div class="col-md-9">
-		  				<input type="text" name='author' value='' class="form-control" placeholder="" aria-describedby="basic-addon1">
+		  				<input type="text" name='author' value='' class="form-control required" placeholder="" aria-describedby="basic-addon1">
 	   				</div>		   				
 	   			</div>
 	   			<div class="row">
@@ -107,7 +107,7 @@
 	   					<label for="publish_date">Publisher: </label>	   					
 	   				</div>
 	   				<div class="col-md-9">
-	   					<input type="text" name="publisher" value="" class="form-control" placeholder="" aria-describedby="basic-addon1">
+	   					<input type="text" name="publisher" value="" class="form-control required" placeholder="" aria-describedby="basic-addon1">
 	   				</div>
 	   			</div>
 	   			<div class="row">
@@ -115,13 +115,15 @@
 	   					<label for="publish_date">Date Published: </label>	   					
 	   				</div>
 	   				<div class="col-md-9">
-	   					<input type="text" name="publish_date" value="" class="form-control" placeholder="" aria-describedby="basic-addon1">
+	   					<input type="text" name="publish_date" value="" class="form-control required" placeholder="" aria-describedby="basic-addon1">
 	   				</div>
 	   			</div>
 	   			
 	   			<div class="row"><p>&nbsp;</p></div>
 
-	   			<div><input	type='submit' value='Submit' class='btn btn-primary'/></div>
+	   			<div>
+  					<input	type='submit' value='Submit' class='btn btn-primary'
+  							disabled="{{#if loggedIn}}{{else}}true{{/if}}"/></div>
 			</form>			
 		</div>
 	</div>

@@ -1,0 +1,32 @@
+<template name="searchTemplate">
+	<div class="search-input">
+  		{{> esInput index=indexes placeholder="Search..." }}	
+	</div>
+	<div class="results-wrapper">
+		<ul>
+	        {{#esEach index="posts"}}
+	            <li>Post: <a href="{{pathFor 'postPage'}}"> {{title}} {{author}} </a></li>
+	        {{/esEach}}
+	    </ul>
+	    <ul>
+	    	{{#esEach index="dictionary"}}
+	    		<li>Dictionary Name: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
+	    	{{/esEach}}
+	    </ul>
+	    <ul>
+	    	{{#esEach index="terms"}}
+	    		<li>Term Name: <a href="{{pathFor 'termPage'}}"> {{term_name}} </a></li>
+	    	{{/esEach}}
+	    </ul>
+	</div>
+
+    {{> esLoadMoreButton index="posts"}}
+
+    {{#ifEsHasNoResults index="posts"}}
+        <div class="no-results">No results found!</div>
+    {{/ifEsHasNoResults}}
+
+    {{#ifEsIsSearching index="posts"}}
+            <div>Loading...</div>
+    {{/ifEsIsSearching}}
+</template>

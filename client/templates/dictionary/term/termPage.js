@@ -60,6 +60,15 @@ Template.termPage.helpers({
 			if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
 				return 'hidden';
 			}
+		} 
+		else {
+			return 'hidden';
+		}
+	},
+
+	'isGuest' : function(){
+		if(Meteor.user()){
+			return '';
 		} else {
 			return 'hidden';
 		}

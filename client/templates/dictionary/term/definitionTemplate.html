@@ -1,41 +1,16 @@
 <template name="definitionTemplate">
 	<div class="row">
-		<div class="col-md-7">
-			<div class="row">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						Definition:
-						<span name="deleteTerm" hidden>
-							<button class="btn btn-sm btn-danger deleteDefintionButton" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
-						</span>
-						<span>
-							{{> uneditableRateItTemplate}}
-						</span>
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div name="defintion">
-								<div class="col-md-8">
-									{{text}}
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4">
-								<label for="rating">Rate this definition: </label>
-								{{> rateitTemplate}}
-							</div>
-							<!-- <div class="col-md-5">
-								<span id="definitionID" class="glyphicon glyphicon-star"></span>
-								<span id="definitionID" class="glyphicon glyphicon-star"></span>
-								<span id="definitionID" class="glyphicon glyphicon-star"></span>
-								<span id="definitionID" class="glyphicon glyphicon-star-empty"></span>
-								<span id="definitionID" class="glyphicon glyphicon-star-empty"></span>
-							</div> -->
-						</div><!-- /row -->		
-					</div>	 
+		<div class="col-md-12">
+			{{> uneditableRateItTemplate}}		
+			<div class="well well-lg">
+				<div class="" {{isAdmin}}>
+					<button class="btn btn-sm btn-danger deleteDefinitionButton" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
 				</div>
-			</div><!-- /row -->
+				{{text}}
+				<div>
+					{{> rateitTemplate}}
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

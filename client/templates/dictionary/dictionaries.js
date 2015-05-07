@@ -1,6 +1,9 @@
+//Subscribe to the subset of dictionaries
+Meteor.subscribe("dictionaries");
+
 Template.dictionaries.helpers({
 	'dictionaries': function(){
-		return Dictionary.find();
+		return Dictionaries.find();
 	},
     
 	'isAdmin' : function(){
@@ -43,7 +46,7 @@ Template.dictionaries.events({
 
     'click .deleteDictionary': function(e){
         if(confirm("Are you sure you want to delete this dictionary?")){
-            Dictionary.remove(this._id);
+            Dictionaries.remove(this._id);
         }
     }
 });

@@ -1,37 +1,8 @@
 
 <template name="postItem">
  <div class="row">
-    <style>
-      #voteArrows{
-        padding-top: 15px;
-        padding-left: 100px;
-        padding-right: 25px;
-        border-left: 75px;
-        font-size: 32px;
-      }
-      .glyphicon.glyphicon-arrow-up{
-        
-        vertical-align: middle;
-      }
-      .glyphicon.glyphicon-arrow-down{
-       
-        vertical-align: middle;
-      }
-    </style>
-    <div class="col-md-1" id="voteArrows">
-        <div class="row">
-          <button name="upArrow{{_id}}" class="btn-default">
-            <span name="upArrowButton{{_id}}" class="upArrowButton glyphicon glyphicon-arrow-up"></span>
-          </button>
-        </div>
-        <div class="row">
-          <button name="downArrow{{_id}}" class="btn-default">
-            <span name="downArrowButton{{_id}}" class="downArrowButton glyphicon glyphicon-arrow-down"></span>
-          </button>
-        </div>
-    </div>  
-    <div class="col-md-8">
-      <div class="panel panel-primary ">
+    <div class="col-md-11">
+      <div class="panel panel-primary">
         <div class="panel-heading">
           <a href="{{pathFor 'postPage'}}" class="panel-title">{{title}}</a>
           <span style="float: right">Rating: {{pop_rating}}</span>
@@ -50,7 +21,7 @@
           </div>          
           <div class="row">
             <div class="col-md-2">
-              <a href="">comments</a>
+              <a href="{{pathFor 'postPage' hash='comments'}}">comments</a>
             </div>
             <div class="col-md-1">
               <span>Rating: </span>
@@ -64,6 +35,18 @@
           </div>
         </div>
       </div>
-    </div> <!-- 2nd column -->     
+    </div> <!-- 2nd column -->
+    <div class="col-md-1" id="voteArrows" style="height: inherit">
+        <div class="row">
+          <button name="upArrow{{_id}}" class="btn btn-default upArrowButton">
+            <span name="upArrowButton{{_id}}" class="glyphicon glyphicon-arrow-up"></span>
+          </button>
+        </div>
+        <div class="row">
+          <button name="downArrow{{_id}}" class="btn btn-default downArrowButton">
+            <span name="downArrowButton{{_id}}" class="glyphicon glyphicon-arrow-down"></span>
+          </button>
+        </div>
+    </div>
   </div> <!-- snapshot -->
 </template>

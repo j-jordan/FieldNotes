@@ -1,4 +1,6 @@
-Template.postsList.helpers({
+Meteor.subscribe('Posts');
+Meteor.subscribe('getUserNames');
 
-	Post: Posts.find()
+Template.postsList.helpers({
+	Post: function(){console.log(Posts.find().fetch()); return Posts.find(); }
 });

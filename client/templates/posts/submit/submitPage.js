@@ -1,3 +1,6 @@
+Meteor.subscribe('categories');
+
+
 /**
  * Handles the submit form action for submitPage.html
  *

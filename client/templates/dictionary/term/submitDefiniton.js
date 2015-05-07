@@ -7,7 +7,8 @@ Template.submitDefinition.events({
 		var definition = {
 			userID: Meteor.user()._id,
 			text: $(e.target).find('[name=definition]').val(),
-			rating: ''
+			quality_rating: 0,
+			numRaters: 0
 		};
 
 		definition._id = Definitions.insert(definition);

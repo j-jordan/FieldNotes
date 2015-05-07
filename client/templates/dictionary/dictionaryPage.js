@@ -1,5 +1,9 @@
+Meteor.subscribe('dictionaryPageTerms');
+
 Template.dictionaryPage.helpers({
 	'terms': function(dictID) {
+        Meteor.subscribe('dictionaryPageTerms', dictID);
+
 		return Terms.find({dictionaryID: dictID});
 	},
     
@@ -21,7 +25,7 @@ Template.dictionaryPage.events({
 
         $editableButton.toggleClass('edit');
 
-        if($editableButton.hasClass('edit')){
+        if($editableButton.hasClass('edit')){   
             $('[name=dictName]').attr('hidden','true');
             $('[name=termLink]').attr('hidden','true');
             $('[name=editableInputField').removeAttr('hidden');
@@ -52,11 +56,11 @@ Template.dictionaryPage.events({
 
     'submit form': function(e){
     	e.preventDefault();
-        console.log($(e.target).find('[id=name]').val());
+
     	var DictionaryData = {
     		name : $(e.target).find('[id=name]').val()
     	};
 
-    	Dictionary.update(this._id,DictionaryData);
+    	Dictionaries.update(this._id,DictionaryData);
     }
 });

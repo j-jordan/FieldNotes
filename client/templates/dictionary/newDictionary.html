@@ -13,7 +13,7 @@
 	   				<label for="dictionaryname">Dictionary Name: </label>
 		   		</div>
 		   		<div class="col-md-6">
-				  	<input type="text" id="dictionaryname" ng-model="nameValue" name="title" value="" class="form-control" placeholder="Name">
+				  	<input type="text" id="dictionaryname" ng-model="nameValue" name="title" value="" class="required form-control" placeholder="Name">
 		   		</div>
 		</div>
 		<div class="row"><p></p></div>
@@ -31,10 +31,10 @@
 		{{#each getArray}}
 		<div class="row" id="row{{index}}">
 			<div class="col-md-4">
-				<input type="text" id="" name="dynamicVarName[]" value="" class="form-control" placeholder="Variable Name">
+				<input type="text" id="" name="dynamicVarName[]" value="" class="required form-control" placeholder="Variable Name">
 			</div>
 			<div class="col-md-4">
-				<input type="text" id="" name="variableType[]" value="" class="form-control" placeholder="Default set to string">
+				<input type="text" id="" name="variableType[]" value="" class="required form-control" placeholder="Default set to string">
 			</div>
 			<div class="col-md-1 text-right">
 				<button type="button" class='{{#if isLastRow index }} btn btn-success {{else}} btn btn-danger{{/if}}'

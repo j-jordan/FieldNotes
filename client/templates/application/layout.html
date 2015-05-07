@@ -1,32 +1,7 @@
+ 
 <template name="layout">
+<script rel="stylesheet" type="text/css" src="layout.css"></script>
   <div class="navbar navbar-default navbar-inverse navbar-static-top" id="navbar">
-    <style>
-      .body  {padding-top:7px}
-
-      #jumbo {
-        font-size: 40px;
-        padding: 10px;
-        color:#3854A8; 
-        font-family:Trebuchet MS;
-        text-align: right;
-      }
-      #navbar {
-        border-bottom: 0px;
-        margin-bottom: 0px;
-      }
-      #navTabs {
-        font-weight: bold;
-        font-size: 34px;
-        font-family: Trebuchet MS;
-        padding: 0px;
-      }
-      #siteTitle {
-        font-size: 40px;
-        padding: 10px;
-        color:#FFFFFF; 
-        font-family:Trebuchet MS;
-      }
-    </style>
     <div class="container">
       <div class="navbar-header">
         <span class="navbar-left"><a href="{{pathFor 'postsList'}}" id="siteTitle">FieldNotes</a></span>
@@ -70,7 +45,7 @@
   </div> <!-- /JUMBO TRON -->
   <section>
       <div class="container">
-          {{> yield}}
+          {{> yield}}              
       </div>
   </section>
 </template>

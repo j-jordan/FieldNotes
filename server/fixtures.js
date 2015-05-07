@@ -46,38 +46,38 @@ if(Meteor.users.find().count() === 0) {
 }
 var UsersData = Meteor.users.find().fetch();
 
-if(Dictionary.find().count() === 0) {
-	Dictionary.insert({
+if(Dictionaries.find().count() === 0) {
+	Dictionaries.insert({
 		name: 'Algorithms'
 	});
-	Dictionary.insert({
+	Dictionaries.insert({
 		name: 'Data Structures'
 	});
-	Dictionary.insert({
+	Dictionaries.insert({
 		name: 'Artificial Intelligence'
 	});
-	Dictionary.insert({
+	Dictionaries.insert({
 		name: 'Discrete Math'
 	});
 }
-var DictionaryData = Dictionary.find().fetch();
+var DictionaryData = Dictionaries.find().fetch();
 
 if(Terms.find().count() === 0) {
 	Terms.insert({
 		term_name : 'Binary Tree',
-		dictionaryID : Dictionary.find().fetch()[0]['_id']
+		dictionaryID : Dictionaries.find().fetch()[0]['_id']
 	});
 	Terms.insert({
 		term_name : 'Variable',
-		dictionaryID : Dictionary.find().fetch()[1]['_id']
+		dictionaryID : Dictionaries.find().fetch()[1]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by contradiction',
-		dictionaryID : Dictionary.find().fetch()[3]['_id']
+		dictionaryID : Dictionaries.find().fetch()[3]['_id']
 	});
 	Terms.insert({
 		term_name : 'Proof by induction',
-		dictionaryID : Dictionary.find().fetch()[2]['_id']
+		dictionaryID : Dictionaries.find().fetch()[2]['_id']
 	});
 }
 var TermsData = Terms.find().fetch();
@@ -120,6 +120,7 @@ if(Posts.find().count() === 0) {
 		numRaters : 20,
 		doi : '12423' ,
 		author : "Thom Yorke",
+		publisher : "Kendrick Lamar",
 		publish_date : "7/4/2010",
 		categoryID : Categories.find().fetch()[0]['_id']
 	});
@@ -131,6 +132,7 @@ if(Posts.find().count() === 0) {
 		numRaters : 15,
 		doi : '6789' ,
 		author : "Elon Musk",
+		publisher : "Tree House",
 		publish_date : "7/5/2010",
 		categoryID : Categories.find().fetch()[4]['_id']
 	});
@@ -142,6 +144,7 @@ if(Posts.find().count() === 0) {
 		numRaters : 10,
 		doi : '12423' ,
 		author : "Jane Goodall",
+		publisher : "Kony 2012",
 		publish_date : "7/2/2010",
 		categoryID : Categories.find().fetch()[1]['_id']
 
@@ -192,8 +195,8 @@ if(Comments.find().count() === 0) {
     	date : "3/3/2015"
 	});
 }
-var CommentsData = Comments.find().fetch();
 
+var CommentsData = Comments.find().fetch();
 
 if(Summaries.find().count() === 0) {
 	Summaries.insert({
@@ -212,6 +215,12 @@ if(Summaries.find().count() === 0) {
 		userID : UsersData[2]['_id'],
 		text: "THIS IS A SUMMARY.",
 		quality_rating : 1,
+		numRaters : 6
+	});
+	Summaries.insert({
+		userID : UsersData[2]['_id'],
+		text: "Test.",
+		quality_rating : 4.2,
 		numRaters : 6
 	});
 }
@@ -295,10 +304,6 @@ if(Post_terms_defined.find().count() === 0) {
 //Terms used pivot tables
 if(Post_terms_used.find().count() === 0) {
 	Post_terms_used.insert({
-		postID : PostsData[0]['_id'],
-		termID : TermsData[0]['_id']
-	});
-	Post_terms_used.insert({
         postID : PostsData[0]['_id'],
         termID : TermsData[1]['_id']
     });
@@ -337,6 +342,10 @@ if(Post_summary.find().count() === 0) {
 	Post_summary.insert({
 		postID : PostsData[1]['_id'],
 		summaryID : SummaryData[2]['_id']
+	});
+	Post_summary.insert({
+		postID : PostsData[0]['_id'],
+		summaryID : SummaryData[3]['_id']
 	});
 }
 

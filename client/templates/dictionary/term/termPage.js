@@ -1,38 +1,40 @@
 var label = [];
 var label_values = [];
+var showAllDefinitions = new ReactiveVar(false);
+var definitionsShown = false;
+
+Template.termPage.rendered = function(){
+	definitionsShown = false;
+	showAllDefinitions.set(false);
+	
+	Meteor.subscribe('dictionaryPageTerms', Session.get('dictionaryID'));
+}
 
 Template.termPage.helpers({
-	'getDynamicFields': function(dictId) {
-		Session.set("dictionaryID", dictId);
+	'getDynamicFields': function(_dictionaryID){
+		if(typeof _dictionaryID !== null)
+			Session.set('dictionaryID', _dictionaryID);
 	},
-
 	'getLabelValue': function(termID) {
 		Session.set("termID", termID);			
 	},
 
-	'labels': function(){
-		var dictId = Session.get("dictionaryID");
+	'labels': function(dictionaryID){
 
-		var adminLabelIDs = Admin_term_fields.find({dictionaryID: dictId}, {fields: {'AdminlabelsID': 1}}).fetch();
-		label = [];
-		for (var i = adminLabelIDs.length - 1; i >= 0; i--) {
-			label.push(Adminlabels.findOne({_id: adminLabelIDs[i]['AdminlabelsID']}));
-		}
+		//Subscribe to the subset of admin_term_fields for this dictionary
+		Meteor.subscribe('admin_fields', dictionaryID);
 
-		return label;
+		return Adminlabels.find({});
 	},
 
 	'labelDescription' : function(labelId){
 		
 		var termID = Session.get("termID");
 
-		label_values = [];
+		//Subscribe to the subset of term_label_values for this term
+		Meteor.subscribe('labelValuesForTerms',termID);
 
-		for (var i=0;i < label.length; i++){
-			var labelID = label[i]._id;
-
-			label_values.push(Term_label_values.findOne({termID: termID, adminlabelsID: labelID}));
-		}
+		label_values = Term_label_values.find({}).fetch();
 
 		for(var i = 0; i < label_values.length; i++)
 		{
@@ -41,6 +43,21 @@ Template.termPage.helpers({
 				return label_values[i].value;
 			}
 		}
+	},
+
+	'findDefinitions' : function(termID){
+	
+		//Subscribe to the subset of definitions for this term
+		Meteor.subscribe('allTermDefinitions', termID);
+
+    	if(showAllDefinitions.get()) {
+    		
+    		return Definitions.find({});
+    	}
+   		else {
+
+			return Definitions.find({}, {sort: {quality_rating: -1}, limit: 1});
+    	}
 	},
 
 	'getDefinitions': function(termID) {
@@ -115,7 +132,7 @@ Template.termPage.events({
 
 	},
 
-	'click .deleteDefintionButton': function(e){
+	'click .deleteDefinitionButton': function(e){
 
 		e.preventDefault();
 
@@ -164,6 +181,22 @@ Template.termPage.events({
 			var id = Term_label_values.findOne({adminlabelsID: labelsID[index], termID: termID})._id;
 			Term_label_values.update(id, updateValueData);
 		});
+	},
+
+	'click .definition-button': function(e){
+        var $definitionButton = $('.definition-button');
+
+        definitionsShown = !definitionsShown;
+
+        showAllDefinitions.set(definitionsShown);  
+
+        $definitionButton.toggleClass('show');
+
+        if($definitionButton.hasClass('show')){
+            $definitionButton.text('Show top Definition');
+        } else {
+            $definitionButton.text('Show all Definitions');
+        }
 	}
 
 });

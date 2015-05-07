@@ -1,5 +1,6 @@
 Template.postItem.helpers({
 	'getUserName': function(userID) {
+		console.log(userID);
     	return Meteor.users.findOne(userID).username;
     },
 

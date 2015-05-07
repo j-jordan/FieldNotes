@@ -21,6 +21,8 @@ Template.submitSummary.events({
 
 		summary._id = Summaries.insert(summary);
 
+		console.log(summary);
+
 		
 		//Insert post/summary entry into pivot table
 		var post_sum = {
@@ -29,7 +31,7 @@ Template.submitSummary.events({
 		}
 
 		post_sum._id = Post_summary.insert(post_sum);
-
+		console.log(post_sum);
 		//Redirect to the postpage  
 		Router.go('/');
 	}

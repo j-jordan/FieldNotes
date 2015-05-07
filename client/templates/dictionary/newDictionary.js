@@ -48,43 +48,54 @@ Template.newDictionary.events({
 	'submit form': function(e) {
 		e.preventDefault();
 
-		var dictionary = {
-			name: $(e.target).find('[name=title]').val()
-		};
+		var validated = true;
 
-		dictionary._id = Dictionary.insert(dictionary);
+		$(e.target).find('.required').map(function(index, object){			
+			if(this.value === '')
+				validated = false;
+		})
 
-		var labelNames = [];
-		var labelDescription = [];
+		if(validated){
+			var dictionary = {
+				name: $(e.target).find('[name=title]').val()
+			};
 
-		$(e.target).find('[name="dynamicVarName[]"]').each(function() {
-			//use this.val() to get the values of each
-			labelNames.push($(this).val());
-		});
+			dictionary._id = Dictionary.insert(dictionary);
 
-		$(e.target).find('[name="variableType[]"]').each(function() {
-			//use this.val() to get the values of each name
-			labelDescription.push($(this).val());
-		});
+			var labelNames = [];
+			var labelDescription = [];
 
-		for(var i = 0; i < labelNames.length; i++)
-		{
-			var adminLabel = {
-				label : labelNames[i],
-				description : labelDescription[i]
+			$(e.target).find('[name="dynamicVarName[]"]').each(function() {
+				//use this.val() to get the values of each
+				labelNames.push($(this).val());
+			});
+
+			$(e.target).find('[name="variableType[]"]').each(function() {
+				//use this.val() to get the values of each name
+				labelDescription.push($(this).val());
+			});
+
+			for(var i = 0; i < labelNames.length; i++)
+			{
+				var adminLabel = {
+					label : labelNames[i],
+					description : labelDescription[i]
+				}
+
+				adminLabel._id = Adminlabels.insert(adminLabel);
+
+				admin_term_field = {
+					dictionaryID: dictionary._id,
+					AdminlabelsID: adminLabel._id
+				}
+
+				Admin_term_fields.insert(admin_term_field);
 			}
 
-			adminLabel._id = Adminlabels.insert(adminLabel);
-
-			admin_term_field = {
-				dictionaryID: dictionary._id,
-				AdminlabelsID: adminLabel._id
-			}
-
-			Admin_term_fields.insert(admin_term_field);
+			Router.go("/dictionary");
+		}else{
+			alert("Please fill out all required fields");
 		}
-
-		Router.go("/dictionary");
 	}
 })
 

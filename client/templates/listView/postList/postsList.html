@@ -1,12 +1,7 @@
 <template name="postsList">
-<div class="row">
 	<a class="btn btn-default" href="{{pathFor 'summaryList'}}">Summaries</a>
-</div>
-
-  {{#each Post}}
-      {{> postItem}}
-  {{/each}}
-
-  <button class="btn btn-info">NEXT</button>
-      PAGINATION
+	
+	{{#each Post}}
+		{{> postItem}}
+	{{/each}}
 </template>

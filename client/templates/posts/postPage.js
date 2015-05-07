@@ -1,10 +1,13 @@
-// var userName = Users.find().fetch()[]['username'];
+//PostPage flags for toggeling summaries
 var showAllSummaries = new ReactiveVar(false);
 var summeriesShown = false;
 
-var listOfSummaries = [];
 
-
+Template.postPage.rendered = function() {
+    summeriesShown = false;
+    showAllSummaries.set(false);
+}
+ 
 Template.postPage.events({
 	"click .summary-button": function(event, template) {
         
@@ -30,7 +33,8 @@ Template.postPage.events({
         $editableButton.toggleClass('edit');
 
         if($editableButton.hasClass('edit')){
-            $('[name=editableInputField]').removeAttr('disabled');
+            $('[name=editableInputField]').attr('type','text');
+            $('.viewSpan').attr('hidden','true');
 
             $editableButton.removeClass('btn-warning')
             $editableButton.addClass('btn-success');
@@ -38,7 +42,9 @@ Template.postPage.events({
             $editableButton.attr('type','button');
             
         } else {
-            $('[name=editableInputField]').attr('disabled','true');
+            $('[name=editableInputField]').attr('type','hidden');
+            $('.viewSpan').removeAttr('hidden');
+
             $editableButton.removeClass('btn-success');
             $editableButton.addClass('btn-warning');
             $editableButton.html('Edit Post <span class="glyphicon glyphicon-pencil"></span>');
@@ -46,6 +52,31 @@ Template.postPage.events({
         }
 
     }, 
+
+    'beforerated .postDataRateItTemplate': function(event,value){
+
+        if(! $('[id=rateitDiv'+this.postData._id+']').hasClass("summaryRating")){
+
+            var postID = this.postData._id;
+            
+            var foundPost = Posts.findOne(postID);
+
+            var oldProduct = foundPost.quality_rating * foundPost.numRaters;
+
+            var updatedNumRaters = foundPost.numRaters + 1;
+
+            $("#rateitDiv"+this.postData._id).bind('rated', function (event, value) { 
+
+                var newProduct = oldProduct + value;
+
+                var updatedValue = newProduct / updatedNumRaters;
+
+                Posts.update({_id: postID}, {$set: {quality_rating: updatedValue, numRaters: updatedNumRaters}});
+
+                $('#uneditableRateItTemplate').rateit('value',updatedValue);
+            });
+        }
+    },
 
     'click .deleteSummary': function(e) {
         if(confirm("Are you sure you want to delete this summary?")){
@@ -63,42 +94,18 @@ Template.postPage.events({
 
         var post = {
             userID: Meteor.user()._id,
-            title: this.title,
-            pop_rating: this.pop_rating,
-            quality_rating: this.quality_rating,
+            title: this.postData.title,
+            pop_rating: this.postData.pop_rating,
+            quality_rating: this.postData.quality_rating,
             doi: $(e.target).find('[id=doi]').val(),
             author: $(e.target).find('[id=author]').val(),
+            publisher : $(e.target).find('[id=publisher]').val(),
             publish_date: $(e.target).find('[id=publish_date]').val(),
             publisher: $(e.target).find('[id=publisher]').val(),
-            categoryID: this.categoryID
+            categoryID: this.postData.categoryID
         };
 
-        Posts.update(this._id,post);
-    },
-
-    'rated': function(event,value){
-
-            if(! $('[id=rateitDiv'+this._id+']').hasClass("summaryRating")){
-
-                var postID = this._id;
-
-                var foundPost = Posts.findOne(postID);
-
-                var oldProduct = foundPost.quality_rating * foundPost.numRaters;
-
-                var updatedNumRaters = foundPost.numRaters + 1;
-
-                $("#rateitDiv"+postID).bind('rated', function (event, value) { 
-                    
-                    var newProduct = oldProduct + value;
-
-                    var updatedValue = newProduct / updatedNumRaters;
-
-                    console.log(updatedValue, updatedNumRaters);
-
-                    Posts.update({_id: postID}, {$set: {quality_rating: updatedValue, numRaters: updatedNumRaters}});
-                });     
-            } 
+        Posts.update(this.postData._id,post);
     }
 });
 
@@ -110,32 +117,46 @@ Template.postPage.helpers({
             return false;
     },
 
-    'findUser': function(userID) {
-        return Meteor.users.findOne(userID).username;
+    'findUser': function(_userID) {
+
+        //Find the username that matches the passed in _userID
+        return Meteor.users.findOne(_userID).username;
     },
 
-    'findSummaries': function(pageID) {
-    	var summaries=[];
-    	if(showAllSummaries.get()) {
-    		var summaryID = Post_summary.find({postID: pageID}).fetch();
+    'findSummaries': function(pageID, summaryID) {
 
-    		for (var i = summaryID.length - 1; i >= 0; i--) {		
-    		   	summaries.push(Summaries.findOne(summaryID[i].summaryID));
-    		}  		
-    		return summaries;
+        //Subscribe to the subset of summaries that belong to this post
+        Meteor.subscribe('getSummaries', pageID);
+
+        //showAllSummaries is reactiveBoolean if you want to show all summaries
+    	if(showAllSummaries.get()) {
+
+    		return Summaries.find();
     	}
    		else {
-    		var summaryID = Post_summary.findOne({postID: pageID}).summaryID;
-			return Summaries.find({_id: summaryID});
+
+            //if summaryID is undefined, there is no specific summary to load -> find the top-rated summary through the post id
+            if(typeof summaryID === 'undefined'){
+                return Summaries.find({}, {sort: {quality_rating: -1}, limit: 1});
+
+            } else {
+                return Summaries.find({_id: summaryID});
+            }    		
     	}
     },
 
     comments: function() {
-        return Comments.find({postID: this._id});
+
+        //Subscribe to the subset of comments that belong to this post
+        Meteor.subscribe('getComments', this.postData._id);
+
+        return Comments.find();
     }, 
 
     'isAdmin' : function(){
+
         if(Meteor.user()){
+            //if your user is an admin
             if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
                 return 'hidden';
             }
@@ -144,32 +165,36 @@ Template.postPage.helpers({
         }
     },
 
-    'terms_used': function(postId){
+    'terms_used': function(_postID){
 
-        var termArray = [];     
+        //Subscribe to the subset of terms used in this paper
+        Meteor.subscribe('terms', _postID);
+        Meteor.subscribe('terms_used', _postID);
 
-        //Find all term ids for the passed in postId
-        var termIdArray = Post_terms_used.find({postID: postId}, {fields: {_id: 0,postID: 0}, reactive: 0}).fetch();
-        
-        //Strip the __proto__ object
-        for (var i = termIdArray.length - 1; i >= 0; i--) {
-            termArray.push(termIdArray[i].termID);
+        var term_used_IDs = Post_terms_used.find().fetch();
+
+        var termsUsed = [];
+
+        for (var i = term_used_IDs.length - 1; i >= 0; i--) {
+            termsUsed.push(Terms.findOne(term_used_IDs[i].termID));
         };
 
-        return Terms.find({_id: {$in: termArray}});
+        return termsUsed;
     },
 
-    'terms_defined': function(postId){
-        var termArray = [];     
-
-        //Find all term ids for the passed in postId
-        var termIdArray = Post_terms_defined.find({postID: postId}, {fields: {_id: 0,postID: 0}, reactive: 0}).fetch();
+    'terms_defined': function(_postID){
         
-        //Strip the __proto__ object
-        for (var i = termIdArray.length - 1; i >= 0; i--) {
-            termArray.push(termIdArray[i].termID);
-        };
+        //Subscribe to the subset of terms defined in this paper
+        Meteor.subscribe('terms_defined', _postID);
 
-        return Terms.find({_id: {$in: termArray}});
+        var term_defined_IDs = Post_terms_defined.find().fetch();
+
+        var termsDefined = [];
+
+        for (var i = term_defined_IDs.length - 1; i >= 0; i--) {
+            termsDefined.push(Terms.findOne(term_defined_IDs[i].termID));
+        };
+        
+        return termsDefined;
     }
 });

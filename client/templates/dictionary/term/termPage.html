@@ -1,16 +1,17 @@
 <template name='termPage'>
-	<div class="container">
+		<div class='col-md-2'></div>
+		<div class="col-md-8">
 		<form>
 			<div class="row">				
 				<div class="col-md-9">
 					<div name="uneditableField">
-						<div class="col-md-12" id="titleID">
-							<h2>Definition(s) for:    {{term_name}}</h2>
+						<div id="titleID">
+							<h2>Definition(s) for:    {{term_name}}</h2>							
 						</div>
 					</div>
 					<div name="editableInputField" hidden>
-						<div class="col-md-3">
-							<h3>Definition(s) For:</h3>
+						<div class="col-md-6">
+							<h3 style="margin-top: 5px;">Definition(s) For:</h3>
 						</div>
 						<div class="col-md-6">
 							<input type="text" class="form-control" id="term_name" name="term_name" value="{{ term_name }}"/>
@@ -23,20 +24,28 @@
 		          		<span class="glyphicon glyphicon-pencil"></span></button>
 					</div>
 				</div>				
-			</div><!-- /row -->
-			<div class="row" {{isGuest}}>			
+			</div>
+			<div class="row" {{isGuest}}>
 				<div class="col-md-5">
 					<a class="btn btn-default" href="{{ pathFor 'submitDefinition'}}">Click here to submit a new defintion</a>
 				</div>
+				<div class="col-md-4">
+      				<button class="definition-button btn btn-default" type="button" style="float: right" id="showAllDefinitions">Show all Definitions</button>
+    			</div>
 			</div>
-			{{#each getDefinitions _id}}
-	          	{{> definitionTemplate}} 
-	      	{{/each}}
+			<div class="row"><p></p></div>
+			<div class="row">
+				<div class="col-md-12">
+					{{#each findDefinitions _id}}
+		          		{{> definitionTemplate}}
+	      			{{/each}}
+      			</div>
+          	</div>	 
 
-			{{getDynamicFields dictionaryID}}
+      		{{getDynamicFields dictionaryID}}
 			{{getLabelValue _id}}
-			
-			{{#each labels}}
+
+			{{#each labels dictionaryID}}
 				<div class="row">
 					<input type="hidden" name="adminLabelID" value="{{_id}}"/>
 					<div class="col-md-3">
@@ -49,13 +58,13 @@
 					</div>
 					<div name="editableInputField" hidden>
 						<div class="col-md-9">
-							<input type="text" id="complexityID" name="labelValue" value="{{labelDescription _id}}" />
+							<input class="form-control" type="text" id="complexityID" name="labelValue" value="{{labelDescription _id}}" />
 						</div>
 					</div>
 				</div><!-- /row -->
 				<!--{{> dynamicFieldWithValue term_name}} -->
 			{{/each}}
 		</form>
-	</div><!-- /container -->
+		</div>
 </template>
 

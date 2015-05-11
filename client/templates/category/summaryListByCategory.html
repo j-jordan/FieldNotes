@@ -1,7 +1,7 @@
 <template	name="summaryListByCategory">
 	<a class="btn btn-default" href="{{pathFor 'categoryPage' }}">Papers</a>
 
-
+	<!-- Loop over the results from the function summaries(_id) -->
 	{{#each summaries _id}}
 		{{> summaryItem}}
 	{{/each}}

@@ -5,3 +5,14 @@ Template.registerHelper('loggedIn', function(){
 	else
 		return false;
 });
+
+Template.registerHelper('isAdmin', function(){
+	if(Meteor.user()){
+		if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
+			return 'hidden';
+		}
+	} 
+    else {
+		return 'hidden';
+	}
+})

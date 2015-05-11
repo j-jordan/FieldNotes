@@ -1,17 +1,5 @@
-Template.summaryTemplate.helpers({
-	'isAdmin' : function(){
-		if(Meteor.user()){
-			if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
-				return 'hidden';
-			}
-		} else {
-			return 'hidden';
-		}
-	}
-});
-
 Template.summaryTemplate.events({
-
+	//Rated event for summaries
     'rated': function(event,value){
 
     		$('[id=rateitDiv' + this._id +']').attr("class","rateit summaryRating");
@@ -24,6 +12,7 @@ Template.summaryTemplate.events({
 
 	        var updatedNumRaters = foundSummary.numRaters + 1;
 
+	        //Rebind the rated event
 	        $("#rateitDiv"+summaryID).bind('rated', function (event, value) { 
 	            
 	            var newProduct = oldProduct + value;

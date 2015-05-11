@@ -1,10 +1,7 @@
-var rootCategories = Categories.find({ parentID : 0});
-
-
 Template.layout.helpers({
-
-	categories : rootCategories,
-
-	
+	//Return all level 0 categories
+	categories : function(){
+		return Categories.find({parentID: 0})
+	}	
 });
 

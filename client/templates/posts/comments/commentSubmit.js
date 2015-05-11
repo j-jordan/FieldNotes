@@ -1,7 +1,10 @@
 Template.commentSubmit.events({
+	//Submit form for creating a comment
 	'submit form': function(e, template){
+		//Prevent the default form actions
 		e.preventDefault();
 
+		//Update data. Some fields such as date still hardcoded.
 		var $body = $(e.target).find('[name=body]');
 		var comment = {
 			text: $body.val(),
@@ -12,9 +15,10 @@ Template.commentSubmit.events({
 			userID: Meteor.user()._id
 		};
 
+		//Insert the comment
 		Comments.insert(comment);
 
+		//Reset the comment box
 		$body.val('');
-
 	}
 });

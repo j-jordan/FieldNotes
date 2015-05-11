@@ -1,6 +1,8 @@
+//Session variables used to keep track of rows. The value is arbitrary, i.e it has no significance
 Session.set("labelRows", [0]);
 
 Template.newDictionary.helpers({
+	//Is this the last row of labels. Returns true or false
 	'isLastRow': function(index) {
 		var labelRow = Session.get("labelRows");
 
@@ -13,14 +15,23 @@ Template.newDictionary.helpers({
 			return false;
 	},
 
+	//Return session variable labelRows
 	'getLabelRows': function(e) {
 		return Session.get("labelRows");
 	},
 
+	//getArray is used to create the correct number of rows in the new dictionary page
+	//the returned object of value and index are used to differentiate each HTML element
 	'getArray': function() {
 		var self = this;
+
+		//Get labelRows from the session. If it's empty instantiate to empty array
 		self.myArray = Session.get('labelRows') || [];
+
+		//Map each element of the array to the function
 		return _.map(self.myArray, function(value,index){
+
+			//Return the objects value and index in an object
 			return {value: value, index: index};
 		});
 	}
@@ -28,88 +39,96 @@ Template.newDictionary.helpers({
 
 Template.newDictionary.events({
 
+	//Click event to add a row
 	'click #increaseRow ': function(event) {
+		//Get the labelRows session variable and add a new element to it. Doesn't matter what
 		var row = Session.get('labelRows');
 		row.push(0);
 
+		//Update the variable
 		Session.set('labelRows', row);
 	},
 
+	//Click event to delete a row
 	'click #deleteRow': function(event) {
+		//Get the index of the clicked row
 		var index = this.index;
-		var findArg = "[id=row" + index + "]";
-/*		var temp = Session.get('labelRows');
-		var findArg = "[id=row" + index + "]";
-		temp.splice(0,1);
-		Session.set('labelRows', temp);
-*/		console.log($('#row'+index).remove())
+		
+		//Remove the approriate row
+		$('#row'+index).remove()
 	},
 
+	//Submit form for new dictionary
 	'submit form': function(e) {
+		//Prevent the forms default action
 		e.preventDefault();
 
+		//Validation flag
 		var validated = true;
 
+		//Map function for each element that is required.
 		$(e.target).find('.required').map(function(index, object){			
+			//If any element doesn't have a value, we should fail validation
 			if(this.value === '')
 				validated = false;
 		})
 
+		//If everything passed validation
 		if(validated){
+
+			//update data
 			var dictionary = {
 				name: $(e.target).find('[name=title]').val()
 			};
 
-			dictionary._id = Dictionary.insert(dictionary);
+			//update
+			dictionary._id = Dictionaries.insert(dictionary);
 
+			//Update data for label names
 			var labelNames = [];
+			//Update data for label descriptions
 			var labelDescription = [];
 
+			//Function for each element that has name dynamicVarName
 			$(e.target).find('[name="dynamicVarName[]"]').each(function() {
 				//use this.val() to get the values of each
 				labelNames.push($(this).val());
 			});
 
+			//Function for each element that has name variableType
 			$(e.target).find('[name="variableType[]"]').each(function() {
 				//use this.val() to get the values of each name
 				labelDescription.push($(this).val());
 			});
 
+			//Update
 			for(var i = 0; i < labelNames.length; i++)
 			{
+				//Update data. Grab the positions out of label names/description
 				var adminLabel = {
 					label : labelNames[i],
 					description : labelDescription[i]
-				}
+				};
 
+				//Update
 				adminLabel._id = Adminlabels.insert(adminLabel);
 
+				//Update data. Get the id's from each update and insert into pivot table
 				admin_term_field = {
 					dictionaryID: dictionary._id,
 					AdminlabelsID: adminLabel._id
 				}
 
+				//Update
 				Admin_term_fields.insert(admin_term_field);
 			}
 
+			//Route back to the list of dictionaries to see you newly created dictionary
 			Router.go("/dictionary");
-		}else{
+		}
+		//Validation failed
+		else{
 			alert("Please fill out all required fields");
 		}
 	}
-})
-
-
-Handlebars.registerHelper('each_with_index', function(cursor, options){
-	var fn = options.fn, inverse = options.inverse;
-	var ret = "";
-	var idx = 0;
-
-	cursor.forEach(function(item){
-		idx++;
-		item.index = idx;
-		ret+=fn(item);
-	});
-	return ret;
-})
-
+});

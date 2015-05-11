@@ -1,33 +1,43 @@
 var label = [];
 var label_values = [];
+
+//Instantiate the reactive boolean variable
 var showAllDefinitions = new ReactiveVar(false);
 var definitionsShown = false;
 
+//Everytime termpage template is rendered
 Template.termPage.rendered = function(){
+
+	//Instantiate the flags back to false
 	definitionsShown = false;
 	showAllDefinitions.set(false);
 	
+	//Get the termID from the URL because Terms collection somehow resets to [] on refresh
+	//But we still have the ID in the URL
 	var url = Router.current().url,
 	delimeter = '/',
 	start = 1,
 	tokens = url.split(delimeter).slice(start),
 	result = tokens.join(delimeter);
-
 	var termID =  tokens[tokens.length-1];
 
+	//Resubscribe with the ID
 	Meteor.subscribe('term', termID);
 }
 
 Template.termPage.helpers({
+	//Set the session variable dictionaryID
 	'getDynamicFields': function(_dictionaryID){
 		if(_dictionaryID){
 			Session.set('dictionaryID', _dictionaryID);
 		}
 	},
+	//Set the session variable termID
 	'getLabelValue': function(termID) {
 		Session.set("termID", termID);			
 	},
 
+	//Return the admin labels for a dictionary
 	'labels': function(dictionaryID){
 
 		//Subscribe to the subset of admin_term_fields for this dictionary
@@ -36,6 +46,7 @@ Template.termPage.helpers({
 		return Adminlabels.find({});
 	},
 
+	//Return the correct value for a label
 	'labelDescription' : function(labelId){
 		
 		var termID = Session.get("termID");
@@ -43,55 +54,39 @@ Template.termPage.helpers({
 		//Subscribe to the subset of term_label_values for this term
 		Meteor.subscribe('labelValuesForTerms',termID);
 
+		//Get the label values
 		label_values = Term_label_values.find({}).fetch();
 
 		for(var i = 0; i < label_values.length; i++)
 		{
+			//If the label value's adminID is equal to our labelID then we've found the right one
 			if(label_values[i].adminlabelsID === labelId)
 			{
+				//Return the first label value that matches, they will all be the same
 				return label_values[i].value;
 			}
 		}
 	},
 
+	//Find all definitions for given term id
 	'findDefinitions' : function(termID){
 	
 		//Subscribe to the subset of definitions for this term
 		Meteor.subscribe('allTermDefinitions', termID);
 
+		//If showallDefinitions is true, we want to show all definitions
     	if(showAllDefinitions.get()) {
     		
     		return Definitions.find({});
     	}
+    	//else we want to show the top rated definition
    		else {
-
+   			//Sort the definitions by quality_rating, highest at top, then grab the first one
 			return Definitions.find({}, {sort: {quality_rating: -1}, limit: 1});
     	}
 	},
 
-	'getDefinitions': function(termID) {
-		var definitions=[];
-		
-		var definitionIDs = Term_definition.find({termID : termID}, {fields: {definitionID: 1}}).fetch();
-
-		for(var i = definitionIDs.length - 1; i >= 0; i--) {
-			definitions.push(Definitions.findOne(definitionIDs[i].definitionID));
-		}
-
-		return definitions;
-	},
-
-	'isAdmin' : function(){
-		if(Meteor.user()){
-			if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
-				return 'hidden';
-			}
-		} 
-		else {
-			return 'hidden';
-		}
-	},
-
+	//If a user is a guest(or not logged in) return hidden
 	'isGuest' : function(){
 		if(Meteor.user()){
 			return '';
@@ -102,43 +97,53 @@ Template.termPage.helpers({
 });
 
 Template.termPage.events({
-
+	//Click event for editing a term page
 	'click .editTermButton': function(e){
 
+		//Save the edit button
 		$editableButton = $('.editTermButton');
 
+		//Toggle the edit class
         $editableButton.toggleClass('edit');
 
+        //Start editing
         if($editableButton.hasClass('edit')){
-
+        	//Hide all elements with the name uneditableField
             $('[name=uneditableField]').attr('hidden','true');
+
+            //Hide all elements with the name labelDesc
             $('[name=labelDesc]').attr('hidden','true');
+
+            //Show all elements with the name editableInputField
             $('[name=editableInputField').removeAttr('hidden');
 
-            $('[name=deleteTerm]').removeAttr('hidden');
-
-
+            //Change the look of the button
             $editableButton.removeClass('btn-warning');
             $editableButton.addClass('btn-success');
             $editableButton.html('Save changes <span class="glyphicon glyphicon-pencil"></span>');
+            //Change the type of the button to 'type=button' so that the form won't auto-submit
             $editableButton.attr('type','button');
             
-        } else {
-
+        }
+        //Finish editing
+        else {
+        	
+        	//Show all elements with the name uneditableField
         	$('[name=uneditableField').removeAttr('hidden');
-            $('[name=labelDesc]').removeAttr('hidden','true');
+
+        	//Show all elements with the name labelDesc
+            $('[name=labelDesc]').removeAttr('hidden');
+
+            //Hide all elements with the name editableInputField
             $('[name=editableInputField]').attr('hidden','true');
 
-            $('[name=deleteTerm]').attr('hidden','true');
-
-
+            //Change the look of the button
             $editableButton.removeClass('btn-success');
             $editableButton.addClass('btn-warning');
             $editableButton.html('Edit Term <span class="glyphicon glyphicon-pencil"></span>');
+        	//Change the type of the button to 'type=submit' so that the form auto-submits
             $editableButton.attr('type','submit');
         }
-
-
 	},
 
 	'click .deleteDefinitionButton': function(e){

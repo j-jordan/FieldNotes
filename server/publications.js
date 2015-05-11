@@ -6,6 +6,11 @@ Meteor.publish("Posts", function(){
 	return Posts.find({});
 });
 
+//Publish the matching post
+Meteor.publish('Post', function(_postID){
+    return Posts.find({_id: _postID});
+})
+
 //Publish for all users who have made a post. 
 Meteor.publish("getUserNames", function(){
 
@@ -159,4 +164,19 @@ Meteor.publish('summariesByCategory', function(_categoryID){
     };
 
     return Post_summary.find({postID: {$in: postIDs}});
+});
+
+//Publish the admin labels for a dictionary id
+Meteor.publish('adminLabels', function(_dictionaryID){
+
+        var adminLabelIDs = Admin_term_fields.find({dictionaryID: _dictionaryID}, {fields: {'AdminlabelsID': 1}}).fetch();
+
+        dynamicFieldIds = [];
+        
+        for (var i = adminLabelIDs.length - 1; i >= 0; i--) {
+            dynamicFieldIds.push(adminLabelIDs[i]['AdminlabelsID']);
+        }
+
+        return Adminlabels.find({_id: {$in: dynamicFieldIds}});
+
 });

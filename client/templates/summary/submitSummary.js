@@ -1,7 +1,7 @@
 /**
  * Handles the submit form action for submitSummary.html
  *
- *
+ * Used when submiting a new summary for a post
  *
  * @param {e} form submit event.
  */

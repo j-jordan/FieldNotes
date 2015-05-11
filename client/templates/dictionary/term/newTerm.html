@@ -35,9 +35,8 @@
 				<p>Required Information: *</p>
 			</div>
 		</div>
-		{{getDynamicFields _id}}
 		
-		{{#each dynamFields}}
+		{{#each getDynamicFields _id}}
 			{{> dynamicField}}
 		{{/each}}
 		<!-- LOOP THROUGH THE DYNAMIC FIELDS FOR THIS DICTIONARY -->

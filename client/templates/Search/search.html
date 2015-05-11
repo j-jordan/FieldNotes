@@ -1,31 +1,38 @@
 <template name="searchTemplate">
 	<div class="search-input">
+		<!-- Search Box -->
   		{{> esInput index=indexes placeholder="Search..." }}	
 	</div>
 	<div class="results-wrapper">
 		<ul>
+			<!-- Loop over the results from posts -->
 	        {{#esEach index="posts"}}
 	            <li>Post: <a href="{{pathFor 'postPage'}}"> {{title}} {{author}} </a></li>
 	        {{/esEach}}
 	    </ul>
 	    <ul>
+	    	<!-- Loop over the results from dictionary -->
 	    	{{#esEach index="dictionary"}}
 	    		<li>Dictionary Name: <a href="{{pathFor 'dictionaryPage'}}">{{name}} </a></li>
 	    	{{/esEach}}
 	    </ul>
 	    <ul>
+	    	<!-- Loop over the results from terms -->
 	    	{{#esEach index="terms"}}
 	    		<li>Term Name: <a href="{{pathFor 'termPage'}}"> {{term_name}} </a></li>
 	    	{{/esEach}}
 	    </ul>
 	</div>
 
+	<!-- Load more results from posts if we have more than the limit set in search.js -->
     {{> esLoadMoreButton index="posts"}}
 
+    <!-- If ES has no results for the posts collection -->
     {{#ifEsHasNoResults index="posts"}}
         <div class="no-results">No results found!</div>
     {{/ifEsHasNoResults}}
 
+    <!-- If ES is still searching display loading -->
     {{#ifEsIsSearching index="posts"}}
             <div>Loading...</div>
     {{/ifEsIsSearching}}

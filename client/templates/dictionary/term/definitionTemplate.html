@@ -1,6 +1,7 @@
 <template name="definitionTemplate">
 	<div class="row">
 		<div class="col-md-12">
+			<!-- Insert the uneditable rate template -->
 			{{> uneditableRateItTemplate}}		
 			<div class="well well-lg">
 				<div class="" {{isAdmin}}>
@@ -8,6 +9,7 @@
 				</div>
 				{{text}}
 				<div>
+					<!-- Insert the editable rate template -->
 					{{> rateitTemplate}}
 				</div>
 			</div>

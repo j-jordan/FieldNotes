@@ -1,3 +1,5 @@
+//Initialize all rate it templates
+
 Template.rateitTemplate.rendered = function() {
 	this.$('.rateit').rateit();
 };

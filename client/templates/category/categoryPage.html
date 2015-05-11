@@ -1,0 +1,8 @@
+<template name="categoryPage">
+	<a class="btn btn-default" href="{{pathFor 'summaryListByCategory' }}">Summaries</a>
+
+	<!-- Loop over the results from the function posts(_id)  -->
+	{{#each posts _id}}
+		{{> postItem}}
+	{{/each}}
+</template>

@@ -1,0 +1,70 @@
+<template name='termPage'>
+		<div class='col-md-2'></div>
+		<div class="col-md-8">
+		<form>
+			<div class="row">				
+				<div class="col-md-9">
+					<div name="uneditableField">
+						<div id="titleID">
+							<h2>Definition(s) for:    {{term_name}}</h2>							
+						</div>
+					</div>
+					<div name="editableInputField" hidden>
+						<div class="col-md-6">
+							<h3 style="margin-top: 5px;">Definition(s) For:</h3>
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="term_name" name="term_name" value="{{ term_name }}"/>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div name="editTermButton" {{isAdmin}}>
+						<button class="editTermButton btn btn-warning" type="button" style="float: right">Edit Term
+		          		<span class="glyphicon glyphicon-pencil"></span></button>
+					</div>
+				</div>				
+			</div>
+			<div class="row" {{isGuest}}>
+				<div class="col-md-5">
+					<a class="btn btn-default" href="{{ pathFor 'submitDefinition'}}">Click here to submit a new defintion</a>
+				</div>
+				<div class="col-md-4">
+      				<button class="definition-button btn btn-default" type="button" style="float: right" id="showAllDefinitions">Show all Definitions</button>
+    			</div>
+			</div>
+			<div class="row"><p></p></div>
+			<div class="row">
+				<div class="col-md-12">
+					{{#each findDefinitions _id}}
+		          		{{> definitionTemplate}}
+	      			{{/each}}
+      			</div>
+          	</div>
+
+      		{{getDynamicFields dictionaryID}}
+			{{getLabelValue _id}}
+
+			{{#each labels dictionaryID}}
+				<div class="row">
+					<input type="hidden" name="adminLabelID" value="{{_id}}"/>
+					<div class="col-md-3">
+						<label for="complexityID">{{label}}</label>
+					</div>
+					<div name="labelDesc" >
+						<div class="col-md-9">
+							<span type="text" id="complexityID">{{labelDescription _id}}</span>
+						</div>
+					</div>
+					<div name="editableInputField" hidden>
+						<div class="col-md-9">
+							<input class="form-control" type="text" id="complexityID" name="labelValue" value="{{labelDescription _id}}" />
+						</div>
+					</div>
+				</div><!-- /row -->
+				<!--{{> dynamicFieldWithValue term_name}} -->
+			{{/each}}
+		</form>
+		</div>
+</template>
+

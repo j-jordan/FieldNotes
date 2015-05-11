@@ -1,0 +1,30 @@
+section {
+  background-color:#lightgray;
+}
+
+.body  {
+  padding-top:7px;
+}
+#jumbo {
+  font-size: 40px;
+  padding: 10px;
+  color:#3854A8; 
+  font-family:Trebuchet MS;
+  text-align: right;
+}
+#navbar {
+  border-bottom: 0px;
+  margin-bottom: 0px;
+}
+#navTabs {
+  font-weight: bold;
+  font-size: 34px;
+  font-family: Trebuchet MS;
+  padding: 0px;
+}
+#siteTitle {
+  font-size: 40px;
+  padding: 10px;
+  color:#FFFFFF; 
+  font-family:Trebuchet MS;
+}

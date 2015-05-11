@@ -1,0 +1,16 @@
+
+<template name="summaryList">
+<div class="row">
+	<div class="col-md-3">
+    	<a class="btn btn-default" href="{{pathFor 'postsList'}}">Papers</a>
+	</div>
+</div>
+	
+
+{{#each Summaries}}
+	{{> summaryItem}}
+{{/each}}
+
+<button class="btn btn-info">NEXT</button>
+      PAGINATION
+</template>

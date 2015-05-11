@@ -1,0 +1,42 @@
+<template name="summaryItem">
+  <style>
+    #voteArrows{
+      padding-top: 15px;
+      padding-left: 85px;
+      padding-right: 0px;
+    }
+    .glyphicon.glyphicon-arrow-up{
+      font-size: 32px;
+    }
+    .glyphicon.glyphicon-arrow-down{
+      font-size: 32px;
+    }
+  </style>
+ <div class="row">
+    <div class="col-md-7">
+      <div class="panel panel-primary text-left">
+        <div class="panel-heading">
+          <a href="{{pathFor 'postPageFromSummary'}}" class="panel-title">{{title _id}}</a>
+        </div>
+        <div class="body">
+          <div class="row text-center">
+            <div class="col-md-12">
+              {{text}}
+            </div>
+              <div class="row"><p>&nbsp;</p></div>
+
+                           
+            <div class="row ">
+              <div class="col-md-3">
+                {{> uneditableRateItTemplate}}
+              </div>
+              <div class="col-md-9 text-left">
+                <small>&nbsp;&nbsp;&nbsp;&nbsp;Submitted ten seconds ago by {{userName userID}}</small>
+              </div>
+            </div>          
+        </div>
+      </div>
+    </div> <!-- 2nd column -->     
+  </div> <!-- snapshot -->
+  </div>
+</template>

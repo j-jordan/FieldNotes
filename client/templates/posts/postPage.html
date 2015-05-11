@@ -1,0 +1,143 @@
+<template name="postPage">
+  <style>
+    input[class="form-control"]{
+      float: right;
+    }
+  </style>
+<form>
+  <div class="row">
+    <div class="col-md-10">
+      <div class="col-md-7">
+        <span> <h2 style="display: inline;">{{postData.title}}</h2></span>
+      </div>  
+      <div class="col-md-3">
+        <span> <h3 style="display: inline;">Posted by: {{ findUser postData.userID }}</h3></span>
+      </div>        
+      <div class="col-md-2">
+        <span>{{> postDataUneditableRateItTemplate}}</span>
+      </div>
+    </div>
+    <div class="col-md-2" {{isAdmin}}>
+          <button class="editPostButton btn btn-warning" type="button" style="float: right">Edit Post
+          <span class="glyphicon glyphicon-pencil"></span></button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+          <label for="doi">DOI: </label>        
+          <span class="viewSpan" style="float: right" name="doi">{{postData.doi}}</span>
+
+          <input class="form-control" name="editableInputField" type="hidden" id="doi"
+            value="{{postData.doi}}" style="text-align: right"/>
+      </div>
+    </div>
+    <!-- <div class="col-md-1"></div> -->
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="publish_date">DATE PUBLISHED:</label>
+        <span  class="viewSpan" style='float: right' name='editableInputField'>{{postData.publish_date}}</span>
+
+        <input class="form-control" type="hidden"  name="editableInputField" id="publish_date" 
+          value="{{postData.publish_date}}" style="text-align: right"/>
+      </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <label for="">Rate this paper: </label>
+        <div>{{> postDataRateItTemplate}}</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-inline form-group">
+        <label for="publisher">Publisher: </label>        
+        <span class="viewSpan" name="publisher" style="float: right" value="{{postData.publisher}}">{{postData.publisher}}</span>
+
+        <input class="form-control" type="hidden" name="editableInputField" id="publisher"
+            value="{{ postData.publisher }}" style="text-align: right"/>
+      </div>      
+    </div>
+    <div class="col-md-4"> 
+      <div class="form-inline form-group">
+        <label for="author">Author: </label>        
+        <span class="viewSpan" name="author" style="float: right">{{postData.author}}</span> 
+
+        <input class="form-control" type="hidden" name="editableInputField" id="author" 
+          value="{{ postData.author }}" style="text-align: right"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label>Terms used in this paper: </label>
+    </div>
+    <div class="col-md-4">
+      <label>Terms defined in this paper:</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      {{#each terms_used postData._id}}
+        <li> {{term_name}} </li>
+      {{/each}}
+    </div>
+    <div class="col-md-4">
+      {{#each terms_defined postData._id}}
+        <li> {{term_name}} </li>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-1">
+      <label for="summaries">Summary: </label>
+    </div>
+    <div class="col-md-3">
+      <a class="btn btn-default" style="float: right" name="submitDefinition"
+      href="{{#if loggedIn}}{{pathFor 'submitSummary'}}{{/if}}"
+      disabled="{{#if loggedIn}}{{else}}true{{/if}}">Submit summary</a>
+    </div>
+    <div class="col-md-4">
+      <button class="summary-button btn btn-default" type="button" style="float: right" id="showAllSummaries">Show all Summaries</button>
+    </div>
+  </div>
+</form>
+   <br>
+
+  <div class="row">
+    <div class="col-md-12"> 
+      {{#each findSummaries postData._id selectedSummaryID}}
+          {{> summaryTemplate}}
+      {{/each}}
+    </div>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label>Comments:</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6" id="comments">
+      {{#each comments}}
+          {{> commentItem}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="row">
+  <!-- {{#if currentUser}} -->
+    {{> commentSubmit}}    
+  <!-- {{else}} -->
+    <!-- <p>Please log in to leave a comment</p> -->
+  <!-- {{/if}} -->
+  </div>
+</template>

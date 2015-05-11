@@ -1,0 +1,16 @@
+<template name="submitSummary">
+	<div class="row">
+		<div class="col-md-6">
+			Summary for: {{title}}
+		</div>
+	</div>
+	<form>
+		<input type="text" name="_id" hidden value="{{_id}}" />
+		<div class="row">
+			<textarea id="summary" name="summary"></textarea>
+		</div>
+		<div class="row">
+			<input	type='submit' value='Submit' class='btn btn-primary'/>
+		</div>
+	</form>
+</template>

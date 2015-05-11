@@ -1,14 +1,17 @@
 Template.summaryItem.helpers({
 
-	'title': function(id){
-		var post_id = Post_summary.findOne({"summaryID": id}).postID;
-		var title = Posts.findOne({"_id" : post_id}).title;
-		console.log(title);
-		return title;
+	'title': function(summaryID){
+
+		//Subscribe to the correct post for this summary
+		Meteor.subscribe('postIDfromSummaryID', summaryID);
+
+		var post_id = Post_summary.findOne({summaryID: summaryID}).postID;
+
+		return Posts.findOne({_id: post_id}).title;
 	},
 
 	'userName': function(userID){
-		return Users.find({"_id": userID}).username;
+		return Meteor.users.findOne(userID).username;
 	}
 
 });

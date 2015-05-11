@@ -1,16 +1,9 @@
 Template.summaryListByCategory.helpers({
-	'summaries': function(categoryID){
-		var categoryID = categoryID;
+	'summaries': function(_categoryID){
+		
+		Meteor.subscribe('summariesByCategory', _categoryID);
 
-		var posts = Posts.find({categoryID: categoryID}).fetch();
-
-		var postIDs = [];
-
-		for (var i = posts.length - 1; i >= 0; i--) {
-			postIDs.push(posts[i]._id);
-		};
-
-		var summaryIDs = Post_summary.find({postID: {$in: postIDs}}).fetch();
+		var summaryIDs = Post_summary.find({}).fetch();
 
 		var summaries = [];
 

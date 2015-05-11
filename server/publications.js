@@ -84,6 +84,11 @@ Meteor.publish('dictionaryPageTerms', function(_dictionaryID) {
     return Terms.find({dictionaryID: _dictionaryID});    
 });
 
+//Publish the terms for a termPage
+Meteor.publish('term', function(_termID){
+    return Terms.find({_id: _termID});
+})
+
 //Publish the terms
 Meteor.publish('termPageTerms', function(){
     return Terms.find({});
@@ -125,4 +130,33 @@ Meteor.publish('allTermDefinitions', function(termID){
 //Publish all the categories
 Meteor.publish('categories', function(){
     return Categories.find({});
+});
+
+//Publish all the summaries for summary lists
+Meteor.publish('summaries', function(){
+    return Summaries.find({});
+});
+
+//Publish the post for a give summaryID
+Meteor.publish('postIDfromSummaryID', function(_summaryID){
+    return Post_summary.find({summaryID: _summaryID});
+});
+
+//Publish the list of searchable terms
+Meteor.publish('searchableTerms', function(){
+    return Terms.find({});
+});
+
+//Publish the summaries based upon category id
+Meteor.publish('summariesByCategory', function(_categoryID){
+
+    var posts = Posts.find({categoryID: _categoryID}).fetch();
+
+    var postIDs = [];
+
+    for (var i = posts.length - 1; i >= 0; i--) {
+        postIDs.push(posts[i]._id);
+    };
+
+    return Post_summary.find({postID: {$in: postIDs}});
 });

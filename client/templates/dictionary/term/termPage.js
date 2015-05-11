@@ -7,13 +7,22 @@ Template.termPage.rendered = function(){
 	definitionsShown = false;
 	showAllDefinitions.set(false);
 	
-	Meteor.subscribe('dictionaryPageTerms', Session.get('dictionaryID'));
+	var url = Router.current().url,
+	delimeter = '/',
+	start = 1,
+	tokens = url.split(delimeter).slice(start),
+	result = tokens.join(delimeter);
+
+	var termID =  tokens[tokens.length-1];
+
+	Meteor.subscribe('term', termID);
 }
 
 Template.termPage.helpers({
 	'getDynamicFields': function(_dictionaryID){
-		if(typeof _dictionaryID !== null)
+		if(_dictionaryID){
 			Session.set('dictionaryID', _dictionaryID);
+		}
 	},
 	'getLabelValue': function(termID) {
 		Session.set("termID", termID);			

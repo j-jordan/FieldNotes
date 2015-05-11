@@ -1,12 +1,6 @@
 Template.postItem.helpers({
 	'getUserName': function(userID) {
-		console.log(userID);
     	return Meteor.users.findOne(userID).username;
-    },
-
-    'getTopSummary': function(pageID){
-    	var summaryID = Post_summary.findOne({postID: pageID}).summaryID;
-		return Summaries.findOne({_id: summaryID}).text;
     },
 
     'loggedIn': function(){
@@ -41,8 +35,7 @@ Template.postItem.events({
 				Posts.update({_id: postID}, {$set : { pop_rating: pop_rating}});
 
 			}else{		//upvote
-				pop_rating = pop_rating + 1;
-				console.log(pop_rating);
+				pop_rating = pop_rating + 1
 				Posts.update({_id : postID},{$set : { pop_rating: pop_rating}});
 			}
 

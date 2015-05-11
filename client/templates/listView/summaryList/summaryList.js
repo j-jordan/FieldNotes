@@ -1,4 +1,8 @@
-Template.summaryList.helpers({
+//Subscribe to the list of summaries
+Meteor.subscribe('summaries');
 
-	Summaries : Summaries.find()
+Template.summaryList.helpers({
+	'Summaries': function(){
+		return Summaries.find({})
+	}
 });

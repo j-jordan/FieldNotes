@@ -6,7 +6,10 @@ var summeriesShown = false;
 Template.postPage.rendered = function() {
     summeriesShown = false;
     showAllSummaries.set(false);
+
+    Meteor.subscribe('postIDfromSummaryID', this.data.selectedSummaryID);
 }
+
  
 Template.postPage.events({
 	"click .summary-button": function(event, template) {
@@ -110,12 +113,6 @@ Template.postPage.events({
 });
 
 Template.postPage.helpers({
-    'loggedIn': function(){
-        if(Meteor.user())
-            return true;
-        else 
-            return false;
-    },
 
     'findUser': function(_userID) {
 
@@ -123,10 +120,10 @@ Template.postPage.helpers({
         return Meteor.users.findOne(_userID).username;
     },
 
-    'findSummaries': function(pageID, summaryID) {
+    'findSummaries': function(postID, summaryID) {
 
         //Subscribe to the subset of summaries that belong to this post
-        Meteor.subscribe('getSummaries', pageID);
+        Meteor.subscribe('getSummaries', postID);
 
         //showAllSummaries is reactiveBoolean if you want to show all summaries
     	if(showAllSummaries.get()) {

@@ -1,1 +1,1 @@
-Template.searchTemplate.indexes = ['posts','dictionaries','terms'];
+Template.searchTemplate.indexes = ['posts','dictionary','terms'];

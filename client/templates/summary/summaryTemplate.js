@@ -27,3 +27,10 @@ Template.summaryTemplate.events({
 
     }
 });
+
+Template.summaryTemplate.helpers({
+	'markdownedText': function() {
+		var converter = new Showdown.converter();
+		return converter.makeHtml(this.text);
+	}
+});

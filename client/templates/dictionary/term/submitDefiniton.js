@@ -1,3 +1,7 @@
+Template.submitDefinition.onCreated(function() {
+  this.previewData = new ReactiveVar;
+});
+
 Template.submitDefinition.events({
 	'submit form': function(e) {
 		//Stop the browser from submitting the form.
@@ -25,5 +29,17 @@ Template.submitDefinition.events({
 
 		//Redirect to the postpage  
 		Router.go('/term/'+termName);
+	},
+	
+	'input [name=definition], change [name=definition], paste [name=definition], keyup [name=definition], mouseup [name=definition]': function(e) {
+		var converter = new Showdown.converter();
+		var text = Template.instance().find("textarea[name=definition]").value;
+		Template.instance().previewData.set(converter.makeHtml(text));
+	}
+});
+
+Template.submitDefinition.helpers({
+	'preview_data': function() {
+		return Template.instance().previewData.get();
 	}
 });

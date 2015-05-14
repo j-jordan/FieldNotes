@@ -33,3 +33,10 @@ Template.definitionTemplate.events({
 		$(e.target).bind('beforerated',function(e){	e.preventDefault();});
 	}
 });
+
+Template.definitionTemplate.helpers({
+	'markdownedText': function() {
+		var converter = new Showdown.converter();
+		return converter.makeHtml(this.text);
+	}
+});

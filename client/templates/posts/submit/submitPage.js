@@ -1,5 +1,8 @@
 Meteor.subscribe('categories');
 
+Template.submitPage.onCreated(function() {
+  this.previewData = new ReactiveVar;
+});
 
 /**
  * Handles the submit form action for submitPage.html
@@ -75,7 +78,14 @@ Template.submitPage.events({
   		Session.set('categoryName',this.category_name);
 		
 		$('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>');
-	}
+	},
+	
+	'input [name=summary], change [name=summary], paste [name=summary], keyup [name=summary], mouseup [name=summary]': function(e) {
+		var converter = new Showdown.converter();
+		var text = Template.instance().find("textarea[name=summary]").value;
+		Template.instance().previewData.set(converter.makeHtml(text));
+	},
+	
 });
 
 Template.submitPage.helpers({
@@ -92,6 +102,9 @@ Template.submitPage.helpers({
         else 
             return false;
     },
+	'preview_data': function() {
+		return Template.instance().previewData.get();
+	}
 });
 
 //Returns the data for the autocomplete search function

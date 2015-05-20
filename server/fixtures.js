@@ -201,24 +201,28 @@ var CommentsData = Comments.find().fetch();
 if(Summaries.find().count() === 0) {
 	Summaries.insert({
 		userID : UsersData[0]['_id'],
+		postID : PostsData[0]['_id'],
 		text : "In general, this paper explains the connection between this and that.",
 		quality_rating : 3,
 		numRaters : 2
 	});
 	Summaries.insert({	
 		userID : UsersData[1]['_id'],
+		postID : PostsData[0]['_id'],
         text : "3 Dimensional Shadow: A shadow cast by a 4 dimensional object.",
         quality_rating : 4.3,
 		numRaters : 4
 	}); 	
 	Summaries.insert({
 		userID : UsersData[2]['_id'],
+		postID : PostsData[1]['_id'],
 		text: "THIS IS A SUMMARY.",
 		quality_rating : 1,
 		numRaters : 6
 	});
 	Summaries.insert({
 		userID : UsersData[2]['_id'],
+		postID : PostsData[2]['_id'],
 		text: "Test.",
 		quality_rating : 4.2,
 		numRaters : 6
@@ -327,26 +331,6 @@ if(Admin_term_fields.find().count() === 0) {
 		dictionaryID : DictionaryData[0]['_id'],
 		AdminlabelsID : AdminLabelsData[1]['_id']
 	});	
-}
-
-//Summaries pivot table
-if(Post_summary.find().count() === 0) {
-	Post_summary.insert({
-		postID : PostsData[0]['_id'],
-		summaryID : SummaryData[0]['_id']
-	});
-	Post_summary.insert({
-		postID : PostsData[0]['_id'],
-		summaryID : SummaryData[1]['_id']
-	});
-	Post_summary.insert({
-		postID : PostsData[1]['_id'],
-		summaryID : SummaryData[2]['_id']
-	});
-	Post_summary.insert({
-		postID : PostsData[0]['_id'],
-		summaryID : SummaryData[3]['_id']
-	});
 }
 
 //Term's definition pivot

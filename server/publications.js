@@ -27,15 +27,7 @@ Meteor.publish("getUserNames", function(){
 
 //Publish the summaries for a given post
 Meteor.publish("getSummaries", function(_postID){
-	var post_summary_IDs = Post_summary.find({postID: _postID}, {fields: {summaryID: 1}}).fetch();
-
-	var summaryIDsArray = [];
-
-	for (var i = post_summary_IDs.length - 1; i >= 0; i--) {
-		summaryIDsArray.push(post_summary_IDs[i].summaryID);
-	};
-
-	return Summaries.find({_id: {$in: summaryIDsArray}});
+	return Summaries.find({postID: _postID});
 });
 
 //Publish the comments for a given post
@@ -142,9 +134,18 @@ Meteor.publish('summaries', function(){
     return Summaries.find({});
 });
 
-//Publish the post for a give summaryID
-Meteor.publish('postIDfromSummaryID', function(_summaryID){
-    return Post_summary.find({summaryID: _summaryID});
+//Publish the post for a given summaryID
+Meteor.publish('postFromSummaryID', function(_summaryID){
+	var summary = Summaries.findOne({_id: _summaryID});
+	
+	if (typeof summary === 'undefined')  {
+		console.log("WARN: 'postFromSummaryID': _summaryID was not in database, doing nothing.");
+		return null;
+	}
+	
+	var post_id = summary.postID;
+	
+    return Posts.find({_id: post_id});
 });
 
 //Publish the list of searchable terms
@@ -163,7 +164,7 @@ Meteor.publish('summariesByCategory', function(_categoryID){
         postIDs.push(posts[i]._id);
     };
 
-    return Post_summary.find({postID: {$in: postIDs}});
+    return Summaries.find({postID: {$in: postIDs}});
 });
 
 //Publish the admin labels for a dictionary id

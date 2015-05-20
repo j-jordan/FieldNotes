@@ -12,7 +12,8 @@ Template.postPage.rendered = function() {
     showAllSummaries.set(false);
 
     //Resubscribe to the cursor for post_summary incase it has changed
-    Meteor.subscribe('postIDfromSummaryID', this.data.selectedSummaryID);
+	// NOTE(James): commented out this line because I can't find anywhere that selectedSummaryID is set, and passing null is not useful.
+    //Meteor.subscribe('postFromSummaryID', this.data.selectedSummaryID);
 }
 
  
@@ -162,24 +163,24 @@ Template.postPage.helpers({
         return Meteor.users.findOne(_userID).username;
     },
 
-    'findSummaries': function(postID, summaryID) {
+    'findSummaries': function(_postID, _summaryID) {
 
         //Subscribe to the subset of summaries that belong to this post
-        Meteor.subscribe('getSummaries', postID);
+        Meteor.subscribe('getSummaries', _postID);
 
         //showAllSummaries is reactiveBoolean if you want to show all summaries
     	if(showAllSummaries.get()) {
 
-    		return Summaries.find();
+    		return Summaries.find({postID: _postID});
     	}
    		else {
 
             //if summaryID is undefined, there is no specific summary to load -> find the top-rated summary through the post id
-            if(typeof summaryID === 'undefined'){
-                return Summaries.find({}, {sort: {quality_rating: -1}, limit: 1});
+            if(typeof _summaryID === 'undefined'){
+                return Summaries.find({postID: _postID}, {sort: {quality_rating: -1}, limit: 1});
 
             } else {
-                return Summaries.find({_id: summaryID});
+                return Summaries.find({_id: _summaryID});
             }    		
     	}
     },

@@ -31,15 +31,6 @@ Template.submitPage.events({
 		e.preventDefault();
 
 		if(validated){
-			//Insert the new summary
-			var summary = {
-				userID: Meteor.user()._id,
-				text: $(e.target).find('[name=summary]').val(),
-				rating: 0
-			};
-
-			summary._id = Summaries.insert(summary);
-
 			//Insert the new post
 			var post = {
 				userID: Meteor.user()._id,
@@ -55,13 +46,15 @@ Template.submitPage.events({
 
 			post._id = Posts.insert(post);
 
-			//Insert post/summary entry into pivot table
-			var post_sum = {
+			//Insert the new summary
+			var summary = {
+				userID: Meteor.user()._id,
 				postID: post._id,
-				summaryID: summary._id
-			}
+				text: $(e.target).find('[name=summary]').val(),
+				rating: 0
+			};
 
-			post_sum._id = Post_summary.insert(post_sum);
+			Summaries.insert(summary);
 
 			//Find any terms that already exist		
 			var terms_defined = $(e.target).find('[name=terms_used]');

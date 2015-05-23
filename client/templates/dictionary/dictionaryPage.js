@@ -62,7 +62,9 @@ Template.dictionaryPage.events({
 
         //Update data
     	var DictionaryData = {
-    		name : $(e.target).find('[id=name]').val()
+			$set : {
+				name : $(e.target).find('[id=name]').val()
+			}
     	};
 
         //Update

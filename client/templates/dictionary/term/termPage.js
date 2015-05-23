@@ -169,16 +169,12 @@ Template.termPage.events({
 
 		//update the term from terms
 		var updateTermData = {
-			term_name: $(e.target).find('[name=term_name]').val(),
-			dictionaryID: this.dictionaryID
+			$set : {
+				term_name: $(e.target).find('[name=term_name]').val(),
+			}
 		}
-		
-		Terms.update(this._id, updateTermData);
 
-		//updated term_label_value data
-		var updateValueData = {
-			termID: termID
-		};
+		Terms.update(this._id, updateTermData);
 
 		var labelsID = [];
 
@@ -188,9 +184,14 @@ Template.termPage.events({
 
 		//update the terms_label_values collection
 		$(e.target).find('[name="labelValue"]').each(function(index){
-			
-			updateValueData.adminlabelsID = labelsID[index];
-			updateValueData.value = $(this).val();
+			//updated term_label_value data
+			var updateValueData = {
+				$set : {
+					termID : termID,
+					adminlabelsID : labelsID[index],
+					value : $(this).val()
+				}
+			};
 
 			var id = Term_label_values.findOne({adminlabelsID: labelsID[index], termID: termID})._id;
 			Term_label_values.update(id, updateValueData);

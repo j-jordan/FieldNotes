@@ -1,7 +1,12 @@
 Template.postItem.helpers({
 	//Return the username of a another user
 	'getUserName': function(userID) {
-    	return Meteor.users.findOne(userID).username;
+		var user = Meteor.users.findOne(userID)
+		if (!user) {
+			console.log("WARN: postItem.js: No user found with userid '" + userID + "'");
+			return "***";
+		}
+    	return user.username;
     }
 });
 

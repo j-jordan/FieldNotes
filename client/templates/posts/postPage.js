@@ -137,21 +137,22 @@ Template.postPage.events({
         e.preventDefault();
 
         //Update data. For fields that aren't updated, grab their old value
-        var post = {
-            userID: Meteor.user()._id,
-            title: this.postData.title,
-            pop_rating: this.postData.pop_rating,
-            quality_rating: this.postData.quality_rating,
-            doi: $(e.target).find('[id=doi]').val(),
-            author: $(e.target).find('[id=author]').val(),
-            publisher : $(e.target).find('[id=publisher]').val(),
-            publish_date: $(e.target).find('[id=publish_date]').val(),
-            publisher: $(e.target).find('[id=publisher]').val(),
-            categoryID: this.postData.categoryID
+        var updatedPost = {
+			$set : {
+				//userID: Meteor.user()._id,
+				//title: this.postData.title,
+				//pop_rating: this.postData.pop_rating,
+				//quality_rating: this.postData.quality_rating,
+				doi: $(e.target).find('[id=doi]').val(),
+				author: $(e.target).find('[id=author]').val(),
+				publisher : $(e.target).find('[id=publisher]').val(),
+				publish_date: $(e.target).find('[id=publish_date]').val(),
+				//categoryID: this.postData.categoryID
+			}
         };
 
         //Update
-        Posts.update(this.postData._id,post);
+        Posts.update(this.postData._id, updatedPost);
     }
 });
 

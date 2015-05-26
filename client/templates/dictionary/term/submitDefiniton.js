@@ -9,6 +9,7 @@ Template.submitDefinition.events({
 
 		//Insert the new definition
 		var definition = {
+			termID: $(e.target).find('[name=_id]').val(),
 			userID: Meteor.user()._id,
 			text: $(e.target).find('[name=definition]').val(),
 			quality_rating: 0,
@@ -16,14 +17,6 @@ Template.submitDefinition.events({
 		};
 
 		definition._id = Definitions.insert(definition);
-		
-		//Insert post/summary entry into pivot table
-		var term_def = {
-			termID: $(e.target).find('[name=_id]').val(),
-			definitionID: definition._id
-		}
-
-		term_def._id = Term_definition.insert(term_def);
 
 		var termName = $(e.target).find('[name=term_name]').val();
 

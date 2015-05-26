@@ -42,6 +42,7 @@ Template.newTerm.events({
 
 		//Update data for definition
 		var defintion = {
+			termID: term._id,
 			userID: Meteor.user()._id,
 			text: $(e.target).find('[name=definition]').val(),
 			rating: 0
@@ -49,15 +50,6 @@ Template.newTerm.events({
 
 		//Update definition
 		defintion._id = Definitions.insert(defintion);
-
-		//Update data for term_definition post data
-		var termDefinition = {
-			termID: term._id,
-			definitionID: defintion._id
-		};			
-
-		//Update term_definition pivot collection
-		Term_definition.insert(termDefinition);	
 
 		//Reset labelDescription
 		labelDescription = [];

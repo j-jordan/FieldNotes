@@ -112,16 +112,8 @@ Meteor.publish('labelValuesForTerms', function(_termID){
 });
 
 //Publish all the definitions for the terms_defined
-Meteor.publish('allTermDefinitions', function(termID){
-
-    var definitionID = Term_definition.find({termID: termID}).fetch();
-
-    var definitions = [];
-    for (var i = definitionID.length - 1; i >= 0; i--) {    
-        definitions.push(definitionID[i].definitionID);
-    }
-
-    return Definitions.find({_id: {$in: definitions}});
+Meteor.publish('allTermDefinitions', function(_termID){
+    return Definitions.find({termID: _termID});
 });
 
 //Publish all the categories

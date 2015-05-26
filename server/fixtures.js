@@ -232,30 +232,35 @@ var SummaryData = Summaries.find().fetch();
 
 if(Definitions.find().count() === 0) {
 	Definitions.insert({
+		termID : TermsData[0]['_id'],
 		userID : UsersData[0]['_id'],
 		text : "A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.",
 		quality_rating : 5,
 		numRaters : 10
 	});
 	Definitions.insert({
+		termID : TermsData[0]['_id'],
 		userID : UsersData[2]['_id'],
 		text : "1s and 0s that grow trunks ad leaves",
 		quality_rating : 1,
 		numRaters : 5
 	});
 	Definitions.insert({
+		termID : TermsData[1]['_id'],
 		userID : UsersData[1]['_id'],
 		text : 'Something used to hold a value.',
 		quality_rating : 5,
 		numRaters : 2
 	});
 	Definitions.insert({
+		termID : TermsData[2]['_id'],
 		userID : UsersData[0]['_id'],
 		text : 'A form of indirect proof, that establishes the truth or validity of a proposition by showing that the proposition\'s being false would imply a contradiction.',
 		quality_rating : 4,
 		numRaters : 6
 	});
 	Definitions.insert({
+		termID : TermsData[3]['_id'],
 		userID : UsersData[0]['_id'],
 		text : '+1',
 		quality_rating : 3,
@@ -331,30 +336,6 @@ if(Admin_term_fields.find().count() === 0) {
 		dictionaryID : DictionaryData[0]['_id'],
 		AdminlabelsID : AdminLabelsData[1]['_id']
 	});	
-}
-
-//Term's definition pivot
-if(Term_definition.find().count() === 0) {
-	Term_definition.insert({
-		termID : TermsData[0]['_id'],
-		definitionID : DefinitionData[0]['_id']
-	});
-	Term_definition.insert({
-		termID : TermsData[0]['_id'],
-		definitionID : DefinitionData[1]['_id']
-	});
-	Term_definition.insert({
-		termID : TermsData[1]['_id'],
-		definitionID : DefinitionData[2]['_id']
-	});
-	Term_definition.insert({
-		termID : TermsData[2]['_id'],
-		definitionID : DefinitionData[3]['_id']
-	});
-	Term_definition.insert({
-		termID : TermsData[3]['_id'],
-		definitionID : DefinitionData[4]['_id']
-	});
 }
 
 if(Term_label_values.find().count() === 0) {

@@ -151,14 +151,8 @@ Template.termPage.events({
 		e.preventDefault();
 
   		if(confirm("Are you sure you want to delete this term?")){
-            
             //Remove the defintions collection
             Definitions.remove(this._id);
-
-            //Remove from the pivot table
-            var termDefs = Term_definition.findOne({definitionID: this._id});
-
-            Term_definition.remove(termDefs._id);
         }
 	},
 

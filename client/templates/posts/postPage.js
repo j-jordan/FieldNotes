@@ -187,7 +187,6 @@ Template.postPage.helpers({
     },
 
     comments: function() {
-
         //Subscribe to the subset of comments that belong to this post
         Meteor.subscribe('getComments', postData._id);
 
@@ -196,36 +195,23 @@ Template.postPage.helpers({
 
     //Return all the terms used in this paper
     'terms_used': function(_postID){
-
         //Subscribe to the subset of terms used in this paper
-        Meteor.subscribe('terms', _postID);
+        Meteor.subscribe('Post', _postID);
         Meteor.subscribe('terms_used', _postID);
 
-        var term_used_IDs = Post_terms_used.find().fetch();
+        var term_used_IDs = Posts.findOne(_postID).usedTermIDArray;
 
-        var termsUsed = [];
-
-        for (var i = term_used_IDs.length - 1; i >= 0; i--) {
-            termsUsed.push(Terms.findOne(term_used_IDs[i].termID));
-        };
-
-        return termsUsed;
+		return Terms.find({_id: {$in: term_used_IDs}});
     },
 
     //Return all terms defined in this paper
     'terms_defined': function(_postID){
-        
         //Subscribe to the subset of terms defined in this paper
-        Meteor.subscribe('terms_defined', _postID);
+        Meteor.subscribe('Post', _postID);
+		Meteor.subscribe('terms_defined', _postID);
 
-        var term_defined_IDs = Post_terms_defined.find().fetch();
+		var term_defined_IDs = Posts.findOne(_postID).definedTermIDArray;
 
-        var termsDefined = [];
-
-        for (var i = term_defined_IDs.length - 1; i >= 0; i--) {
-            termsDefined.push(Terms.findOne(term_defined_IDs[i].termID));
-        };
-        
-        return termsDefined;
+        return Terms.find({_id: {$in: term_defined_IDs}});
     }
 });

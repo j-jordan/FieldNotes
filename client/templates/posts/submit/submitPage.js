@@ -41,7 +41,9 @@ Template.submitPage.events({
 				author: $(e.target).find('[name=author]').val(),
 				publish_date: $(e.target).find('[name=publish_date]').val(),
 				publisher: $(e.target).find('[name=publisher]').val(),
-				categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id   // use $(e.target).find('[name=category]').val() when category dropdown works
+				categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id,   // use $(e.target).find('[name=category]').val() when category dropdown works
+				definedTermIDArray : [], //TODO(James): actually fill this array
+				usedTermIDArray : [] //TODO(James): actually fill this array
 			};
 
 			post._id = Posts.insert(post);

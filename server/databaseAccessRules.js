@@ -133,6 +133,4 @@ Terms.allow(thunkFactory('Terms'));
 Categories.allow(thunkFactory('Categories'));
 Definitions.allow(thunkFactory('Definitions'));
 
-Post_terms_defined.allow(thunkFactory('Post_terms_defined'));
-Post_terms_used.allow(thunkFactory('Post_terms_used'));
 Term_label_values.allow(thunkFactory('Term_label_values'));

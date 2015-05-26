@@ -35,40 +35,22 @@ Meteor.publish("getComments", function(_postID){
 	return Comments.find({postID: _postID});
 });
 
-//Publish the terms for a given post
-Meteor.publish('terms', function(_postID){
-
-	//Find all used term ids for the passed in postId
-    var termUsedIdArray = Post_terms_used.find({postID: _postID}, {fields: {termID: 1}}).fetch();
-
+//Publish the terms defined for a given post
+Meteor.publish('terms_defined', function(_postID){
     //Find all defined term ids for
-    var termDefinedIdArray = Post_terms_defined.find({postID: _postID}, {fields: {termID: 1}}).fetch();
-
-    var termArray = [];
-    
-    //Strip the __proto__ object
-    for (var i = termUsedIdArray.length - 1; i >= 0; i--) {
-    	//Push the terms used 
-        termArray.push(termUsedIdArray[i].termID);
-    };
-
-    for (var i = termDefinedIdArray.length - 1; i >= 0; i--) {
-    	//Push the terms defined
-    	termArray.push(termDefinedIdArray[i].termID);
-    };
+    var termDefinedIdArray = Posts.findOne(_postID).definedTermIDArray;
 
     //Return all terms either used or defined
-    return Terms.find({_id: {$in: termArray}});
+    return Terms.find({_id: {$in: termDefinedIdArray}});
 });
 
-//Publish the terms used by a given post
+//Publish the terms used for a given post
 Meteor.publish('terms_used', function(_postID){
-    return Post_terms_used.find({postID: _postID}, {fields: {termID: 1}});
-});
+	//Find all used term ids for the passed in postId
+    var termUsedIdArray = Posts.findOne(_postID).usedTermIDArray;
 
-//Publish the terms defined by a given post
-Meteor.publish('terms_defined', function(_postID){
-    return Post_terms_defined.find({postID: _postID}, {fields: {termID: 1}});
+    //Return all terms either used or defined
+    return Terms.find({_id: {$in: termUsedIdArray}});
 });
 
 //Publish the dictionaries
@@ -101,7 +83,7 @@ Meteor.publish('labelValuesForTerms', function(_termID){
     return Term_label_values.find({termID: _termID});
 });
 
-//Publish all the definitions for the terms_defined
+//Publish all the definitions for the term ID
 Meteor.publish('allTermDefinitions', function(_termID){
     return Definitions.find({termID: _termID});
 });

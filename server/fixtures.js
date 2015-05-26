@@ -122,7 +122,9 @@ if(Posts.find().count() === 0) {
 		author : "Thom Yorke",
 		publisher : "Kendrick Lamar",
 		publish_date : "7/4/2010",
-		categoryID : Categories.find().fetch()[0]['_id']
+		categoryID : Categories.find().fetch()[0]['_id'],
+		definedTermIDArray : [ TermsData[0]['_id'] ],
+		usedTermIDArray : [ TermsData[1]['_id'] ]
 	});
 	Posts.insert({
 		userID : UsersData[1]['_id'],
@@ -134,7 +136,9 @@ if(Posts.find().count() === 0) {
 		author : "Elon Musk",
 		publisher : "Tree House",
 		publish_date : "7/5/2010",
-		categoryID : Categories.find().fetch()[4]['_id']
+		categoryID : Categories.find().fetch()[4]['_id'],
+		definedTermIDArray : [ TermsData[1]['_id'], TermsData[2]['_id'] ],
+		usedTermIDArray : [ TermsData[2]['_id'] ]
 	});
 	Posts.insert({
 		userID : UsersData[2]['_id'],
@@ -146,8 +150,9 @@ if(Posts.find().count() === 0) {
 		author : "Jane Goodall",
 		publisher : "Kony 2012",
 		publish_date : "7/2/2010",
-		categoryID : Categories.find().fetch()[1]['_id']
-
+		categoryID : Categories.find().fetch()[1]['_id'],
+		definedTermIDArray : [ TermsData[3]['_id'] ],
+		usedTermIDArray : [ TermsData[1]['_id'] ]
 	});
 }
 var PostsData = Posts.find().fetch();
@@ -291,42 +296,6 @@ var AdminLabelsData = Adminlabels.find().fetch();
 * PIVOT TABLES  *
 *               *
 ****************/
-
-//Terms defined pivot tables
-if(Post_terms_defined.find().count() === 0) {
-	Post_terms_defined.insert({
-		postID : PostsData[0]['_id'],
-		termID : TermsData[0]['_id']
-	});
-	Post_terms_defined.insert({
-    	postID : PostsData[1]['_id'],
-    	termID : TermsData[1]['_id']
-    });
-	Post_terms_defined.insert({
-    	postID : PostsData[1]['_id'],
-    	termID : TermsData[2]['_id']
-    });
-	Post_terms_defined.insert({
-    	postID : PostsData[2]['_id'],
-    	termID : TermsData[3]['_id']
-    });	
-}
-
-//Terms used pivot tables
-if(Post_terms_used.find().count() === 0) {
-	Post_terms_used.insert({
-        postID : PostsData[0]['_id'],
-        termID : TermsData[1]['_id']
-    });
-    Post_terms_used.insert({
-        postID : PostsData[0]['_id'],
-        termID : TermsData[2]['_id']
-    });
-	Post_terms_used.insert({
-        postID : PostsData[1]['_id'],
-        termID : TermsData[3]['_id']
-    });
-}
 
 if(Term_label_values.find().count() === 0) {
 	Term_label_values.insert({

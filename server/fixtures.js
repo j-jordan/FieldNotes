@@ -273,10 +273,12 @@ var DefinitionData = Definitions.find().fetch();
 
 if(Adminlabels.find().count() === 0) {
 	Adminlabels.insert({
+		dictionaryID : DictionaryData[0]['_id'],
 		label : 'Running time big-O',
 		description : 'Running time is required for this term to be added to this dictionary'
 	});
 	Adminlabels.insert({
+		dictionaryID : DictionaryData[0]['_id'],
 		label : 'Running time little-O',
 		description : 'Running time is required for this term to be added to this dictionary'
 	});
@@ -324,18 +326,6 @@ if(Post_terms_used.find().count() === 0) {
         postID : PostsData[1]['_id'],
         termID : TermsData[3]['_id']
     });
-}
-
-//admin fields pivot table
-if(Admin_term_fields.find().count() === 0) {
-	Admin_term_fields.insert({
-		dictionaryID : DictionaryData[0]['_id'],
-		AdminlabelsID : AdminLabelsData[0]['_id']
-	});
-	Admin_term_fields.insert({
-		dictionaryID : DictionaryData[0]['_id'],
-		AdminlabelsID : AdminLabelsData[1]['_id']
-	});	
 }
 
 if(Term_label_values.find().count() === 0) {

@@ -41,7 +41,7 @@ Template.termPage.helpers({
 	'labels': function(dictionaryID){
 
 		//Subscribe to the subset of admin_term_fields for this dictionary
-		Meteor.subscribe('admin_fields', dictionaryID);
+		Meteor.subscribe('adminLabels', dictionaryID);
 
 		return Adminlabels.find({});
 	},

@@ -92,18 +92,8 @@ Meteor.publish('termPageTerms', function(){
 })
 
 //Publish the admin term fields for a dictionary
-Meteor.publish('admin_fields', function(_dictionaryID){
-    var dictId = _dictionaryID;
-
-    var adminLabelIDs = Admin_term_fields.find({dictionaryID: dictId}, {fields: {'AdminlabelsID': 1}}).fetch();
-
-    label = [];
-
-    for (var i = adminLabelIDs.length - 1; i >= 0; i--) {
-        label.push(adminLabelIDs[i]['AdminlabelsID']);
-    }
-
-    return Adminlabels.find({_id: {$in: label}});
+Meteor.publish('adminLabels', function(_dictionaryID){
+    return Adminlabels.find({dictionaryID: _dictionaryID});
 });
 
 //Publish the label values for a term
@@ -157,19 +147,4 @@ Meteor.publish('summariesByCategory', function(_categoryID){
     };
 
     return Summaries.find({postID: {$in: postIDs}});
-});
-
-//Publish the admin labels for a dictionary id
-Meteor.publish('adminLabels', function(_dictionaryID){
-
-        var adminLabelIDs = Admin_term_fields.find({dictionaryID: _dictionaryID}, {fields: {'AdminlabelsID': 1}}).fetch();
-
-        dynamicFieldIds = [];
-        
-        for (var i = adminLabelIDs.length - 1; i >= 0; i--) {
-            dynamicFieldIds.push(adminLabelIDs[i]['AdminlabelsID']);
-        }
-
-        return Adminlabels.find({_id: {$in: dynamicFieldIds}});
-
 });

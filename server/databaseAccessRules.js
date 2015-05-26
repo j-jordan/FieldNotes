@@ -79,9 +79,6 @@ var accessControlList = {
 		'insert' : true,
 		'remove' : aclUserIsAdmin
 	},
-	'Admin_term_fields' : {
-		'insert' : true
-	},
 	'Term_label_values' : {
 		'insert' : true,
 		'update' : aclALL([	aclUserIsAdmin,
@@ -136,7 +133,6 @@ Terms.allow(thunkFactory('Terms'));
 Categories.allow(thunkFactory('Categories'));
 Definitions.allow(thunkFactory('Definitions'));
 
-Admin_term_fields.allow(thunkFactory('Admin_term_fields'));
 Post_terms_defined.allow(thunkFactory('Post_terms_defined'));
 Post_terms_used.allow(thunkFactory('Post_terms_used'));
 Term_label_values.allow(thunkFactory('Term_label_values'));

@@ -106,21 +106,13 @@ Template.newDictionary.events({
 			{
 				//Update data. Grab the positions out of label names/description
 				var adminLabel = {
+					dictionaryID: dictionary._id,
 					label : labelNames[i],
 					description : labelDescription[i]
 				};
 
 				//Update
-				adminLabel._id = Adminlabels.insert(adminLabel);
-
-				//Update data. Get the id's from each update and insert into pivot table
-				admin_term_field = {
-					dictionaryID: dictionary._id,
-					AdminlabelsID: adminLabel._id
-				}
-
-				//Update
-				Admin_term_fields.insert(admin_term_field);
+				Adminlabels.insert(adminLabel);
 			}
 
 			//Route back to the list of dictionaries to see you newly created dictionary

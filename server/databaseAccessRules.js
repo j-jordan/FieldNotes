@@ -35,52 +35,59 @@ function aclOnlyWhitelistedFieldsModified(_allowedFieldsArray) {
 }
 
 // ACL function
-// Returns true IFF the provided _userid had the 'admin' role.
+// Returns true IFF the provided _userid has the 'admin' role.
 function aclUserIsAdmin(_userid) {
 	return Roles.userIsInRole(_userid, 'admin');
 }
 
+// ACL function
+// Returns true IFF the provided _userid is not null.
+function aclUserIsAuthed(_userid) {
+	return (typeof _userid !== null);
+}
+
 // Database name -> request type -> boolean value or function returning boolean
 // NOTE(James): When adding a new Database name entry, be sure that a thunk for it exists at the bottom of this file.
+// TODO(James): Add more rigorous validation and move it out of the ACL.
 var accessControlList = {
 	'Posts' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'update' : aclALL([	aclUserIsAdmin,
 							aclOnlyWhitelistedFieldsModified([ 'doi', 'author', 'publisher', 'publish_date'])
 							]),
 	},
 	'Comments' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'update' : aclOnlyWhitelistedFieldsModified([ 'pop_rating' ]),
 		'remove' : aclUserIsAdmin
 	},
 	'Dictionaries' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'update' : aclALL([	aclUserIsAdmin,
 							aclOnlyWhitelistedFieldsModified([ 'name' ])
 							]),
 		'remove' : aclUserIsAdmin
 	},
 	'Adminlabels' : {
-		'insert' : true
+		'insert' : aclUserIsAuthed,
 	},
 	'Summaries' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'remove' : aclUserIsAdmin
 	},
 	'Terms' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'update' : aclALL([	aclUserIsAdmin,
 							aclOnlyWhitelistedFieldsModified([ 'term_name' ])
 							]),
 		'remove' : aclUserIsAdmin
 	},
 	'Definitions' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'remove' : aclUserIsAdmin
 	},
 	'Term_label_values' : {
-		'insert' : true,
+		'insert' : aclUserIsAuthed,
 		'update' : aclALL([	aclUserIsAdmin,
 							aclOnlyWhitelistedFieldsModified([ 'termID', 'adminlabelsID', 'value' ])
 							]),

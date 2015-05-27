@@ -2,7 +2,7 @@ Template.dictionaryPage.helpers({
     //Return all terms for this dictionary
 	'terms': function(dictID) {
         //Subscribe to the correct set of terms for this dictionary
-        Meteor.subscribe('dictionaryPageTerms', dictID);
+        Meteor.subscribe('getTermsFromDictionaryID', dictID);
 
         //Return the terms
 		return Terms.find({dictionaryID: dictID});

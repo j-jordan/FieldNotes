@@ -1,4 +1,4 @@
-Meteor.subscribe('categories');
+Meteor.subscribe('listAllCategories');
 
 Template.submitPage.onCreated(function() {
   this.previewData = new ReactiveVar;
@@ -19,7 +19,6 @@ Template.submitPage.onCreated(function() {
  */
 Template.submitPage.events({
 	'submit form': function(e) {
-
 		var validated = true;
 
 		$(e.target).find('.required').map(function(index, object){			

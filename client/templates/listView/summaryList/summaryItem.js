@@ -1,16 +1,30 @@
 Template.summaryItem.helpers({
 	//Return the title of a post for the summaryItems
-	'title': function(summaryID){
+	'title': function(_summaryID){
+		Meteor.subscribe('lookupSummary', _summaryID);
+		
+		var summary = Summaries.findOne({_id: _summaryID});
+		if (!summary) {
+			return "SID:" + _summaryID;
+		}
+		
+		Meteor.subscribe('lookupPost', summary.postID);
+		
+		var post = Posts.findOne({_id: summary.postID});
+		if (!post) {
+			return "PID:" + summary.postID;
+		}
 
-		//Subscribe to the correct cursor from post_summary for this summary
-		Meteor.subscribe('postFromSummaryID', summaryID);
-
-		//Return the post
-		return Posts.findOne({}).title;
+		return post.title;
 	},
 	//Return the username from a user id
 	'userName': function(userID){
-		return Meteor.users.findOne(userID).username;
+		Meteor.subscribe('lookupUsername', userID)
+		var user = Meteor.users.findOne(userID)
+		if (!user) {
+			return "UID:" + userID;
+		}
+    	return user.username;
 	}
 
 });

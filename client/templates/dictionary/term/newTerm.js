@@ -5,7 +5,7 @@ Template.newTerm.helpers({
 	'getDynamicFields': function(dictId){
 		
 		//Subscribe to the cursor of admin labels for this dictionary
-		Meteor.subscribe('adminLabels', dictId);
+		Meteor.subscribe('getAdminlabelsFromDictionaryID', dictId);
 
 		dynamicFields = Adminlabels.find({}).fetch();
 		return dynamicFields;

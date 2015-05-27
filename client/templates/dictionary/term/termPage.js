@@ -22,7 +22,8 @@ Template.termPage.rendered = function(){
 	var termID =  tokens[tokens.length-1];
 
 	//Resubscribe with the ID
-	Meteor.subscribe('term', termID);
+	// TODO(James): I think this subscription should be elsewhere...
+	Meteor.subscribe('lookupTerm', termID);
 }
 
 Template.termPage.helpers({
@@ -41,7 +42,7 @@ Template.termPage.helpers({
 	'labels': function(dictionaryID){
 
 		//Subscribe to the subset of admin_term_fields for this dictionary
-		Meteor.subscribe('adminLabels', dictionaryID);
+		Meteor.subscribe('getAdminlabelsFromDictionaryID', dictionaryID);
 
 		return Adminlabels.find({});
 	},
@@ -49,30 +50,26 @@ Template.termPage.helpers({
 	//Return the correct value for a label
 	'labelDescription' : function(labelId){
 		
-		var termID = Session.get("termID");
+		var _termID = Session.get("termID");
 
 		//Subscribe to the subset of term_label_values for this term
-		Meteor.subscribe('labelValuesForTerms',termID);
+		Meteor.subscribe('getLabelValuesFromTermIDAndAdminlabelsID', _termID, labelId);
 
-		//Get the label values
-		label_values = Term_label_values.find({}).fetch();
-
-		for(var i = 0; i < label_values.length; i++)
-		{
-			//If the label value's adminID is equal to our labelID then we've found the right one
-			if(label_values[i].adminlabelsID === labelId)
-			{
-				//Return the first label value that matches, they will all be the same
-				return label_values[i].value;
-			}
+		//Get the label value
+		var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: labelId });
+		
+		if (!value) {
+			return "TID:" + _termID + "/ALID:" + labelId;
 		}
+		
+		return Term_label_values.findOne({ termID: _termID, adminlabelsID: labelId }).value;
 	},
 
 	//Find all definitions for given term id
 	'findDefinitions' : function(termID){
 	
 		//Subscribe to the subset of definitions for this term
-		Meteor.subscribe('allTermDefinitions', termID);
+		Meteor.subscribe('getDefinitionsFromTermID', termID);
 
 		//If showallDefinitions is true, we want to show all definitions
     	if(showAllDefinitions.get()) {

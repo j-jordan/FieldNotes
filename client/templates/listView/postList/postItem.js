@@ -1,10 +1,10 @@
 Template.postItem.helpers({
 	//Return the username of a another user
 	'getUserName': function(userID) {
+		Meteor.subscribe('lookupUsername', userID)
 		var user = Meteor.users.findOne(userID)
 		if (!user) {
-			console.log("WARN: postItem.js: No user found with userid '" + userID + "'");
-			return "***";
+			return "UID:" + userID;
 		}
     	return user.username;
     }

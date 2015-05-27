@@ -10,10 +10,6 @@ Template.postPage.rendered = function() {
     //Reset flags
     summeriesShown = false;
     showAllSummaries.set(false);
-
-    //Resubscribe to the cursor for post_summary incase it has changed
-	// NOTE(James): commented out this line because I can't find anywhere that selectedSummaryID is set, and passing null is not useful.
-    //Meteor.subscribe('postFromSummaryID', this.data.selectedSummaryID);
 }
 
  
@@ -161,17 +157,17 @@ Template.postPage.helpers({
     'findUser': function(_userID) {
 
         //Find the username that matches the passed in _userID
+		Meteor.subscribe('lookupUsername');
         return Meteor.users.findOne(_userID).username;
     },
 
     'findSummaries': function(_postID, _summaryID) {
 
         //Subscribe to the subset of summaries that belong to this post
-        Meteor.subscribe('getSummaries', _postID);
+        Meteor.subscribe('getSummariesFromPostID', _postID);
 
         //showAllSummaries is reactiveBoolean if you want to show all summaries
     	if(showAllSummaries.get()) {
-
     		return Summaries.find({postID: _postID});
     	}
    		else {
@@ -188,7 +184,7 @@ Template.postPage.helpers({
 
     comments: function() {
         //Subscribe to the subset of comments that belong to this post
-        Meteor.subscribe('getComments', postData._id);
+        Meteor.subscribe('getCommentsFromPostID', postData._id);
 
         return Comments.find();
     },
@@ -196,8 +192,8 @@ Template.postPage.helpers({
     //Return all the terms used in this paper
     'terms_used': function(_postID){
         //Subscribe to the subset of terms used in this paper
-        Meteor.subscribe('Post', _postID);
-        Meteor.subscribe('terms_used', _postID);
+        Meteor.subscribe('lookupPost', _postID);
+        Meteor.subscribe('getTermsFromPostID', _postID);
 
         var term_used_IDs = Posts.findOne(_postID).usedTermIDArray;
 
@@ -207,8 +203,8 @@ Template.postPage.helpers({
     //Return all terms defined in this paper
     'terms_defined': function(_postID){
         //Subscribe to the subset of terms defined in this paper
-        Meteor.subscribe('Post', _postID);
-		Meteor.subscribe('terms_defined', _postID);
+        Meteor.subscribe('lookupPost', _postID);
+		Meteor.subscribe('getTermsFromPostID', _postID);
 
 		var term_defined_IDs = Posts.findOne(_postID).definedTermIDArray;
 

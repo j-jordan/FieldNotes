@@ -1,5 +1,4 @@
-//Subscribe to the cursor of dictionaries
-Meteor.subscribe("dictionaries");
+Meteor.subscribe('listAllDictionaries');
 
 Template.dictionaries.helpers({
     //Return all the dictionaries

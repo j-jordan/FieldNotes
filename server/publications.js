@@ -55,8 +55,8 @@ Meteor.publish('lookupSummary', function(_summaryID){
 
 /****************
 *   DOCUMENTS   *
-*   BY PARENT   *
-*      ID       *
+*      BY       *
+*  FOREIGN KEY  *
 ****************/
 
 //Publish the summaries for a given post
@@ -84,7 +84,6 @@ Meteor.publish('getTermsFromPostID', function(_postID){
 
 //Publish the terms for a dictionary
 Meteor.publish('getTermsFromDictionaryID', function(_dictionaryID) {
-	console.log("Found " + Terms.find({dictionaryID: _dictionaryID}).fetch().length + " for " + _dictionaryID);
     return Terms.find({dictionaryID: _dictionaryID});
 });
 
@@ -119,4 +118,38 @@ Meteor.publish('getSummariesFromCategoryID', function(_categoryID){
 
 Meteor.publish('getPostsFromCategoryID', function(_categoryID){
 	return Posts.find({categoryID: _categoryID});
+});
+
+/****************
+* DOCUMENT SETS *
+****************/
+
+// All documents needed to render a postPage template
+Meteor.publish('retrievePostPage', function(_postID){
+	var post = Posts.findOne({_id: _postID});
+	var cursors = [
+		Posts.find({_id: _postID}), // The post itself
+		Summaries.find({postID: _postID}), // The summaries for the post
+		Comments.find({postID: _postID}), // The comments for the post
+		];
+	
+	var comments = Comments.find({postID: _postID}).fetch();
+	var userIDs = [];
+	for (i = 0; i < comments.length; i++) {
+		userIDs.push(comments[i].userID); // UserID for comment submitter
+	}
+	if (post) {
+		userIDs.push(post.userID); // UserID for post submitter
+	}
+	cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}}));
+
+	if (post) {
+		var termIdArray = post.definedTermIDArray;
+		for (i = 0; i < post.usedTermIDArray.length; i++) {
+			termIdArray.push(post.usedTermIDArray[i]);
+		}
+		cursors.push(Terms.find({_id: {$in: termIdArray}})); // All terms either used or defined in the post
+	}
+
+	return cursors;
 });

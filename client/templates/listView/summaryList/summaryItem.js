@@ -25,6 +25,11 @@ Template.summaryItem.helpers({
 			return "UID:" + userID;
 		}
     	return user.username;
+	},
+
+	'postLinkData': function() {
+		var summary = Summaries.findOne({_id: this._id});
+		return {_id: summary.postID};
 	}
 
 });

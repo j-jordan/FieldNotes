@@ -1,17 +1,7 @@
-//PostPage flags for toggeling summaries
-var showAllSummaries = new ReactiveVar(false);
-var summeriesShown = false;
-
-postData = {};
-submitSummaryID = {};
-
-//Run everytime postPage template is rendered. More or less a constructor
-Template.postPage.rendered = function() {
-    //Reset flags
-    summeriesShown = false;
-    showAllSummaries.set(false);
-}
-
+Template.postPage.onCreated(function() {
+	//PostPage flag for toggeling summaries
+	this.showAllSummaries = new ReactiveVar(false);
+});
  
 Template.postPage.events({
     //Click event for showing all summaries
@@ -20,11 +10,9 @@ Template.postPage.events({
         //Save the button
         var $summaryButton = $('.summary-button');
 
-        //Toggle our flag
-        summeriesShown = !summeriesShown;
-
         //Update the reactive flag
-        showAllSummaries.set(summeriesShown);  
+		var sas = Template.instance().showAllSummaries;
+        sas.set(!sas.get());  
 
         //Toggle class 'show' used to display the correct text
         $summaryButton.toggleClass('show');
@@ -86,10 +74,10 @@ Template.postPage.events({
     'beforerated .postDataRateItTemplate': function(event,value){
 
         //Make sure we only change the rated event of the correct item. In this case we want to change summaries
-        if(! $('[id=rateitDiv'+this.postData._id+']').hasClass("summaryRating")){
+        if(! $('[id=rateitDiv'+this.data._id+']').hasClass("summaryRating")){
 
             //Get the old data, and any new data that doesn't require the actual rating from the user
-            var postID = this.postData._id;
+            var postID = this.data._id;
             
             var foundPost = Posts.findOne(postID);
 
@@ -98,7 +86,7 @@ Template.postPage.events({
             var updatedNumRaters = foundPost.numRaters + 1;
 
             //Bind the rated event and compute the new values with 'value'
-            $("#rateitDiv"+this.postData._id).bind('rated', function (event, value) { 
+            $("#rateitDiv"+this.data._id).bind('rated', function (event, value) { 
 
                 var newProduct = oldProduct + value;
 
@@ -148,66 +136,37 @@ Template.postPage.events({
         };
 
         //Update
-        Posts.update(this.postData._id, updatedPost);
+        Posts.update(this._id, updatedPost);
     }
 });
 
 Template.postPage.helpers({
 
     'findUser': function(_userID) {
-
-        //Find the username that matches the passed in _userID
-		Meteor.subscribe('lookupUsername');
-        return Meteor.users.findOne(_userID).username;
+		return Meteor.users.findOne(_userID).username;
     },
 
-    'findSummaries': function(_postID, _summaryID) {
-
-        //Subscribe to the subset of summaries that belong to this post
-        Meteor.subscribe('getSummariesFromPostID', _postID);
-
+    'findSummaries': function() {
         //showAllSummaries is reactiveBoolean if you want to show all summaries
-    	if(showAllSummaries.get()) {
-    		return Summaries.find({postID: _postID});
+    	if(Template.instance().showAllSummaries.get()) {
+			return Summaries.find({postID: this._id});
     	}
    		else {
-
-            //if summaryID is undefined, there is no specific summary to load -> find the top-rated summary through the post id
-            if(typeof _summaryID === 'undefined'){
-                return Summaries.find({postID: _postID}, {sort: {quality_rating: -1}, limit: 1});
-
-            } else {
-                return Summaries.find({_id: _summaryID});
-            }    		
+			return Summaries.find({postID: this._id}, {sort: {quality_rating: -1}, limit: 1});   		
     	}
     },
 
-    comments: function() {
-        //Subscribe to the subset of comments that belong to this post
-        Meteor.subscribe('getCommentsFromPostID', postData._id);
-
-        return Comments.find();
+    'comments': function() {
+        return Comments.find({postID: this._id});
     },
 
     //Return all the terms used in this paper
-    'terms_used': function(_postID){
-        //Subscribe to the subset of terms used in this paper
-        Meteor.subscribe('lookupPost', _postID);
-        Meteor.subscribe('getTermsFromPostID', _postID);
-
-        var term_used_IDs = Posts.findOne(_postID).usedTermIDArray;
-
-		return Terms.find({_id: {$in: term_used_IDs}});
+    'terms_used': function() {
+		return Terms.find({_id: {$in: this.usedTermIDArray}});
     },
 
     //Return all terms defined in this paper
-    'terms_defined': function(_postID){
-        //Subscribe to the subset of terms defined in this paper
-        Meteor.subscribe('lookupPost', _postID);
-		Meteor.subscribe('getTermsFromPostID', _postID);
-
-		var term_defined_IDs = Posts.findOne(_postID).definedTermIDArray;
-
-        return Terms.find({_id: {$in: term_defined_IDs}});
+    'terms_defined': function() {
+        return Terms.find({_id: {$in: this.definedTermIDArray}});
     }
 });

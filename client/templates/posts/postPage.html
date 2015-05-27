@@ -8,10 +8,10 @@
   <div class="row">
     <div class="col-md-10">
       <div class="col-md-7">
-        <span> <h2 style="display: inline;">{{postData.title}}</h2></span>
+        <span> <h2 style="display: inline;">{{title}}</h2></span>
       </div>  
       <div class="col-md-3">
-        <span> <h3 style="display: inline;">Posted by: {{ findUser postData.userID }}</h3></span>
+        <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
       </div>        
       <div class="col-md-2">
         <span>{{> postDataUneditableRateItTemplate}}</span>
@@ -26,7 +26,7 @@
     <div class="col-md-4">
       <div class="form-inline form-group">
           <label for="doi">DOI: </label>        
-          <span class="viewSpan" style="float: right" name="doi">{{postData.doi}}</span>
+          <span class="viewSpan" style="float: right" name="doi">{{doi}}</span>
 
           <input class="form-control" name="editableInputField" type="hidden" id="doi"
             value="{{postData.doi}}" style="text-align: right"/>
@@ -36,7 +36,7 @@
     <div class="col-md-4">
       <div class="form-inline form-group">
         <label for="publish_date">DATE PUBLISHED:</label>
-        <span  class="viewSpan" style='float: right' name='editableInputField'>{{postData.publish_date}}</span>
+        <span  class="viewSpan" style='float: right' name='editableInputField'>{{publish_date}}</span>
 
         <input class="form-control" type="hidden"  name="editableInputField" id="publish_date" 
           value="{{postData.publish_date}}" style="text-align: right"/>
@@ -52,7 +52,7 @@
     <div class="col-md-4">
       <div class="form-inline form-group">
         <label for="publisher">Publisher: </label>        
-        <span class="viewSpan" name="publisher" style="float: right" value="{{postData.publisher}}">{{postData.publisher}}</span>
+        <span class="viewSpan" name="publisher" style="float: right" value="{{postData.publisher}}">{{publisher}}</span>
 
         <input class="form-control" type="hidden" name="editableInputField" id="publisher"
             value="{{ postData.publisher }}" style="text-align: right"/>
@@ -61,7 +61,7 @@
     <div class="col-md-4"> 
       <div class="form-inline form-group">
         <label for="author">Author: </label>        
-        <span class="viewSpan" name="author" style="float: right">{{postData.author}}</span> 
+        <span class="viewSpan" name="author" style="float: right">{{author}}</span> 
 
         <input class="form-control" type="hidden" name="editableInputField" id="author" 
           value="{{ postData.author }}" style="text-align: right"/>
@@ -84,12 +84,12 @@
 
   <div class="row">
     <div class="col-md-4">
-      {{#each terms_used postData._id}}
+      {{#each terms_used}}
         <li> {{term_name}} </li>
       {{/each}}
     </div>
     <div class="col-md-4">
-      {{#each terms_defined postData._id}}
+      {{#each terms_defined}}
         <li> {{term_name}} </li>
       {{/each}}
     </div>
@@ -113,7 +113,7 @@
 
   <div class="row">
     <div class="col-md-12"> 
-      {{#each findSummaries postData._id selectedSummaryID}}
+      {{#each findSummaries}}
           {{> summaryTemplate}}
       {{/each}}
     </div>

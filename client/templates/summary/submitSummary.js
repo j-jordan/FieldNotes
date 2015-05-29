@@ -23,6 +23,6 @@ Template.submitSummary.events({
 		Summaries.insert(summary);
 		
 		//Redirect to the postpage  
-		Router.go(Router.routes['postPage'].path({_id: summary.postID}));
+		Router.go('postPage', {_id: summary.postID});
 	}
 });

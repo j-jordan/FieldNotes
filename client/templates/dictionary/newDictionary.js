@@ -116,7 +116,7 @@ Template.newDictionary.events({
 			}
 
 			//Route back to the list of dictionaries to see you newly created dictionary
-			Router.go("/dictionary");
+			Router.go('dictionaries');
 		}
 		//Validation failed
 		else{

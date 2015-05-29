@@ -18,10 +18,8 @@ Template.submitDefinition.events({
 
 		definition._id = Definitions.insert(definition);
 
-		var termName = $(e.target).find('[name=term_name]').val();
-
 		//Redirect to the postpage  
-		Router.go('/term/'+termName);
+		Router.go('termPage', {_id: definition.termID});
 	},
 	
 	'input [name=definition], change [name=definition], paste [name=definition], keyup [name=definition], mouseup [name=definition]': function(e) {

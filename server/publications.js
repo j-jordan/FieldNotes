@@ -36,24 +36,29 @@ Meteor.publish('listAllTerms', function(){
 
 //Publish the matching post
 Meteor.publish('lookupPost', function(_postID){
+	check(_postID, String);
     return Posts.find({_id: _postID});
 });
 
 Meteor.publish('lookupUsername', function(_userID){
+	check(_userID, String);
 	return Meteor.users.find(_userID, {fields: {username :1}});
 });
 
 Meteor.publish('lookupDictionary', function(_dictionaryID){
+	check(_dictionaryID, String);
     return Dictionaries.find({_id: _dictionaryID});
 });
 
 //Publish the terms for a termPage
 Meteor.publish('lookupTerm', function(_termID){
+	check(_termID, String);
     return Terms.find({_id: _termID});
 });
 
 //Publish the summary for a given summaryID
 Meteor.publish('lookupSummary', function(_summaryID){
+	check(_summaryID, String);
 	return Summaries.find({_id: _summaryID});
 });
 
@@ -63,6 +68,7 @@ Meteor.publish('lookupSummary', function(_summaryID){
 ****************/
 
 Meteor.publish('getDictionaryByName', function(_name){
+	check(_name, String);
     return Dictionaries.find({name: _name});
 });
 
@@ -74,16 +80,19 @@ Meteor.publish('getDictionaryByName', function(_name){
 
 //Publish the summaries for a given post
 Meteor.publish('getSummariesFromPostID', function(_postID){
+	check(_postID, String);
 	return Summaries.find({postID: _postID});
 });
 
 //Publish the comments for a given post
 Meteor.publish('getCommentsFromPostID', function(_postID){
+	check(_postID, String);
 	return Comments.find({postID: _postID});
 });
 
 //Publish the terms defined for a given post
 Meteor.publish('getTermsFromPostID', function(_postID){
+	check(_postID, String);
     var termIdArray = Posts.findOne(_postID).definedTermIDArray;
 	
 	var termUsedIdArray = Posts.findOne(_postID).usedTermIDArray;
@@ -97,26 +106,32 @@ Meteor.publish('getTermsFromPostID', function(_postID){
 
 //Publish the terms for a dictionary
 Meteor.publish('getTermsFromDictionaryID', function(_dictionaryID) {
+	check(_dictionaryID, String);
     return Terms.find({dictionaryID: _dictionaryID});
 });
 
 //Publish the admin term fields for a dictionary
 Meteor.publish('getAdminlabelsFromDictionaryID', function(_dictionaryID){
+	check(_dictionaryID, String);
     return Adminlabels.find({dictionaryID: _dictionaryID});
 });
 
 //Publish the label values for a term
 Meteor.publish('getLabelValuesFromTermIDAndAdminlabelsID', function(_termID, _adminlabelsID){
+	check(_termID, String);
+	check(_adminlabelsID, String);
     return Term_label_values.find({termID: _termID, adminlabelsID: _adminlabelsID});
 });
 
 //Publish all the definitions for the term ID
 Meteor.publish('getDefinitionsFromTermID', function(_termID){
+	check(_termID, String);
     return Definitions.find({termID: _termID});
 });
 
 //Publish the summaries based upon category id
 Meteor.publish('getSummariesFromCategoryID', function(_categoryID){
+	check(_categoryID, String);
 
     var posts = Posts.find({categoryID: _categoryID}).fetch();
 
@@ -130,6 +145,7 @@ Meteor.publish('getSummariesFromCategoryID', function(_categoryID){
 });
 
 Meteor.publish('getPostsFromCategoryID', function(_categoryID){
+	check(_categoryID, String);
 	return Posts.find({categoryID: _categoryID});
 });
 
@@ -164,6 +180,8 @@ Meteor.publish('retrievePostsList', function() {
 
 // All documents needed to render a postPage template
 Meteor.publish('retrievePostPage', function(_postID) {
+	check(_postID, String);
+
 	var post = Posts.findOne({_id: _postID});
 	var cursors = [
 		Posts.find({_id: _postID}), // The post itself
@@ -194,6 +212,8 @@ Meteor.publish('retrievePostPage', function(_postID) {
 
 // All documents needed to render a categoryPage template
 Meteor.publish('retrieveCategoryPage', function(_categoryName) {
+	check(_categoryName, String);
+
 	var category = Categories.findOne({category_name: _categoryName});
 	var cursors = [
 		Categories.find({category_name: _categoryName}), // The category itself
@@ -224,6 +244,8 @@ Meteor.publish('retrieveCategoryPage', function(_categoryName) {
 
 // All documents needed to render a termPage template
 Meteor.publish('retrieveTermPage', function(_termID) {
+	check(_termID, String);
+
 	var term = Terms.findOne({_id: _termID});
 	var cursors = [
 		Terms.find({_id: _termID}), // The term itself
@@ -250,6 +272,8 @@ Meteor.publish('retrieveTermPage', function(_termID) {
 
 // All documents needed to render a newTerm template
 Meteor.publish('retrieveNewTerm', function(_dictName) {
+	check(_dictName, String);
+
 	var dictionary = Dictionaries.findOne({name: _dictName});
 	var cursors = [
 		Dictionaries.find({name: _dictName}), // The dictionary itself
@@ -284,6 +308,8 @@ Meteor.publish('retrieveSummaryList', function() {
 
 // All documents needed to render a summaryListByCategory template
 Meteor.publish('retrieveSummaryListByCategory', function(_categoryID) {
+	check(_categoryID, String);
+
     var postsCursor = Posts.find({categoryID: _categoryID});
 	var cursors = [
 		postsCursor, // All posts in the category

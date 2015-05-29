@@ -168,5 +168,9 @@ Template.postPage.helpers({
     //Return all terms defined in this paper
     'terms_defined': function() {
         return Terms.find({_id: {$in: this.definedTermIDArray}});
-    }
+    },
+	
+	'submitSummaryData': function() {
+		return { submitSummaryID: this._id };
+	}
 });

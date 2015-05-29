@@ -1,11 +1,7 @@
 Template.commentItem.helpers({
 	//Return a username from a user id
     'findUser': function(userID) {
-		if (Meteor.subscribe('lookupUsername', userID).ready()) {
-			return Meteor.users.findOne({_id : userID}).username;
-		} else {
-			return "UID:" + userID;
-		}
+		return Meteor.users.findOne({_id : userID}).username;
     }
 });
 

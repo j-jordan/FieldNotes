@@ -1,5 +1,3 @@
-Meteor.subscribe('listAllDictionaries');
-
 Template.dictionaries.helpers({
     //Return all the dictionaries
 	'dictionaries': function(){

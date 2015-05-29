@@ -1,13 +1,15 @@
 Template.postItem.helpers({
 	//Return the username of a another user
 	'getUserName': function(userID) {
-		Meteor.subscribe('lookupUsername', userID)
 		var user = Meteor.users.findOne(userID)
 		if (!user) {
 			return "UID:" + userID;
 		}
     	return user.username;
-    }
+    },
+	'top_summary': function() {
+		return Summaries.findOne({postID: this._id});
+	}
 });
 
 Template.postItem.events({

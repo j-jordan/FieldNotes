@@ -1,5 +1,3 @@
-Meteor.subscribe('listAllCategories');
-
 Template.submitPage.onCreated(function() {
   this.previewData = new ReactiveVar;
 });

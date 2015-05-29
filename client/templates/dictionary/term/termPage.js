@@ -6,7 +6,7 @@ var showAllDefinitions = new ReactiveVar(false);
 var definitionsShown = false;
 
 //Everytime termpage template is rendered
-Template.termPage.rendered = function(){
+Template.termPage.rendered = function(){ //TODO(James): Get rid of this once routing is fixed.
 
 	//Instantiate the flags back to false
 	definitionsShown = false;
@@ -20,10 +20,6 @@ Template.termPage.rendered = function(){
 	tokens = url.split(delimeter).slice(start),
 	result = tokens.join(delimeter);
 	var termID =  tokens[tokens.length-1];
-
-	//Resubscribe with the ID
-	// TODO(James): I think this subscription should be elsewhere...
-	Meteor.subscribe('lookupTerm', termID);
 }
 
 Template.termPage.helpers({
@@ -39,21 +35,14 @@ Template.termPage.helpers({
 	},
 
 	//Return the admin labels for a dictionary
-	'labels': function(dictionaryID){
-
-		//Subscribe to the subset of admin_term_fields for this dictionary
-		Meteor.subscribe('getAdminlabelsFromDictionaryID', dictionaryID);
-
-		return Adminlabels.find({});
+	'labels': function(_dictionaryID){
+		return Adminlabels.find({dictionaryID: _dictionaryID});
 	},
 
 	//Return the correct value for a label
 	'labelDescription' : function(labelId){
 		
 		var _termID = Session.get("termID");
-
-		//Subscribe to the subset of term_label_values for this term
-		Meteor.subscribe('getLabelValuesFromTermIDAndAdminlabelsID', _termID, labelId);
 
 		//Get the label value
 		var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: labelId });
@@ -66,20 +55,15 @@ Template.termPage.helpers({
 	},
 
 	//Find all definitions for given term id
-	'findDefinitions' : function(termID){
-	
-		//Subscribe to the subset of definitions for this term
-		Meteor.subscribe('getDefinitionsFromTermID', termID);
-
+	'findDefinitions' : function(_termID){
 		//If showallDefinitions is true, we want to show all definitions
     	if(showAllDefinitions.get()) {
-    		
-    		return Definitions.find({});
+    		return Definitions.find({termID: _termID});
     	}
     	//else we want to show the top rated definition
    		else {
    			//Sort the definitions by quality_rating, highest at top, then grab the first one
-			return Definitions.find({}, {sort: {quality_rating: -1}, limit: 1});
+			return Definitions.find({termID: _termID}, {sort: {quality_rating: -1}, limit: 1});
     	}
 	},
 

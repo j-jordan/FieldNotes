@@ -101,7 +101,7 @@
     </div>
     <div class="col-md-3">
       <a class="btn btn-default" style="float: right" name="submitDefinition"
-      href="{{#if loggedIn}}{{pathFor 'submitSummary'}}{{/if}}"
+      href="{{#if loggedIn}}{{pathFor 'submitSummary' data=submitSummaryData}}{{/if}}"
       disabled="{{#if loggedIn}}{{else}}true{{/if}}">Submit summary</a>
     </div>
     <div class="col-md-4">

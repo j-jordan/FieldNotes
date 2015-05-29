@@ -3,11 +3,7 @@ var dynamicFields = [];
 
 Template.newTerm.helpers({
 	'getDynamicFields': function(dictId){
-		
-		//Subscribe to the cursor of admin labels for this dictionary
-		Meteor.subscribe('getAdminlabelsFromDictionaryID', dictId);
-
-		dynamicFields = Adminlabels.find({}).fetch();
+		dynamicFields = Adminlabels.find({dictionaryID: dictId}).fetch();
 		return dynamicFields;
 	}
 }); 

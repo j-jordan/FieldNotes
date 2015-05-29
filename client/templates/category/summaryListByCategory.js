@@ -1,9 +1,14 @@
 Template.summaryListByCategory.helpers({
-	//Return a cursor of summaries from a category id
+	//Return an array of summaries from a category id
 	'summaries': function(_categoryID){
-		//Subscription for the cursor of post_summary
-		Meteor.subscribe('getSummariesFromCategoryID', _categoryID);
+		var summaries = [];
 
-		return Summaries.find({}).fetch();
+		Posts.find({categoryID: _categoryID}).forEach(function(post) {
+			Summaries.find({postID: post._id}).forEach(function(summary) {
+				summaries.push(summary);
+			});
+		});
+
+		return summaries;
 	}
 });

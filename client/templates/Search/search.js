@@ -1,2 +1,6 @@
 //Array of indexes to search. Indexes defined in collections.js
-Template.searchTemplate.indexes = ['posts','dictionary','terms'];
+Template.searchTemplate.helpers({
+	indexes: function() {
+		return ['posts', 'dictionary', 'terms'];
+	}
+});

@@ -34,6 +34,7 @@ Template.submitPage.events({
 				title: $(e.target).find('[name=title]').val(),
 				pop_rating: 0,
 				quality_rating: 0,
+				numRaters : 0,
 				doi: $(e.target).find('[name=doi]').val(),
 				author: $(e.target).find('[name=author]').val(),
 				publish_date: $(e.target).find('[name=publish_date]').val(),
@@ -50,7 +51,8 @@ Template.submitPage.events({
 				userID: Meteor.user()._id,
 				postID: post._id,
 				text: $(e.target).find('[name=summary]').val(),
-				rating: 0
+				quality_rating : 0,
+				numRaters : 0
 			};
 
 			Summaries.insert(summary);

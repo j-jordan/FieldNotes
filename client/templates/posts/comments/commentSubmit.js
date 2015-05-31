@@ -10,7 +10,7 @@ Template.commentSubmit.events({
 			text: $body.val(),
 			postID: template.data._id,
 			parentID: 0,
-			rating: 0,
+			pop_rating: 0,
 			date: "3/27/2015",
 			userID: Meteor.user()._id
 		};

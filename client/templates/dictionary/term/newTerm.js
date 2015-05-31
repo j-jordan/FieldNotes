@@ -34,7 +34,8 @@ Template.newTerm.events({
 			termID: term._id,
 			userID: Meteor.user()._id,
 			text: $(e.target).find('[name=definition]').val(),
-			rating: 0
+			quality_rating : 0,
+			numRaters : 0,
 		};
 
 		//Update definition

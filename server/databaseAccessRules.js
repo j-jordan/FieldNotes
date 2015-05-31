@@ -83,7 +83,6 @@ function valIsCurrentUserID(_userid, _doc, _field) {
 
 // Database name -> request type -> boolean value or function returning boolean
 // NOTE(James): When adding a new Database name entry, be sure that a thunk for it exists at the bottom of this file.
-// TODO(James): Add more rigorous validation and move it out of the ACL.
 var accessControlList = {
 	'Posts' : {
 		'insert' : aclUserIsAuthed,
@@ -127,7 +126,7 @@ var accessControlList = {
 
 // Database name -> { key, format }
 // key is an array of field names, the combination of which is unique among documents in the database.
-// If key is empty or not present, no uniqueness constraint is enforces.
+// If key is empty or not present, no uniqueness constraint is enforced.
 // format is an object with properties named identically to those from documents in the database.
 // The values of format's properties are validation functions.
 // All properties of format must be present for a document to be valid
@@ -150,6 +149,31 @@ var validationList = {
 			'usedTermIDArray':		valIsForeignKeyArray(Terms),
 		}
 	},
+	'Comments' : {
+		'key': [],
+		'format': {
+			'userID':		valIsCurrentUserID,
+			'parentID':		valMatches(Number),
+			'postID':		valIsForeignKey(Posts),
+			'pop_rating':	valMatches(Number),
+			'text':			valMatches(String),
+			'date':			valMatches(String),
+		}
+	},
+	'Dictionaries' : {
+		'key': [],
+		'format': {
+			'name':		valMatches(String),
+		}
+	},
+	'Adminlabels' : {
+		'key': [],
+		'format': {
+			'dictionaryID':	valIsForeignKey(Dictionaries),
+			'label':		valMatches(String),
+			'description':	valMatches(String),
+		}
+	},
 	'Summaries' : {
 		'key': [],
 		'format': {
@@ -160,6 +184,31 @@ var validationList = {
 			'numRaters':		valMatches(Number),
 		}
 	},
+	'Terms' : {
+		'key': [],
+		'format': {
+			'term_name':	valMatches(String),
+			'dictionaryID':	valIsForeignKey(Dictionaries),
+		}
+	},
+	'Definitions' : {
+		'key': [],
+		'format': {
+			'termID':			valIsForeignKey(Terms),
+			'userID':			valIsCurrentUserID,
+			'text':				valMatches(String),
+			'quality_rating':	valMatches(Number),
+			'numRaters':		valMatches(Number),
+		}
+	},
+	'Term_label_values' : {
+		'key': [ 'termID', 'adminlabelsID' ],
+		'format': {
+			'termID':			valIsForeignKey(Terms),
+			'adminlabelsID':	valIsForeignKey(Adminlabels),
+			'value':			valMatches(String),
+		}
+	}
 };
 
 /*********************
@@ -213,7 +262,7 @@ function verifyData(_collection, _dbname, _userid, _doc) {
 		// Format constraint
 		if (validationList[_dbname]['format']) {
 			for (var property in _doc) { // verify that there are no unexpected fields
-				if (!(property in validationList[_dbname]['format'])) {
+				if (!(property in validationList[_dbname]['format']) && !(property === '_id')) {
 					console.log("WARN: databaseAccessRules.js: " + _dbname + " request denied - Unexpected field: '" + property + "'. (userid: " + _userid + ", doc: " + JSON.stringify(_doc) + ")");
 					return false;
 				}
@@ -267,6 +316,7 @@ function denyThunkFactory(collection, name) {
 		update : function(userId, doc, fieldNames, modifier) {
 			return !verifyData(collection, name, userId, doc);
 		},
+		// TODO(James): Add check for existence of foreign keys for documents to be removed.
 	};
 }
 

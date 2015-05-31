@@ -1,63 +1,32 @@
-var label = [];
-var label_values = [];
-
-//Instantiate the reactive boolean variable
-var showAllDefinitions = new ReactiveVar(false);
-var definitionsShown = false;
-
-//Everytime termpage template is rendered
-Template.termPage.rendered = function(){ //TODO(James): Get rid of this once routing is fixed.
-
-	//Instantiate the flags back to false
-	definitionsShown = false;
-	showAllDefinitions.set(false);
-	
-	//Get the termID from the URL because Terms collection somehow resets to [] on refresh
-	//But we still have the ID in the URL
-	var url = Router.current().url,
-	delimeter = '/',
-	start = 1,
-	tokens = url.split(delimeter).slice(start),
-	result = tokens.join(delimeter);
-	var termID =  tokens[tokens.length-1];
-}
+Template.termPage.onCreated(function() {
+	this.showAllDefinitions = new ReactiveVar(false);
+});
 
 Template.termPage.helpers({
-	//Set the session variable dictionaryID
-	'getDynamicFields': function(_dictionaryID){
-		if(_dictionaryID){
-			Session.set('dictionaryID', _dictionaryID);
-		}
-	},
-	//Set the session variable termID
-	'getLabelValue': function(termID) {
-		Session.set("termID", termID);			
-	},
-
 	//Return the admin labels for a dictionary
 	'labels': function(_dictionaryID){
 		return Adminlabels.find({dictionaryID: _dictionaryID});
 	},
 
 	//Return the correct value for a label
-	'labelDescription' : function(labelId){
-		
-		var _termID = Session.get("termID");
+	'labelDescription' : function(){
+		var _labelID = this._id;
+		var _termID = Template.parentData(1)._id;
 
 		//Get the label value
-		var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: labelId });
+		var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: _labelID });
 		
 		if (!value) {
-			return "TID:" + _termID + "/ALID:" + labelId;
+			return "TID:" + _termID + "/ALID:" + _labelID;
 		}
 		
-		return Term_label_values.findOne({ termID: _termID, adminlabelsID: labelId }).value;
+		return value.value;
 	},
 
 	//Find all definitions for given term id
 	'findDefinitions' : function(_termID){
 		//If showallDefinitions is true, we want to show all definitions
-    	if(showAllDefinitions.get()) {
+    	if (Template.instance().showAllDefinitions.get()) {
     		return Definitions.find({termID: _termID});
     	}
     	//else we want to show the top rated definition
@@ -176,9 +145,8 @@ Template.termPage.events({
 	'click .definition-button': function(e){
         var $definitionButton = $('.definition-button');
 
-        definitionsShown = !definitionsShown;
-
-        showAllDefinitions.set(definitionsShown);  
+		var sad = Template.instance().showAllDefinitions;
+        sad.set(!sad.get());  
 
         $definitionButton.toggleClass('show');
 

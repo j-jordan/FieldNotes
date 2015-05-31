@@ -42,9 +42,6 @@
       			</div>
           	</div>
 
-      		{{getDynamicFields dictionaryID}}
-			{{getLabelValue _id}}
-
 			{{#each labels dictionaryID}}
 				<div class="row">
 					<input type="hidden" name="adminLabelID" value="{{_id}}"/>
@@ -53,7 +50,7 @@
 					</div>
 					<div name="labelDesc" >
 						<div class="col-md-9">
-							<span type="text" id="complexityID">{{labelDescription _id}}</span>
+							<span type="text" id="complexityID">{{labelDescription}}</span>
 						</div>
 					</div>
 					<div name="editableInputField" hidden>

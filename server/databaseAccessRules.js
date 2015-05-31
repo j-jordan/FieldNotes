@@ -124,12 +124,20 @@ var accessControlList = {
 * Data Validation  Rules *
 *************************/
 
-// Database name -> { key, format }
+// Database name -> { key, format, references }
+
 // key is an array of field names, the combination of which is unique among documents in the database.
 // If key is empty or not present, no uniqueness constraint is enforced.
+
 // format is an object with properties named identically to those from documents in the database.
 // The values of format's properties are validation functions.
 // All properties of format must be present for a document to be valid
+
+// references is an object with properties of the form 'Foreign Database Property Name -> Database Variable'.
+// When a document is removed from the database, each Foreign Database Property's content is checked for the document's _id.
+// The removal will be stopped if any references to the document are found.
+// The Foreign Database Property may be either a String or an Array of Strings.
+
 // NOTE(James): When adding a new Database name entry, be sure that a thunk for it exists at the bottom of this file.
 var validationList = {
 	'Posts' : {
@@ -147,6 +155,10 @@ var validationList = {
 			'categoryID':			valIsForeignKey(Categories),
 			'definedTermIDArray':	valIsForeignKeyArray(Terms),
 			'usedTermIDArray':		valIsForeignKeyArray(Terms),
+		},
+		'references': {
+			'postID': Comments,
+			'postID': Summaries,
 		}
 	},
 	'Comments' : {
@@ -158,12 +170,19 @@ var validationList = {
 			'pop_rating':	valMatches(Number),
 			'text':			valMatches(String),
 			'date':			valMatches(String),
+		},
+		'references': {
+			'parentID': Comments,
 		}
 	},
 	'Dictionaries' : {
 		'key': [],
 		'format': {
 			'name':		valMatches(String),
+		},
+		'references': {
+			'dictionaryID': Adminlabels,
+			'dictionaryID': Terms,
 		}
 	},
 	'Adminlabels' : {
@@ -172,6 +191,9 @@ var validationList = {
 			'dictionaryID':	valIsForeignKey(Dictionaries),
 			'label':		valMatches(String),
 			'description':	valMatches(String),
+		},
+		'references': {
+			'adminlabelID': Term_label_values,
 		}
 	},
 	'Summaries' : {
@@ -182,6 +204,8 @@ var validationList = {
 			'text':				valMatches(String),
 			'quality_rating':	valMatches(Number),
 			'numRaters':		valMatches(Number),
+		},
+		'references': {
 		}
 	},
 	'Terms' : {
@@ -189,6 +213,11 @@ var validationList = {
 		'format': {
 			'term_name':	valMatches(String),
 			'dictionaryID':	valIsForeignKey(Dictionaries),
+		},
+		'references': {
+			'termID': Term_label_values,
+			'definedTermIDArray': Posts,
+			'usedTermIDArray': Posts,
 		}
 	},
 	'Definitions' : {
@@ -199,6 +228,8 @@ var validationList = {
 			'text':				valMatches(String),
 			'quality_rating':	valMatches(Number),
 			'numRaters':		valMatches(Number),
+		},
+		'references': {
 		}
 	},
 	'Term_label_values' : {
@@ -207,6 +238,8 @@ var validationList = {
 			'termID':			valIsForeignKey(Terms),
 			'adminlabelsID':	valIsForeignKey(Adminlabels),
 			'value':			valMatches(String),
+		},
+		'references': {
 		}
 	}
 };
@@ -256,7 +289,7 @@ function allowThunkFactory(name) {
 * Validation Implementation *
 ****************************/
 
-// Returns true if the data is valid.
+// Returns true IFF the data is valid.
 function verifyData(_collection, _dbname, _userid, _doc) {
 	if (validationList[_dbname]) {
 		// Format constraint
@@ -308,6 +341,34 @@ function verifyData(_collection, _dbname, _userid, _doc) {
 	return true; // Default allow
 }
 
+// Returns true IFF no known references exist
+function checkReferences(_dbname, _doc) {
+	if (validationList[_dbname]) {
+		if (validationList[_dbname]['references']) {
+			var refObj = validationList[_dbname]['references'];
+			var numProperties = 0;
+			for (var property in refObj) {
+				numProperties++;
+			}
+			var count = 0;
+			for (var property in refObj) {
+				count++;
+				var foreignDatabase = refObj[property];
+
+				var query = {};
+				query[property] = _doc._id;
+
+				if (foreignDatabase.find(query).count() !== 0) {
+					console.log("WARN: databaseAccessRules.js: " + _dbname + " remove denied - Reference exists in '" + property + "' (Rule #" + count + "/" + numProperties + "). (doc: " + JSON.stringify(_doc) + ")");
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
 function denyThunkFactory(collection, name) {
 	return {
 		insert : function(userId, doc) {
@@ -316,7 +377,9 @@ function denyThunkFactory(collection, name) {
 		update : function(userId, doc, fieldNames, modifier) {
 			return !verifyData(collection, name, userId, doc);
 		},
-		// TODO(James): Add check for existence of foreign keys for documents to be removed.
+		remove : function(userId, doc) {
+			return !checkReferences(name, doc);
+		}
 	};
 }
 

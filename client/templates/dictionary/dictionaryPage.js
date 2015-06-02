@@ -48,7 +48,22 @@ Template.dictionaryPage.events({
     //Click event for delete term
     'click .deleteTerm': function(e){
         if(confirm("Are you sure you want to delete this term?")){
-            Terms.remove(this._id);
+            var termID = this._id;
+            Tracker.autorun(function (computation) {
+                var valSub = Meteor.subscribe('getLabelValuesFromTermID', termID);
+                var defSub = Meteor.subscribe('getDefinitionsFromTermID', termID);
+                if (!valSub.ready() || !defSub.ready()) {
+                    return;
+                }
+                Term_label_values.find({ termID: termID }).forEach(function(val) {
+                    Term_label_values.remove({_id: val._id });
+                });
+                Definitions.find({ termID: termID }).forEach(function(def) {
+                    Definitions.remove({_id: def._id });
+                });
+                Terms.remove(termID);
+                computation.stop();
+            });
         }
     },
 

@@ -117,6 +117,24 @@ Meteor.publish('getAdminlabelsFromDictionaryID', function(_dictionaryID){
 });
 
 //Publish the label values for a term
+Meteor.publish('getLabelValuesFromTermID', function(_termID){
+    check(_termID, String);
+    return Term_label_values.find({termID: _termID});
+});
+
+//Publish the label values for all terms in a dictionary
+Meteor.publish('getLabelValuesFromDictionaryID', function(_dictionaryID){
+    check(_dictionaryID, String);
+    var termIDs = [];
+
+    Terms.find({dictionaryID: _dictionaryID}).forEach(function(term) {
+        termIDs.push(term._id);
+    });
+
+    return Term_label_values.find({termID: {$in: termIDs}});
+});
+
+//Publish the label values for a term
 Meteor.publish('getLabelValuesFromTermIDAndAdminlabelsID', function(_termID, _adminlabelsID){
 	check(_termID, String);
 	check(_adminlabelsID, String);
@@ -127,6 +145,17 @@ Meteor.publish('getLabelValuesFromTermIDAndAdminlabelsID', function(_termID, _ad
 Meteor.publish('getDefinitionsFromTermID', function(_termID){
 	check(_termID, String);
     return Definitions.find({termID: _termID});
+});
+
+//Publish all the definitions for all terms in a dictionary
+Meteor.publish('getDefinitionsFromDictionaryID', function(_dictionaryID){
+    check(_dictionaryID, String);
+    var termIDs = [];
+
+    Terms.find({dictionaryID: _dictionaryID}).forEach(function(term) {
+        termIDs.push(term._id);
+    });
+    return Definitions.find({termID: {$in: termIDs}});
 });
 
 //Publish the summaries based upon category id

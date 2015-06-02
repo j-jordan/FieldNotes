@@ -100,6 +100,7 @@ var accessControlList = {
 	},
 	'Adminlabels' : {
 		'insert' : aclUserIsAuthed,
+        'remove' : aclUserIsAdmin,
 	},
 	'Summaries' : {
 		'insert' : aclUserIsAuthed,
@@ -117,6 +118,7 @@ var accessControlList = {
 	'Term_label_values' : {
 		'insert' : aclUserIsAuthed,
 		'update' : aclUserIsAdmin,
+        'remove' : aclUserIsAdmin,
 	}
 };
 
@@ -133,7 +135,7 @@ var accessControlList = {
 // The values of format's properties are validation functions.
 // All properties of format must be present for a document to be valid
 
-// references is an object with properties of the form 'Foreign Database Property Name -> Database Variable'.
+// references is an array containing objects with properties of the form 'Foreign Database Property Name -> Database Variable'.
 // When a document is removed from the database, each Foreign Database Property's content is checked for the document's _id.
 // The removal will be stopped if any references to the document are found.
 // The Foreign Database Property may be either a String or an Array of Strings.
@@ -156,10 +158,10 @@ var validationList = {
 			'definedTermIDArray':	valIsForeignKeyArray(Terms),
 			'usedTermIDArray':		valIsForeignKeyArray(Terms),
 		},
-		'references': {
-			'postID': Comments,
-			'postID': Summaries,
-		}
+        'references': [
+            {'postID': Comments},
+            {'postID': Summaries},
+        ]
 	},
 	'Comments' : {
 		'key': [],
@@ -171,19 +173,19 @@ var validationList = {
 			'text':			valMatches(String),
 			'date':			valMatches(String),
 		},
-		'references': {
-			'parentID': Comments,
-		}
+        'references': [
+            {'parentID': Comments},
+        ]
 	},
 	'Dictionaries' : {
 		'key': [],
 		'format': {
 			'name':		valMatches(String),
 		},
-		'references': {
-			'dictionaryID': Adminlabels,
-			'dictionaryID': Terms,
-		}
+        'references': [
+            {'dictionaryID': Adminlabels},
+            {'dictionaryID': Terms},
+        ]
 	},
 	'Adminlabels' : {
 		'key': [],
@@ -192,9 +194,9 @@ var validationList = {
 			'label':		valMatches(String),
 			'description':	valMatches(String),
 		},
-		'references': {
-			'adminlabelID': Term_label_values,
-		}
+        'references': [
+            {'adminlabelID': Term_label_values},
+        ]
 	},
 	'Summaries' : {
 		'key': [],
@@ -205,8 +207,8 @@ var validationList = {
 			'quality_rating':	valMatches(Number),
 			'numRaters':		valMatches(Number),
 		},
-		'references': {
-		}
+        'references': [
+        ]
 	},
 	'Terms' : {
 		'key': [],
@@ -214,11 +216,12 @@ var validationList = {
 			'term_name':	valMatches(String),
 			'dictionaryID':	valIsForeignKey(Dictionaries),
 		},
-		'references': {
-			'termID': Term_label_values,
-			'definedTermIDArray': Posts,
-			'usedTermIDArray': Posts,
-		}
+        'references': [
+            {'termID': Term_label_values},
+            {'termID': Definitions},
+            {'definedTermIDArray': Posts},
+            {'usedTermIDArray': Posts},
+        ]
 	},
 	'Definitions' : {
 		'key': [],
@@ -228,9 +231,9 @@ var validationList = {
 			'text':				valMatches(String),
 			'quality_rating':	valMatches(Number),
 			'numRaters':		valMatches(Number),
-		},
-		'references': {
-		}
+        },
+        'references': [
+        ]
 	},
 	'Term_label_values' : {
 		'key': [ 'termID', 'adminlabelsID' ],
@@ -239,8 +242,8 @@ var validationList = {
 			'adminlabelsID':	valIsForeignKey(Adminlabels),
 			'value':			valMatches(String),
 		},
-		'references': {
-		}
+        'references': [
+        ]
 	}
 };
 
@@ -343,30 +346,26 @@ function verifyData(_collection, _dbname, _userid, _doc) {
 
 // Returns true IFF no known references exist
 function checkReferences(_dbname, _doc) {
-	if (validationList[_dbname]) {
-		if (validationList[_dbname]['references']) {
-			var refObj = validationList[_dbname]['references'];
-			var numProperties = 0;
-			for (var property in refObj) {
-				numProperties++;
-			}
-			var count = 0;
-			for (var property in refObj) {
-				count++;
-				var foreignDatabase = refObj[property];
+    if (validationList[_dbname]) {
+        if (validationList[_dbname]['references']) {
+            var refArray = validationList[_dbname]['references'];
+            for (var i = 0; i < refArray.length; i++) {
+                for (var property in refArray[i]) {
+                    var foreignDatabase = refArray[i][property];
 
-				var query = {};
-				query[property] = _doc._id;
+                    var query = {};
+                    query[property] = _doc._id;
 
-				if (foreignDatabase.find(query).count() !== 0) {
-					console.log("WARN: databaseAccessRules.js: " + _dbname + " remove denied - Reference exists in '" + property + "' (Rule #" + count + "/" + numProperties + "). (doc: " + JSON.stringify(_doc) + ")");
-					return false;
-				}
-			}
-		}
-	}
+                    if (foreignDatabase.find(query).count() !== 0) {
+                        console.log("WARN: databaseAccessRules.js: " + _dbname + " remove denied - Reference exists in '" + property + "' (Rule #" + (i+1) + "/" + refArray.length + "). (doc: " + JSON.stringify(_doc) + ")");
+                        return false;
+                    }
+                }
+            }
+        }
+    }
 
-	return true;
+    return true;
 }
 
 function denyThunkFactory(collection, name) {

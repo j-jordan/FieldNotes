@@ -1,8 +1,8 @@
 Template.dictionaries.helpers({
     //Return all the dictionaries
-	'dictionaries': function(){
-		return Dictionaries.find();
-	}
+    'dictionaries': function(){
+        return Dictionaries.find();
+    }
 });
 
 Template.dictionaries.events({

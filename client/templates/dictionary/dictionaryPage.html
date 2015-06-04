@@ -1,72 +1,72 @@
 <template name="dictionaryPage">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
-	<form>
-		<div class="row">
-			<div style="font-weight: 32">
-				<div class="col-md-9" name="dictName">
-					<h2>{{name}} Dictionary</h2>
-				</div>
-				<div class="col-md-9" name="editableInputField" hidden>
-					<input class="form-control" id="name" value="{{ name }}"/>
-					<h2></h2>
-				</div>		
-				<div class="col-md-3">
-					<button class="editTermsButton btn btn-warning" type="button" style="float: right">Edit Title and Terms
-      				<span class="glyphicon glyphicon-pencil"></span></button>
-				</div>
-					
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-8">
-				<div class="input-group input-group-lg">
-					<input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon"/>
-					<span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="dropdown">
-				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-				    Sort by
-				    <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: high to low</a></li>
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: low to high</a></li>
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: high to low</a></li>
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: low to high</a></li>
-				  </ul>
-				</div>
-			</div>
-		</div>
-		<div class="row"><p></p></div>
-		<div class="row" {{isAdmin}}>
-			<div class="col-md-6">
-				<a href="{{pathFor 'newTerm'}}" class="btn btn-info">Click here to enter a new term</a>
-			</div>
-		</div>
-		<div class="row"><p></p></div>
-		<div class="row">
-			<div class="col-md-5">
-				<ul class="list-group">
-					{{#each terms _id}}
-						<div name="termLink">
-								<a href="{{pathFor 'termPage'}}">{{term_name}}</a>
-							</div>
-							<div class="row" name="editableInputField" hidden>
-								<div class="col-md-8">
-    							<a id="name" href="{{pathFor 'termPage'}}">{{term_name}}</a> 									
-								</div>
-								<div class="col-md-4">
-									<button class="btn btn-sm btn-danger deleteTerm" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
-								</div>
-						</div>
-					{{/each}}
-				</ul>
-			</div>		
-		</div>
-	</form>
-	</div>
-	<div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form>
+            <div class="row">
+                <div style="font-weight: 32">
+                    <div class="col-md-9" name="dictName">
+                        <h2>{{name}} Dictionary</h2>
+                    </div>
+                    <div class="col-md-9" name="editableInputField" hidden>
+                        <input class="form-control" id="name" value="{{ name }}"/>
+                        <h2></h2>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="editTermsButton btn btn-warning" type="button" style="float: right">Edit Title and Terms
+                        <span class="glyphicon glyphicon-pencil"></span></button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon"/>
+                        <span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                        Sort by
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: high to low</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Popularity: low to high</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: high to low</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rating: low to high</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><p></p></div>
+            <div class="row" {{isAdmin}}>
+                <div class="col-md-6">
+                    <a href="{{pathFor 'newTerm'}}" class="btn btn-info">Click here to enter a new term</a>
+                </div>
+            </div>
+            <div class="row"><p></p></div>
+            <div class="row">
+                <div class="col-md-5">
+                    <ul class="list-group">
+                        {{#each terms _id}}
+                            <div name="termLink">
+                                    <a href="{{pathFor 'termPage'}}">{{term_name}}</a>
+                                </div>
+                                <div class="row" name="editableInputField" hidden>
+                                    <div class="col-md-8">
+                                    <a id="name" href="{{pathFor 'termPage'}}">{{term_name}}</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-sm btn-danger deleteTerm" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </div>
+                            </div>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
 </template>

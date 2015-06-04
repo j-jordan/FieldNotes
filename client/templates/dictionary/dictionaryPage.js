@@ -1,9 +1,9 @@
 Template.dictionaryPage.helpers({
     //Return all terms for this dictionary
-	'terms': function(dictID) {
+    'terms': function(dictID) {
         //Return the terms
-		return Terms.find({dictionaryID: dictID});
-	}
+        return Terms.find({dictionaryID: dictID});
+    }
 });
 
 Template.dictionaryPage.events({
@@ -70,16 +70,16 @@ Template.dictionaryPage.events({
     //Form submit event fired when button is changed back to 'type=submit' in click event
     'submit form': function(e){
         //Prevent the form from executing its default actions
-    	e.preventDefault();
+        e.preventDefault();
 
         //Update data
-    	var DictionaryData = {
-			$set : {
-				name : $(e.target).find('[id=name]').val()
-			}
-    	};
+        var DictionaryData = {
+            $set : {
+                name : $(e.target).find('[id=name]').val()
+            }
+        };
 
         //Update
-    	Dictionaries.update(this._id,DictionaryData);
+        Dictionaries.update(this._id,DictionaryData);
     }
 });

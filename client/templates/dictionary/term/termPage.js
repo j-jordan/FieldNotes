@@ -1,64 +1,64 @@
 Template.termPage.onCreated(function() {
-	this.showAllDefinitions = new ReactiveVar(false);
+    this.showAllDefinitions = new ReactiveVar(false);
 });
 
 Template.termPage.helpers({
-	//Return the admin labels for a dictionary
-	'labels': function(_dictionaryID){
-		return Adminlabels.find({dictionaryID: _dictionaryID});
-	},
+    //Return the admin labels for a dictionary
+    'labels': function(_dictionaryID){
+        return Adminlabels.find({dictionaryID: _dictionaryID});
+    },
 
-	//Return the correct value for a label
-	'labelDescription' : function(){
-		var _labelID = this._id;
-		var _termID = Template.parentData(1)._id;
+    //Return the correct value for a label
+    'labelDescription' : function(){
+        var _labelID = this._id;
+        var _termID = Template.parentData(1)._id;
 
-		//Get the label value
-		var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: _labelID });
-		
-		if (!value) {
-			return "TID:" + _termID + "/ALID:" + _labelID;
-		}
-		
-		return value.value;
-	},
+        //Get the label value
+        var value = Term_label_values.findOne({ termID: _termID, adminlabelsID: _labelID });
+        
+        if (!value) {
+            return "TID:" + _termID + "/ALID:" + _labelID;
+        }
+        
+        return value.value;
+    },
 
-	//Find all definitions for given term id
-	'findDefinitions' : function(_termID){
-		//If showallDefinitions is true, we want to show all definitions
-    	if (Template.instance().showAllDefinitions.get()) {
-    		return Definitions.find({termID: _termID});
-    	}
-    	//else we want to show the top rated definition
-   		else {
-   			//Sort the definitions by quality_rating, highest at top, then grab the first one
-			return Definitions.find({termID: _termID}, {sort: {quality_rating: -1}, limit: 1});
-    	}
-	},
+    //Find all definitions for given term id
+    'findDefinitions' : function(_termID){
+        //If showallDefinitions is true, we want to show all definitions
+        if (Template.instance().showAllDefinitions.get()) {
+            return Definitions.find({termID: _termID});
+        }
+        //else we want to show the top rated definition
+        else {
+            //Sort the definitions by quality_rating, highest at top, then grab the first one
+            return Definitions.find({termID: _termID}, {sort: {quality_rating: -1}, limit: 1});
+        }
+    },
 
-	//If a user is a guest(or not logged in) return hidden
-	'isGuest' : function(){
-		if(Meteor.user()){
-			return '';
-		} else {
-			return 'hidden';
-		}
-	}
+    //If a user is a guest(or not logged in) return hidden
+    'isGuest' : function(){
+        if(Meteor.user()){
+            return '';
+        } else {
+            return 'hidden';
+        }
+    }
 });
 
 Template.termPage.events({
-	//Click event for editing a term page
-	'click .editTermButton': function(e){
+    //Click event for editing a term page
+    'click .editTermButton': function(e){
 
-		//Save the edit button
-		$editableButton = $('.editTermButton');
+        //Save the edit button
+        $editableButton = $('.editTermButton');
 
-		//Toggle the edit class
+        //Toggle the edit class
         $editableButton.toggleClass('edit');
 
         //Start editing
         if($editableButton.hasClass('edit')){
-        	//Hide all elements with the name uneditableField
+            //Hide all elements with the name uneditableField
             $('[name=uneditableField]').attr('hidden','true');
 
             //Hide all elements with the name labelDesc
@@ -77,11 +77,11 @@ Template.termPage.events({
         }
         //Finish editing
         else {
-        	
-        	//Show all elements with the name uneditableField
-        	$('[name=uneditableField').removeAttr('hidden');
+            
+            //Show all elements with the name uneditableField
+            $('[name=uneditableField').removeAttr('hidden');
 
-        	//Show all elements with the name labelDesc
+            //Show all elements with the name labelDesc
             $('[name=labelDesc]').removeAttr('hidden');
 
             //Hide all elements with the name editableInputField
@@ -91,61 +91,61 @@ Template.termPage.events({
             $editableButton.removeClass('btn-success');
             $editableButton.addClass('btn-warning');
             $editableButton.html('Edit Term <span class="glyphicon glyphicon-pencil"></span>');
-        	//Change the type of the button to 'type=submit' so that the form auto-submits
+            //Change the type of the button to 'type=submit' so that the form auto-submits
             $editableButton.attr('type','submit');
         }
-	},
+    },
 
-	'click .deleteDefinitionButton': function(e){
+    'click .deleteDefinitionButton': function(e){
 
-		e.preventDefault();
+        e.preventDefault();
 
-  		if(confirm("Are you sure you want to delete this term?")){
+        if(confirm("Are you sure you want to delete this term?")){
             //Remove the defintions collection
             Definitions.remove(this._id);
         }
-	},
+    },
 
-	'submit form': function(e){
-		e.preventDefault();
+    'submit form': function(e){
+        e.preventDefault();
 
-		var termID = this._id;
+        var termID = this._id;
 
-		//update the term from terms
-		var updateTermData = {
-			$set : {
-				term_name: $(e.target).find('[name=term_name]').val(),
-			}
-		}
+        //update the term from terms
+        var updateTermData = {
+            $set : {
+                term_name: $(e.target).find('[name=term_name]').val(),
+            }
+        }
 
-		Terms.update(this._id, updateTermData);
+        Terms.update(this._id, updateTermData);
 
-		var labelsID = [];
+        var labelsID = [];
 
-		$(e.target).find('[name=adminLabelID]').each(function(){
-			labelsID.push($(this).val());
-		});
+        $(e.target).find('[name=adminLabelID]').each(function(){
+            labelsID.push($(this).val());
+        });
 
-		//update the terms_label_values collection
-		$(e.target).find('[name="labelValue"]').each(function(index){
-			//updated term_label_value data
-			var updateValueData = {
-				$set : {
-					termID : termID,
-					adminlabelsID : labelsID[index],
-					value : $(this).val()
-				}
-			};
+        //update the terms_label_values collection
+        $(e.target).find('[name="labelValue"]').each(function(index){
+            //updated term_label_value data
+            var updateValueData = {
+                $set : {
+                    termID : termID,
+                    adminlabelsID : labelsID[index],
+                    value : $(this).val()
+                }
+            };
 
-			var id = Term_label_values.findOne({adminlabelsID: labelsID[index], termID: termID})._id;
-			Term_label_values.update(id, updateValueData);
-		});
-	},
+            var id = Term_label_values.findOne({adminlabelsID: labelsID[index], termID: termID})._id;
+            Term_label_values.update(id, updateValueData);
+        });
+    },
 
-	'click .definition-button': function(e){
+    'click .definition-button': function(e){
         var $definitionButton = $('.definition-button');
 
-		var sad = Template.instance().showAllDefinitions;
+        var sad = Template.instance().showAllDefinitions;
         sad.set(!sad.get());  
 
         $definitionButton.toggleClass('show');
@@ -155,6 +155,6 @@ Template.termPage.events({
         } else {
             $definitionButton.text('Show all Definitions');
         }
-	}
+    }
 
 });

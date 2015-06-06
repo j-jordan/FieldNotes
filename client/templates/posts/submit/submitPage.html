@@ -20,14 +20,14 @@
                 </div>
                 <div class="col-md-9">
                         <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" >
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
                                 Select a Category<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
                                 {{#each categories}}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{category_name}}">{{ category_name }}</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{_id}}">{{ category_name }}</a></li>
                                 {{/each}}
-                        </ul>
+                            </ul>
                         </div>
                 </div>
             </div>

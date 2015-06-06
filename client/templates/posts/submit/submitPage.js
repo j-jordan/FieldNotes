@@ -17,61 +17,61 @@ Template.submitPage.onCreated(function() {
  */
 Template.submitPage.events({
     'submit form': function(e) {
-        var validated = true;
-
-        $(e.target).find('.required').map(function(index, object){
-            if(this.value === '')
-                validated = false;
-        })
-
         //Stop the browser from submitting the form.
         e.preventDefault();
 
-        if(validated){
-            //Insert the new post
-            var post = {
-                userID: Meteor.user()._id,
-                title: $(e.target).find('[name=title]').val(),
-                pop_rating: 0,
-                quality_rating: 0,
-                numRaters : 0,
-                doi: $(e.target).find('[name=doi]').val(),
-                author: $(e.target).find('[name=author]').val(),
-                publish_date: $(e.target).find('[name=publish_date]').val(),
-                publisher: $(e.target).find('[name=publisher]').val(),
-                categoryID: Categories.findOne({category_name: Session.get('categoryName')}, {fields: {_id: 1}})._id,   // use $(e.target).find('[name=category]').val() when category dropdown works
-                definedTermIDArray : [], //TODO(James): actually fill this array
-                usedTermIDArray : [] //TODO(James): actually fill this array
-            };
+        var validated = true;
 
-            post._id = Posts.insert(post);
+        $(e.target).find('.required').map(function(index, object) {
+            if (this.value === '') {
+                validated = false;
+            }
+        })
 
-            //Insert the new summary
-            var summary = {
-                userID: Meteor.user()._id,
-                postID: post._id,
-                text: $(e.target).find('[name=summary]').val(),
-                quality_rating : 0,
-                numRaters : 0
-            };
-
-            Summaries.insert(summary);
-
-            //Find any terms that already exist
-            var terms_defined = $(e.target).find('[name=terms_used]');
-            var terms_used = $(e.target).find('[name=terms_defined]');
-
-            //Redirect to the postpage
-            Router.go('postPage',post);
-        } else {
+        if (!validated) {
             alert("Please fill in all required fields.");
+            return;
         }
+
+        //Insert the new post
+        var post = {
+            userID: Meteor.user()._id,
+            title: $(e.target).find('[name=title]').val(),
+            pop_rating: 0,
+            quality_rating: 0,
+            numRaters : 0,
+            doi: $(e.target).find('[name=doi]').val(),
+            author: $(e.target).find('[name=author]').val(),
+            publish_date: $(e.target).find('[name=publish_date]').val(),
+            publisher: $(e.target).find('[name=publisher]').val(),
+            categoryID: $(e.target).find('#dropdownMenuButton').prop("value"),
+            definedTermIDArray : [], //TODO(James): actually fill this array
+            usedTermIDArray : [] //TODO(James): actually fill this array
+        };
+
+        post._id = Posts.insert(post);
+
+        //Insert the new summary
+        var summary = {
+            userID: Meteor.user()._id,
+            postID: post._id,
+            text: $(e.target).find('[name=summary]').val(),
+            quality_rating : 0,
+            numRaters : 0
+        };
+
+        Summaries.insert(summary);
+
+        //Find any terms that already exist
+        var terms_defined = $(e.target).find('[name=terms_used]');
+        var terms_used = $(e.target).find('[name=terms_defined]');
+
+        //Redirect to the postpage
+        Router.go('postPage',post);
     },
 
     'click .dropdown-menu li a': function(e) {
-        Session.set('categoryName',this.category_name);
-
-        $('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>');
+        $('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>').prop("value", this._id);
     },
 
     'input [name=summary], change [name=summary], paste [name=summary], keyup [name=summary], mouseup [name=summary]': function(e) {

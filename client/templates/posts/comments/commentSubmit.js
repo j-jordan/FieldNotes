@@ -1,16 +1,13 @@
 Template.commentSubmit.events({
     //Submit form for creating a comment
-    'submit form': function(e, template){
-        //Prevent the default form actions
-        e.preventDefault();
-
+    'click [name=submitComment]': function(e, template) {
         //Update data. Some fields such as date still hardcoded.
-        var $body = $(e.target).find('[name=body]');
+        var $body = template.$('textarea[name=body]');
+
         var comment = {
             text: $body.val(),
             postID: template.data._id,
             parentID: 0,
-            pop_rating: 0,
             date: "3/27/2015",
             userID: Meteor.user()._id
         };

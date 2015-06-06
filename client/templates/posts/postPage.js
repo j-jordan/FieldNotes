@@ -108,13 +108,6 @@ Template.postPage.events({
         }
     },
 
-    //Click event for deleting a comment
-    'click .deleteComment': function(e){
-        if(confirm("Are you sure you want to delete this comment?")){
-            Comments.remove(this._id);
-        }
-    },
-
     //Submit form for editing a post
     'submit form': function(e){
         //Prevent the default form actions

@@ -220,13 +220,17 @@ Meteor.publish('retrievePostPage', function(_postID) {
 
     var comments = Comments.find({postID: _postID}).fetch();
     var userIDs = [];
+    var commentIDs = [];
     for (i = 0; i < comments.length; i++) {
         userIDs.push(comments[i].userID); // UserID for comment submitter
+        commentIDs.push(comments[i]._id);
     }
     if (post) {
         userIDs.push(post.userID); // UserID for post submitter
     }
     cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}}));
+
+    cursors.push(Comment_ratings.find({'commentID': {'$in': commentIDs}}));
 
     if (post) {
         var termIdArray = post.definedTermIDArray;

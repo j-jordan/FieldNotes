@@ -163,7 +163,6 @@ if(Comments.find().count() === 0) {
         userID : UsersData[0]['_id'],
         parentID : '0', //No parent
         postID : PostsData[0]['_id'],
-        pop_rating : 4,
         text : "This is the coolest paper ever. amirite?",
         date : "3/2/2015"
     });
@@ -171,7 +170,6 @@ if(Comments.find().count() === 0) {
         userID : UsersData[1]['_id'],
         parentID : Comments.find().fetch()[0]['_id'],
         postID : PostsData[0]['_id'],
-        pop_rating : 1,
         text : "N0pe. You think these sources are scholarly?",
         date : "3/2/2015"
     });
@@ -179,7 +177,6 @@ if(Comments.find().count() === 0) {
         userID : UsersData[0]['_id'],
         parentID : Comments.find().fetch()[1]['_id'],
         postID : PostsData[0]['_id'],
-        pop_rating : 5,
         text : "Science has put Wikipedia to the test, it is the irrefutable all-source. You can't escape it.",
         date : "3/2/2015"
     });
@@ -187,7 +184,6 @@ if(Comments.find().count() === 0) {
         userID : UsersData[2]['_id'],
         parentID : Comments.find().fetch()[0]['_id'],
         postID : PostsData[0]['_id'],
-        pop_rating : 4,
         text : "You are right. Hail Wiki.",
         date : "3/2/2015"
     });
@@ -195,7 +191,6 @@ if(Comments.find().count() === 0) {
         userID : UsersData[2]['_id'],
         parentID : '0', //No parent
         postID : PostsData[0]['_id'],
-        pop_rating : 3,
         text : "This is what I've been looking for.",
         date : "3/3/2015"
     });

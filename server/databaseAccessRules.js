@@ -17,6 +17,20 @@
     }
 }*/
 
+// ACL function factory
+// Returned functions return true IFF any of the specified functions return true.
+function aclANY(_funcArray) {
+    return function(_userid, _doc, _fields, _modifier) {
+        var result = true;
+
+        for (var i = 0; i < _funcArray.length; i++) {
+            result = result || _funcArray[i](_userid, _doc, _fields, _modifier);
+        }
+
+        return result;
+    }
+}
+
 // ACL function
 // Returns true IFF the provided _userid has the 'admin' role.
 function aclUserIsAdmin(_userid, _doc, _fields, _modifier) {
@@ -27,6 +41,14 @@ function aclUserIsAdmin(_userid, _doc, _fields, _modifier) {
 // Returns true IFF the provided _userid is not null.
 function aclUserIsAuthed(_userid, _doc, _fields, _modifier) {
     return (typeof _userid !== null);
+}
+
+// ACL function factory
+// Returned functions return true IFF the document's _fieldName field contains the provided _userid.
+function aclUserIsOwner(_fieldName) {
+    return function(_userid, _doc, _fields, _modifier) {
+        return (_doc[_fieldName] === _userid);
+    };
 }
 
 /******************************
@@ -77,6 +99,18 @@ function valIsCurrentUserID(_userid, _doc, _field) {
     return (_userid === _doc[_field]);
 }
 
+// Validation function factory
+// Returned functions return true IFF the field's value is an integer in the range [_min, _max].
+function valIsIntegerInRange(_min, _max) {
+    return function(_userid, _doc, _field) {
+        if (!Match.test(_doc[_field], Match.Integer)) {
+            return false;
+        }
+
+        return (_min <= _doc[_field] && _doc[_field] <= _max);
+    }
+}
+
 /************************
 * Database Access Rules *
 *************************/
@@ -119,6 +153,14 @@ var accessControlList = {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsAdmin,
         'remove' : aclUserIsAdmin,
+    },
+    'Comment_ratings' : {
+        'insert' : aclUserIsAuthed,
+        'update' : aclUserIsOwner('userID'),
+        'remove' : aclANY([
+            aclUserIsAdmin,
+            aclUserIsOwner('userID'),
+        ]),
     }
 };
 
@@ -145,18 +187,18 @@ var validationList = {
     'Posts' : {
         'key': [],
         'format': {
-            'userID':                valIsCurrentUserID,
-            'title':                valMatches(String),
-            'pop_rating':            valMatches(Number),
-            'quality_rating':        valMatches(Number),
-            'numRaters':            valMatches(Number),
-            'doi':                    valMatches(String),
-            'author':                valMatches(String),
-            'publisher':            valMatches(String),
-            'publish_date':            valMatches(String),
-            'categoryID':            valIsForeignKey(Categories),
-            'definedTermIDArray':    valIsForeignKeyArray(Terms),
-            'usedTermIDArray':        valIsForeignKeyArray(Terms),
+            'userID':             valIsCurrentUserID,
+            'title':              valMatches(String),
+            'pop_rating':         valMatches(Number),
+            'quality_rating':     valMatches(Number),
+            'numRaters':          valMatches(Number),
+            'doi':                valMatches(String),
+            'author':             valMatches(String),
+            'publisher':          valMatches(String),
+            'publish_date':       valMatches(String),
+            'categoryID':         valIsForeignKey(Categories),
+            'definedTermIDArray': valIsForeignKeyArray(Terms),
+            'usedTermIDArray':    valIsForeignKeyArray(Terms),
         },
         'references': [
             {'postID': Comments},
@@ -166,21 +208,21 @@ var validationList = {
     'Comments' : {
         'key': [],
         'format': {
-            'userID':        valIsCurrentUserID,
-            'parentID':        valMatches(Number),
-            'postID':        valIsForeignKey(Posts),
-            'pop_rating':    valMatches(Number),
-            'text':            valMatches(String),
-            'date':            valMatches(String),
+            'userID':     valIsCurrentUserID,
+            'parentID':   valMatches(Number),
+            'postID':     valIsForeignKey(Posts),
+            'text':       valMatches(String),
+            'date':       valMatches(String),
         },
         'references': [
-            {'parentID': Comments},
+            {'parentID':  Comments},
+            {'commentID': Comment_ratings},
         ]
     },
     'Dictionaries' : {
         'key': [],
         'format': {
-            'name':        valMatches(String),
+            'name': valMatches(String),
         },
         'references': [
             {'dictionaryID': Adminlabels},
@@ -190,9 +232,9 @@ var validationList = {
     'Adminlabels' : {
         'key': [],
         'format': {
-            'dictionaryID':    valIsForeignKey(Dictionaries),
+            'dictionaryID': valIsForeignKey(Dictionaries),
             'label':        valMatches(String),
-            'description':    valMatches(String),
+            'description':  valMatches(String),
         },
         'references': [
             {'adminlabelID': Term_label_values},
@@ -201,11 +243,11 @@ var validationList = {
     'Summaries' : {
         'key': [],
         'format': {
-            'userID':            valIsCurrentUserID,
-            'postID':            valIsForeignKey(Posts),
-            'text':                valMatches(String),
-            'quality_rating':    valMatches(Number),
-            'numRaters':        valMatches(Number),
+            'userID':         valIsCurrentUserID,
+            'postID':         valIsForeignKey(Posts),
+            'text':           valMatches(String),
+            'quality_rating': valMatches(Number),
+            'numRaters':      valMatches(Number),
         },
         'references': [
         ]
@@ -214,23 +256,23 @@ var validationList = {
         'key': [],
         'format': {
             'term_name':    valMatches(String),
-            'dictionaryID':    valIsForeignKey(Dictionaries),
+            'dictionaryID': valIsForeignKey(Dictionaries),
         },
         'references': [
-            {'termID': Term_label_values},
-            {'termID': Definitions},
+            {'termID':             Term_label_values},
+            {'termID':             Definitions},
             {'definedTermIDArray': Posts},
-            {'usedTermIDArray': Posts},
+            {'usedTermIDArray':    Posts},
         ]
     },
     'Definitions' : {
         'key': [],
         'format': {
-            'termID':            valIsForeignKey(Terms),
-            'userID':            valIsCurrentUserID,
-            'text':                valMatches(String),
-            'quality_rating':    valMatches(Number),
-            'numRaters':        valMatches(Number),
+            'termID':         valIsForeignKey(Terms),
+            'userID':         valIsCurrentUserID,
+            'text':           valMatches(String),
+            'quality_rating': valMatches(Number),
+            'numRaters':      valMatches(Number),
         },
         'references': [
         ]
@@ -238,9 +280,19 @@ var validationList = {
     'Term_label_values' : {
         'key': [ 'termID', 'adminlabelsID' ],
         'format': {
-            'termID':            valIsForeignKey(Terms),
-            'adminlabelsID':    valIsForeignKey(Adminlabels),
-            'value':            valMatches(String),
+            'termID':        valIsForeignKey(Terms),
+            'adminlabelsID': valIsForeignKey(Adminlabels),
+            'value':         valMatches(String),
+        },
+        'references': [
+        ]
+    },
+    'Comment_ratings' : {
+        'key': [ 'userID', 'commentID' ],
+        'format': {
+            'userID':    valIsCurrentUserID,
+            'commentID': valIsForeignKey(Comments),
+            'isUpvote':  valMatches(Boolean),
         },
         'references': [
         ]
@@ -412,3 +464,6 @@ Definitions.deny(denyThunkFactory(Definitions, 'Definitions'));
 
 Term_label_values.allow(allowThunkFactory('Term_label_values'));
 Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'));
+
+Comment_ratings.allow(allowThunkFactory('Comment_ratings'));
+Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));

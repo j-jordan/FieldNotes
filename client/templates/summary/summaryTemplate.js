@@ -1,4 +1,5 @@
 Template.summaryTemplate.events({
+
     //Rated event for summaries
     'rated': function(event,value){
         $('[id=rateitDiv' + this._id +']').attr("class","rateit summaryRating");

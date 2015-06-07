@@ -18,34 +18,42 @@
                 </div>
             </div>
             <div class="col-md-2" {{isAdmin}}>
-                <button class="editPostButton btn btn-warning" type="button" style="float: right">Edit Post
-                    <span class="glyphicon glyphicon-pencil"></span>
+                {{#if editMode}}
+                <button class="savePostButton btn btn-success" type="button" style="float: right">
+                    Save changes <span class="glyphicon glyphicon-pencil"></span>
                 </button>
+                {{else}}
+                <button class="editPostButton btn btn-warning" type="button" style="float: right">
+                    Edit Post <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                {{/if}}
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="form-inline form-group">
                     <label for="doi">DOI: </label>
+                    {{#if editMode}}
+                    <input class="form-control" name="editableInputField" type="text" id="doi" value="{{doi}}" style="text-align: right"/>
+                    {{else}}
                     <span class="viewSpan" style="float: right" name="doi">{{doi}}</span>
-
-                    <input class="form-control" name="editableInputField" type="hidden" id="doi"
-                        value="{{postData.doi}}" style="text-align: right"/>
+                    {{/if}}
                 </div>
             </div>
             <!-- <div class="col-md-1"></div> -->
             <div class="col-md-4">
                 <div class="form-inline form-group">
                     <label for="publish_date">DATE PUBLISHED:</label>
+                    {{#if editMode}}
+                    <input class="form-control" type="text"  name="editableInputField" id="publish_date" value="{{publish_date}}" style="text-align: right"/>
+                    {{else}}
                     <span  class="viewSpan" style='float: right' name='editableInputField'>{{publish_date}}</span>
-
-                    <input class="form-control" type="hidden"  name="editableInputField" id="publish_date"
-                        value="{{postData.publish_date}}" style="text-align: right"/>
+                    {{/if}}
                 </div>
             </div>
             <div class="col-md-4 text-center">
                 <label for="">Rate this paper: </label>
-                <div>{{> postDataRateItTemplate}}</div>
+                <div>{{> rateitTemplate}}</div>
             </div>
         </div>
 
@@ -53,19 +61,21 @@
             <div class="col-md-4">
                 <div class="form-inline form-group">
                     <label for="publisher">Publisher: </label>
-                    <span class="viewSpan" name="publisher" style="float: right" value="{{postData.publisher}}">{{publisher}}</span>
-
-                    <input class="form-control" type="hidden" name="editableInputField" id="publisher"
-                        value="{{ postData.publisher }}" style="text-align: right"/>
+                    {{#if editMode}}
+                    <input class="form-control" type="text" name="editableInputField" id="publisher" value="{{ publisher }}" style="text-align: right"/>
+                    {{else}}
+                    <span class="viewSpan" name="publisher" style="float: right" value="{{publisher}}">{{publisher}}</span>
+                    {{/if}}
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-inline form-group">
                     <label for="author">Author: </label>
+                    {{#if editMode}}
+                    <input class="form-control" type="text" name="editableInputField" id="author" value="{{author}}" style="text-align: right"/>
+                    {{else}}
                     <span class="viewSpan" name="author" style="float: right">{{author}}</span>
-
-                    <input class="form-control" type="hidden" name="editableInputField" id="author"
-                        value="{{ postData.author }}" style="text-align: right"/>
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -105,7 +115,13 @@
                     disabled="{{#if loggedIn}}{{else}}true{{/if}}">Submit summary</a>
             </div>
             <div class="col-md-4">
-                <button class="summary-button btn btn-default" type="button" style="float: right" id="showAllSummaries">Show all Summaries</button>
+                <button class="summary-button btn btn-default" type="button" style="float: right" id="showAllSummaries">
+                    {{#if showAllSummaries}}
+                    Show top Summary
+                    {{else}}
+                    Show all Summaries
+                    {{/if}}
+                </button>
             </div>
         </div>
     </form>
@@ -113,9 +129,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            {{#each findSummaries}}
-                {{> summaryTemplate}}
-            {{/each}}
+            {{#if showAllSummaries}}
+                {{#each allSummaries}}
+                    {{> summaryTemplate}}
+                {{/each}}
+            {{else}}
+                {{#each topSummary}}
+                    {{> summaryTemplate}}
+                {{/each}}
+            {{/if}}
         </div>
     </div>
     <br>

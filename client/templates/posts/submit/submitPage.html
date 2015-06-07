@@ -5,10 +5,10 @@
         <form>
             <div class="row">
                 <div class="col-md-3">
-                        <label for="title">Title:</label>
+                    <label for="title">Title:</label>
                 </div>
                 <div class="col-md-9">
-                      <input type="text" id="title" name="title" value="" class="form-control required" placeholder="Title">
+                    <input type="text" id="title" name="title" value="" class="form-control required" placeholder="Title">
                 </div>
             </div>
 
@@ -19,20 +19,20 @@
                     <label for="title">Category:</label>
                 </div>
                 <div class="col-md-9">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
-                                Select a Category<span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
-                                {{#each categories}}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName" value="{{_id}}">{{ category_name }}</a></li>
-                                {{/each}}
-                            </ul>
-                        </div>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton" aria-expanded="true" value="">
+                            {{selectedCategory}}<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labeledby="dropdownMenu1">
+                            {{#each categories}}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" name="categoryName">{{ category_name }}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <br>
+            <br/>
 
             <div class="row">
                 <div class="col-md-12">
@@ -51,7 +51,7 @@
             </div>
 
             <div class="row">
-                    <div class="col-md-3">
+                <div class="col-md-3">
                     <label for="title">DOI Link:</label>
                 </div>
                 <div class="col-md-9">
@@ -70,16 +70,16 @@
                 </div>
             </div>
             <div class="row">
-                    <div class="col-md-12">
-                        <ul>
+                <div class="col-md-12">
+                    <ul>
                             <!-- {{#each submitPostTerms 'used'}}
                             {{> termUsed}}
                         {{/each}}    -->
                     </ul>
-                    </div>
+                </div>
             </div>
             <div class="row">
-                    <div class="col-md-4">
+                <div class="col-md-4">
                     <label>Terms Defined:</label>
                 </div>
                 <div class="col-md-7">
@@ -87,19 +87,19 @@
                 </div>
             </div>
             <div class="row">
-                    <div class="col-md-12">
-                        <ul>
+                <div class="col-md-12">
+                    <ul>
                             <!-- {{#each submitPostTerms 'defined'}}
                             {{> termDefined}}
                         {{/each}} -->
                     </ul>
-                    </div>
+                </div>
             </div>
 
             <div class="row"><p>&nbsp;</p></div>
 
             <div class="row">
-                    <div class="col-md-3">
+                <div class="col-md-3">
                     <label for="author">Author: </label>
                 </div>
                 <div class="col-md-9">
@@ -126,7 +126,8 @@
             <div class="row"><p>&nbsp;</p></div>
 
             <div>
-                <input type='submit' value='Submit' class='btn btn-primary' disabled="{{#if loggedIn}}{{else}}true{{/if}}"/></div>
+                <input type='button' value='Submit' class='submitButton btn btn-primary' disabled="{{#if loggedIn}}{{else}}true{{/if}}"/>
+            </div>
         </form>
     </div>
     <div class="col-md-3"></div>

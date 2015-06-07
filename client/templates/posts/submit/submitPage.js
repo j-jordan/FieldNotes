@@ -1,32 +1,21 @@
 Template.submitPage.onCreated(function() {
     this.previewData = new ReactiveVar;
+    this.selectedCategory = new ReactiveVar;
 });
 
-/**
- * Handles the submit form action for submitPage.html
- *
- * Save the summary
- * Save the post
- * Insert the _id's into post_summary
- * Check terms collection for any terms in terms_used or terms_defined and get _id's
- * Link the _id's with the post._id in appropriate pivot tables
- * Any terms from terms_defined that weren't found are new terms -> Add them to terms and get back _id's
- * Save the new term _id's into pivot table
- *
- * @param {e} form submit event.
- */
 Template.submitPage.events({
-    'submit form': function(e) {
-        //Stop the browser from submitting the form.
-        e.preventDefault();
-
+    'click .submitButton': function(e) {
         var validated = true;
 
-        $(e.target).find('.required').map(function(index, object) {
+        Template.instance().$('.required').map(function(index, object) {
             if (this.value === '') {
                 validated = false;
             }
-        })
+        });
+        
+        if (!Template.instance().selectedCategory.get()) {
+            validated = false;
+        }
 
         if (!validated) {
             alert("Please fill in all required fields.");
@@ -36,15 +25,15 @@ Template.submitPage.events({
         //Insert the new post
         var post = {
             userID: Meteor.user()._id,
-            title: $(e.target).find('[name=title]').val(),
+            title: Template.instance().$('[name=title]').val(),
             pop_rating: 0,
             quality_rating: 0,
             numRaters : 0,
-            doi: $(e.target).find('[name=doi]').val(),
-            author: $(e.target).find('[name=author]').val(),
-            publish_date: $(e.target).find('[name=publish_date]').val(),
-            publisher: $(e.target).find('[name=publisher]').val(),
-            categoryID: $(e.target).find('#dropdownMenuButton').prop("value"),
+            doi: Template.instance().$('[name=doi]').val(),
+            author: Template.instance().$('[name=author]').val(),
+            publish_date: Template.instance().$('[name=publish_date]').val(),
+            publisher: Template.instance().$('[name=publisher]').val(),
+            categoryID: Template.instance().selectedCategory.get()._id,
             definedTermIDArray : [], //TODO(James): actually fill this array
             usedTermIDArray : [] //TODO(James): actually fill this array
         };
@@ -55,7 +44,7 @@ Template.submitPage.events({
         var summary = {
             userID: Meteor.user()._id,
             postID: post._id,
-            text: $(e.target).find('[name=summary]').val(),
+            text: Template.instance().$('[name=summary]').val(),
             quality_rating : 0,
             numRaters : 0
         };
@@ -63,15 +52,15 @@ Template.submitPage.events({
         Summaries.insert(summary);
 
         //Find any terms that already exist
-        var terms_defined = $(e.target).find('[name=terms_used]');
-        var terms_used = $(e.target).find('[name=terms_defined]');
+        var terms_defined = Template.instance().$('[name=terms_used]');
+        var terms_used = Template.instance().$('[name=terms_defined]');
 
         //Redirect to the postpage
         Router.go('postPage',post);
     },
 
     'click .dropdown-menu li a': function(e) {
-        $('#dropdownMenuButton').html(this.category_name +'<span class="caret"></span>').prop("value", this._id);
+        Template.instance().selectedCategory.set(this);
     },
 
     'input [name=summary], change [name=summary], paste [name=summary], keyup [name=summary], mouseup [name=summary]': function(e) {
@@ -90,15 +79,19 @@ Template.submitPage.helpers({
     'categories': function() {
         return Categories.find();
     },
-    'loggedIn': function(){
-        if(Meteor.user())
-            return true;
-        else
-            return false;
-    },
+
     'preview_data': function() {
         return Template.instance().previewData.get();
-    }
+    },
+    
+    'selectedCategory': function() {
+        var cat = Template.instance().selectedCategory.get();
+        if (cat) {
+            return cat.category_name;
+        } else {
+            return 'Select a Category';
+        }
+    },
 });
 
 //Returns the data for the autocomplete search function

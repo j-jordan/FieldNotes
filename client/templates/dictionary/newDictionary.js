@@ -1,4 +1,4 @@
- Template.newDictionary.onCreated(function () {
+Template.newDictionary.onCreated(function () {
     // Used to keep track of rows.
     this.numLabels = new ReactiveVar(0);
 });
@@ -19,7 +19,6 @@ Template.newDictionary.helpers({
 });
 
 Template.newDictionary.events({
-
     //Click event to add a row
     'click #increaseRow ': function(event) {
         // Change the length of the array returned by 'getArray'
@@ -36,16 +35,13 @@ Template.newDictionary.events({
         $('#row'+index).remove()
     },
 
-    //Submit form for new dictionary
-    'submit form': function(e) {
-        //Prevent the forms default action
-        e.preventDefault();
-
+    //Submit button for new dictionary
+    'click button[name=createDictionaryButton]': function(e) {
         //Validation flag
         var validated = true;
 
         //Map function for each element that is required.
-        $(e.target).find('.required').map(function(index, object){
+        Template.instance().$('.required').map(function(index, object){
             //If any element doesn't have a value, we should fail validation
             if(this.value === '')
                 validated = false;
@@ -59,7 +55,7 @@ Template.newDictionary.events({
 
         //update data
         var dictionary = {
-            name: $(e.target).find('[name=title]').val()
+            name: Template.instance().$('[name=title]').val()
         };
 
         //update
@@ -71,13 +67,13 @@ Template.newDictionary.events({
         var labelDescription = [];
 
         //Function for each element that has name dynamicVarName
-        $(e.target).find('[name="dynamicVarName[]"]').each(function() {
+        Template.instance().$('[name="dynamicVarName[]"]').each(function() {
             //use this.val() to get the values of each
             labelNames.push($(this).val());
         });
 
         //Function for each element that has name variableType
-        $(e.target).find('[name="variableType[]"]').each(function() {
+        Template.instance().$('[name="variableType[]"]').each(function() {
             //use this.val() to get the values of each name
             labelDescription.push($(this).val());
         });

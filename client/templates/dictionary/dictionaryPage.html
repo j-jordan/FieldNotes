@@ -4,18 +4,29 @@
         <form>
             <div class="row">
                 <div style="font-weight: 32">
-                    <div class="col-md-9" name="dictName">
-                        <h2>{{name}} Dictionary</h2>
-                    </div>
-                    <div class="col-md-9" name="editableInputField" hidden>
+                    {{#if editMode}}
+                    <div class="col-md-9" name="editableInputField">
                         <input class="form-control" id="name" value="{{ name }}"/>
                         <h2></h2>
                     </div>
-                    <div class="col-md-3">
-                        <button class="editTermsButton btn btn-warning" type="button" style="float: right">Edit Title and Terms
-                        <span class="glyphicon glyphicon-pencil"></span></button>
+                    {{else}}
+                    <div class="col-md-9" name="dictName">
+                        <h2>{{name}} Dictionary</h2>
                     </div>
-
+                    {{/if}}
+                    <div class="col-md-3">
+                        {{#if editMode}}
+                        <button name="saveChangesButton" class="btn btn-success" type="button" style="float: right">
+                            Save changes
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        {{else}}
+                        <button name="editTermsButton" class="btn btn-warning" type="button" style="float: right">
+                            Edit Title and Terms
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        {{/if}}
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -50,18 +61,19 @@
             <div class="row">
                 <div class="col-md-5">
                     <ul class="list-group">
-                        {{#each terms _id}}
-                            <div name="termLink">
-                                    <a href="{{pathFor 'termPage'}}">{{term_name}}</a>
-                                </div>
-                                <div class="row" name="editableInputField" hidden>
-                                    <div class="col-md-8">
-                                    <a id="name" href="{{pathFor 'termPage'}}">{{term_name}}</a>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-sm btn-danger deleteTerm" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
-                                    </div>
+                        {{#each terms}}
+                        <div name="termLink">
+                            <div class="col-md-8">
+                                <a id="name" href="{{pathFor 'termPage'}}">{{term_name}}</a>
                             </div>
+                            {{#if editMode}}
+                            <div class="col-md-4">
+                                <button type="button" name="deleteTermButton" class="btn btn-sm btn-danger" style="float: right">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </div>
+                            {{/if}}
+                        </div>
                         {{/each}}
                     </ul>
                 </div>

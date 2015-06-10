@@ -31,7 +31,14 @@ Template.definitionTemplate.events({
 
         //Unbind the beforerated event so that we don't keep binding new rated events
         $(e.target).bind('beforerated',function(e){ e.preventDefault();});
-    }
+    },
+
+    'click .deleteDefinitionButton': function(e){
+        if(confirm("Are you sure you want to delete this term?")){
+            //Remove the defintions collection
+            Definitions.remove(this._id);
+        }
+    },
 });
 
 Template.definitionTemplate.helpers({

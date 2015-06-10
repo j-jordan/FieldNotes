@@ -1,9 +1,10 @@
 // 'loggedIn' global template function. Returns true if the user is logged in
-Template.registerHelper('loggedIn', function(){
-    if(Meteor.user())
+Template.registerHelper('loggedIn', function() {
+    if (Meteor.user()) {
         return true;
-    else
+    } else {
         return false;
+    }
 });
 
 Template.registerHelper('isAdmin', function(){

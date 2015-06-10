@@ -4,58 +4,79 @@
         <form>
             <div class="row">
                 <div class="col-md-9">
-                    <div name="uneditableField">
-                        <div id="titleID">
-                            <h2>Definition(s) for: {{term_name}}</h2>
-                        </div>
-                    </div>
-                    <div name="editableInputField" hidden>
+                    <div>
+                        {{#if editMode}}
                         <div class="col-md-6">
                             <h3 style="margin-top: 5px;">Definition(s) For:</h3>
                         </div>
                         <div class="col-md-6">
                             <input type="text" class="form-control" id="term_name" name="term_name" value="{{ term_name }}"/>
                         </div>
+                        {{else}}
+                        <div id="titleID">
+                            <h3 style="margin-top: 5px;">Definition(s) for: {{term_name}}</h3>
+                        </div>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div name="editTermButton" {{isAdmin}}>
-                        <button class="editTermButton btn btn-warning" type="button" style="float: right">Edit Term
-                        <span class="glyphicon glyphicon-pencil"></span></button>
+                    <div {{isAdmin}}>
+                        {{#if editMode}}
+                        <button name="saveChangesButton" class="btn btn-success" type="button" style="float: right">
+                            Save Changes
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        {{else}}
+                        <button name="editTermButton" class="btn btn-warning" type="button" style="float: right">
+                            Edit Term
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        {{/if}}
                     </div>
                 </div>
             </div>
-            <div class="row" {{isGuest}}>
+            <div class="row">
                 <div class="col-md-5">
-                    <a class="btn btn-default" href="{{ pathFor 'submitDefinition'}}">Click here to submit a new defintion</a>
+                    {{#if loggedIn}}
+                    <a class="btn btn-default" href="{{ pathFor 'submitDefinition'}}">Click here to submit a new definition</a>
+                    {{/if}}
                 </div>
                 <div class="col-md-4">
-                    <button class="definition-button btn btn-default" type="button" style="float: right" id="showAllDefinitions">Show all Definitions</button>
+                    {{#if showAllDefinitions}}
+                    <button class="btn btn-default" type="button" style="float: right" name="showTopDefinition">Show top Definition</button>
+                    {{else}}
+                    <button class="btn btn-default" type="button" style="float: right" name="showAllDefinitions">Show all Definitions</button>
+                    {{/if}}
                 </div>
             </div>
             <div class="row"><p></p></div>
             <div class="row">
                 <div class="col-md-12">
-                    {{#each findDefinitions _id}}
-                        {{> definitionTemplate}}
-                    {{/each}}
+                    {{#if showAllDefinitions}}
+                        {{#each allDefinitions}}
+                            {{> definitionTemplate}}
+                        {{/each}}
+                    {{else}}
+                        {{#with topDefinition}}
+                            {{> definitionTemplate}}
+                        {{/with}}
+                    {{/if}}
                 </div>
             </div>
 
-            {{#each labels dictionaryID}}
+            {{#each labels}}
                 <div class="row">
                     <input type="hidden" name="adminLabelID" value="{{_id}}"/>
                     <div class="col-md-3">
                         <label for="complexityID">{{label}}</label>
                     </div>
-                    <div name="labelDesc" >
+                    <div>
                         <div class="col-md-9">
+                            {{#if editMode}}
+                            <input class="form-control" type="text" id="complexityID" name="labelValue" value="{{labelDescription}}" />
+                            {{else}}
                             <span type="text" id="complexityID">{{labelDescription}}</span>
-                        </div>
-                    </div>
-                    <div name="editableInputField" hidden>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" id="complexityID" name="labelValue" value="{{labelDescription _id}}" />
+                            {{/if}}
                         </div>
                     </div>
                 </div><!-- /row -->

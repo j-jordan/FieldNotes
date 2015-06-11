@@ -9,12 +9,12 @@
                 </div>
             </div>
             <div class="row">
-                    <div class="col-md-2">
-                        <label for="name">Entry Name: </label>
-                    </div>
-                    <div class="col-md-5">
-                        <input type="text" id="title" name="term_name" value="" class="form-control" placeholder="Name">
-                    </div>
+                <div class="col-md-2">
+                    <label for="name">Entry Name: </label>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" id="title" name="term_name" value="" class="form-control" placeholder="Name">
+                </div>
             </div>
             <div class="row"><p></p></div>
             <div class="row">
@@ -24,7 +24,7 @@
                             Definition:
                         </div>
                         <div class="panel-body">
-                        <textarea name="definition" value=""></textarea>>
+                            <textarea name="definition" value=""></textarea>>
                         </div>
                     </div>
                 </div>
@@ -35,12 +35,19 @@
                     <p>Required Information: *</p>
                 </div>
             </div>
-
-            {{#each getDynamicFields _id}}
-                {{> dynamicField}}
+            {{#each getLabels}}
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="complexityID">{{label}}</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" label_id="{{_id}}" name="labelValue" id="complexityID" value="">
+                </div>
+            </div>
             {{/each}}
-            <!-- LOOP THROUGH THE DYNAMIC FIELDS FOR THIS DICTIONARY -->
-            <div><input type='submit' class='btn btn-primary'/></div>
+            <div>
+                <button type="button" name="submitButton" class="btn btn-primary">Submit</button>
+            </div>
         </div>
     </form>
 </template>

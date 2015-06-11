@@ -4,8 +4,10 @@
             <div></div>
             {{> rateitTemplate}}
             <div class="well well-lg">
-                <div class="" {{isAdmin}}>
+                <div>
+                    {{#if isAdmin}}
                     <button class="btn btn-sm btn-danger deleteSummary" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
                 </div>
                 {{#markdown}}{{{markdownedText}}}{{/markdown}}
             </div>

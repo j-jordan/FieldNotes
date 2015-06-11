@@ -17,7 +17,8 @@
                     <span>{{> postDataUneditableRateItTemplate}}</span>
                 </div>
             </div>
-            <div class="col-md-2" {{isAdmin}}>
+            <div class="col-md-2">
+                {{#if isAdmin}}
                 {{#if editMode}}
                 <button class="savePostButton btn btn-success" type="button" style="float: right">
                     Save changes <span class="glyphicon glyphicon-pencil"></span>
@@ -26,6 +27,7 @@
                 <button class="editPostButton btn btn-warning" type="button" style="float: right">
                     Edit Post <span class="glyphicon glyphicon-pencil"></span>
                 </button>
+                {{/if}}
                 {{/if}}
             </div>
         </div>

@@ -20,7 +20,8 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div {{isAdmin}}>
+                    <div>
+                        {{#if isAdmin}}
                         {{#if editMode}}
                         <button name="saveChangesButton" class="btn btn-success" type="button" style="float: right">
                             Save Changes
@@ -31,6 +32,7 @@
                             Edit Term
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
+                        {{/if}}
                         {{/if}}
                     </div>
                 </div>

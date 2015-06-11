@@ -11,19 +11,25 @@
                 </div>
             </div>
         </div>
-        <div class="row" {{isAdmin}}>
+        <div class="row">
             <div class="col-md-6">
                 <div class="row">
                     <p></p>
+                    {{#if isAdmin}}
                     <a class="btn btn-primary" href="{{pathFor 'newDictionary'}}">Create a new Dictionary</a>
+                    {{/if}}
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="row">
                     <p></p>
-                    <button class="editDictionariesButton btn btn-warning" type="button" style="float: right">Remove Dictionary
-                        <span class="glyphicon glyphicon-pencil"></span></button>
+                    {{#if isAdmin}}
+                    <button class="editDictionariesButton btn btn-warning" type="button" style="float: right">
+                        Remove Dictionary
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {{/if}}
                 </div>
             </div>
         </div>

@@ -8,12 +8,9 @@ Template.registerHelper('loggedIn', function() {
 });
 
 Template.registerHelper('isAdmin', function(){
-    if(Meteor.user()){
-        if(!Roles.userIsInRole(Meteor.user()._id,'admin')){
-            return 'hidden';
-        }
-    } 
-    else {
-        return 'hidden';
+    if (Meteor.user()) {
+        return Roles.userIsInRole(Meteor.user()._id,'admin');
+    } else {
+        return false;
     }
 })

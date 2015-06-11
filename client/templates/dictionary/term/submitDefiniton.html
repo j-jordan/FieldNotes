@@ -5,15 +5,13 @@
         </div>
     </div>
     <form>
-        <input type="text" name="_id" hidden value="{{_id}}" />
-        <input type="text" name="term_name" hidden value="{{term_name}}" />
         <div class="row">
             <textarea name="definition"></textarea>
         </div>
         Preview:
         {{#markdown}}{{{preview_data}}}{{/markdown}}
         <div class="row">
-            <input type='submit' value='Submit' class='btn btn-primary'/>
+            <button type="button" name="submitButton" class='btn btn-primary'>Submit</button>
         </div>
     </form>
 </template>

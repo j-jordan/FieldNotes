@@ -1,32 +1,27 @@
 Template.submitDefinition.onCreated(function() {
-  this.previewData = new ReactiveVar;
+    this.previewData = new ReactiveVar("");
 });
 
 Template.submitDefinition.events({
-    'submit form': function(e) {
-        //Stop the browser from submitting the form.
-        e.preventDefault();
-
+    'click button[name=submitButton]': function(e) {
         //Insert the new definition
-        var definition = {
-            termID: $(e.target).find('[name=_id]').val(),
+        Definitions.insert({
+            termID: this._id,
             userID: Meteor.user()._id,
-            text: $(e.target).find('[name=definition]').val(),
+            text: Template.instance().$('[name=definition]').val(),
             quality_rating: 0,
             numRaters: 0
-        };
+        });
 
-        definition._id = Definitions.insert(definition);
-
-        //Redirect to the postpage
-        Router.go('termPage', {_id: definition.termID});
+        // Redirect to the term page
+        Router.go('termPage', this);
     },
 
     'input [name=definition], change [name=definition], paste [name=definition], keyup [name=definition], mouseup [name=definition]': function(e) {
         var converter = new Showdown.converter();
         var text = Template.instance().find("textarea[name=definition]").value;
         Template.instance().previewData.set(converter.makeHtml(text));
-    }
+    },
 });
 
 Template.submitDefinition.helpers({

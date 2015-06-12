@@ -244,12 +244,12 @@ Meteor.publish('retrievePostPage', function(_postID) {
 });
 
 // All documents needed to render a categoryPage template
-Meteor.publish('retrieveCategoryPage', function(_categoryName) {
-    check(_categoryName, String);
+Meteor.publish('retrieveCategoryPage', function(_categoryID) {
+    check(_categoryID, String);
 
-    var category = Categories.findOne({category_name: _categoryName});
+    var category = Categories.findOne(_categoryID);
     var cursors = [
-        Categories.find({category_name: _categoryName}), // The category itself
+        Categories.find(_categoryID), // The category itself
     ];
 
     if (category) {
@@ -304,18 +304,13 @@ Meteor.publish('retrieveTermPage', function(_termID) {
 });
 
 // All documents needed to render a newTerm template
-Meteor.publish('retrieveNewTerm', function(_dictName) {
-    check(_dictName, String);
+Meteor.publish('retrieveNewTerm', function(_dictID) {
+    check(_dictID, String);
 
-    var dictionary = Dictionaries.findOne({name: _dictName});
     var cursors = [
-        Dictionaries.find({name: _dictName}), // The dictionary itself
+        Dictionaries.find(_dictID), // The dictionary itself
+        Adminlabels.find({'dictionaryID': _dictID}) // The Adminlabels for the dictionary
     ];
-
-    if (dictionary) {
-        var labelCursor = Adminlabels.find({dictionaryID: dictionary._id})
-        cursors.push(labelCursor); // The Adminlabels for the dictionary
-    }
 
     return cursors;
 });

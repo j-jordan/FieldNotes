@@ -114,6 +114,8 @@ var CategoriesData = Categories.find().fetch();
 if(Posts.find().count() === 0) {
     Posts.insert({
         userID : UsersData[0]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
         title : "This and That, Algorithms united.",
         pop_rating : 29,
         quality_rating : 4,
@@ -128,6 +130,8 @@ if(Posts.find().count() === 0) {
     });
     Posts.insert({
         userID : UsersData[1]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
         title : "Why Discreet Math changed my life.",
         pop_rating : 67,
         quality_rating : 3,
@@ -142,6 +146,8 @@ if(Posts.find().count() === 0) {
     });
     Posts.insert({
         userID : UsersData[2]['_id'],
+        createdAt: moment(),
+        modifiedAt: moment(),
         title : "GLICKO: made easy.",
         pop_rating : 29,
         quality_rating : 4,

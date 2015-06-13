@@ -164,9 +164,9 @@ var accessControlList = {
     }
 };
 
-/*************************
-* Data Validation  Rules *
-*************************/
+/************************
+* Data Validation Rules *
+************************/
 
 // Database name -> { key, format, references }
 
@@ -188,6 +188,8 @@ var validationList = {
         'key': [],
         'format': {
             'userID':             valIsCurrentUserID,
+            'createdAt':          valMatches(Match.Any), // Overwritten in DB hook
+            'modifiedAt':         valMatches(Match.Any), // Overwritten in DB hook
             'title':              valMatches(String),
             'pop_rating':         valMatches(Number),
             'quality_rating':     valMatches(Number),
@@ -396,6 +398,24 @@ function verifyData(_collection, _dbname, _userid, _doc) {
     return true; // Default allow
 }
 
+// Applies a specified modifier to a specified document. Returns true if successful, false if the modifier is unsupported.
+function applyModification(_doc, _modifier) {
+    //NOTE(James): If we ever use a modifier other than $set, this is going to need a lot of work. Until then, forbid everything else.
+    for (var property in _modifier) {
+        if (property !== "$set") {
+            return false;
+        }
+    }
+
+    if (_modifier.$set) {
+        for (var property in _modifier.$set) {
+            _doc[property] = _modifier.$set[property];
+        }
+    }
+
+    return true;
+}
+
 // Returns true IFF no known references exist
 function checkReferences(_dbname, _doc) {
     if (validationList[_dbname]) {
@@ -426,6 +446,10 @@ function denyThunkFactory(collection, name) {
             return !verifyData(collection, name, userId, doc);
         },
         update : function(userId, doc, fieldNames, modifier) {
+            var success = applyModification(doc, modifier);
+            if (!success) {
+                return false;
+            }
             return !verifyData(collection, name, userId, doc);
         },
         remove : function(userId, doc) {

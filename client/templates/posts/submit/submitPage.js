@@ -25,6 +25,8 @@ Template.submitPage.events({
         //Insert the new post
         var post = {
             userID: Meteor.user()._id,
+            createdAt: moment(),
+            modifiedAt: moment(),
             title: Template.instance().$('[name=title]').val(),
             pop_rating: 0,
             quality_rating: 0,

@@ -70,6 +70,7 @@ Template.postPage.events({
                 'author': Template.instance().$('[id=author]').val(),
                 'publisher': Template.instance().$('[id=publisher]').val(),
                 'publish_date': Template.instance().$('[id=publish_date]').val(),
+                'modifiedAt': moment(),
             }
         };
 

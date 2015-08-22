@@ -40,11 +40,6 @@ Meteor.publish('lookupPost', function(_postID){
     return Posts.find({_id: _postID});
 });
 
-Meteor.publish('lookupUsername', function(_userID){
-    check(_userID, String);
-    return Meteor.users.find(_userID, {fields: {username :1}});
-});
-
 Meteor.publish('lookupDictionary', function(_dictionaryID){
     check(_dictionaryID, String);
     return Dictionaries.find({_id: _dictionaryID});
@@ -56,64 +51,22 @@ Meteor.publish('lookupTerm', function(_termID){
     return Terms.find({_id: _termID});
 });
 
-//Publish the summary for a given summaryID
-Meteor.publish('lookupSummary', function(_summaryID){
-    check(_summaryID, String);
-    return Summaries.find({_id: _summaryID});
-});
-
-/****************
-*   DOCUMENT    *
-*  BY PROPERTY  *
-****************/
-
-Meteor.publish('getDictionaryByName', function(_name){
-    check(_name, String);
-    return Dictionaries.find({name: _name});
-});
-
 /****************
 *   DOCUMENTS   *
 *      BY       *
 *  FOREIGN KEY  *
 ****************/
 
-//Publish the summaries for a given post
-Meteor.publish('getSummariesFromPostID', function(_postID){
-    check(_postID, String);
-    return Summaries.find({postID: _postID});
-});
-
-//Publish the comments for a given post
-Meteor.publish('getCommentsFromPostID', function(_postID){
-    check(_postID, String);
-    return Comments.find({postID: _postID});
-});
-
-//Publish the terms defined for a given post
-Meteor.publish('getTermsFromPostID', function(_postID){
-    check(_postID, String);
-    var termIdArray = Posts.findOne(_postID).definedTermIDArray;
-
-    var termUsedIdArray = Posts.findOne(_postID).usedTermIDArray;
-    for (i = 0; i < termUsedIdArray.length; i++) {
-        termIdArray.push(termUsedIdArray[i]);
-    }
-
-    //Return all terms either used or defined
-    return Terms.find({_id: {$in: termIdArray}});
+//Publish the admin term fields for a dictionary
+Meteor.publish('getAdminlabelsFromDictionaryID', function(_dictionaryID){
+    check(_dictionaryID, String);
+    return Adminlabels.find({dictionaryID: _dictionaryID});
 });
 
 //Publish the terms for a dictionary
 Meteor.publish('getTermsFromDictionaryID', function(_dictionaryID) {
     check(_dictionaryID, String);
     return Terms.find({dictionaryID: _dictionaryID});
-});
-
-//Publish the admin term fields for a dictionary
-Meteor.publish('getAdminlabelsFromDictionaryID', function(_dictionaryID){
-    check(_dictionaryID, String);
-    return Adminlabels.find({dictionaryID: _dictionaryID});
 });
 
 //Publish the label values for a term
@@ -123,22 +76,20 @@ Meteor.publish('getLabelValuesFromTermID', function(_termID){
 });
 
 //Publish the label values for all terms in a dictionary
-Meteor.publish('getLabelValuesFromDictionaryID', function(_dictionaryID){
+Meteor.publishComposite('getLabelValuesFromDictionaryID', function(_dictionaryID){
     check(_dictionaryID, String);
-    var termIDs = [];
-
-    Terms.find({dictionaryID: _dictionaryID}).forEach(function(term) {
-        termIDs.push(term._id);
-    });
-
-    return Term_label_values.find({termID: {$in: termIDs}});
-});
-
-//Publish the label values for a term
-Meteor.publish('getLabelValuesFromTermIDAndAdminlabelsID', function(_termID, _adminlabelsID){
-    check(_termID, String);
-    check(_adminlabelsID, String);
-    return Term_label_values.find({termID: _termID, adminlabelsID: _adminlabelsID});
+    return { // All Dictionary Terms
+        'find': function() {
+            return Terms.find({'dictionaryID': _dictionaryID});
+        },
+        'children': [
+            { // Term Label Values
+                'find': function(term) {
+                    return Term_label_values.find({'termID': term._id});
+                }
+            }
+        ]
+    };
 });
 
 //Publish all the definitions for the term ID
@@ -148,34 +99,20 @@ Meteor.publish('getDefinitionsFromTermID', function(_termID){
 });
 
 //Publish all the definitions for all terms in a dictionary
-Meteor.publish('getDefinitionsFromDictionaryID', function(_dictionaryID){
+Meteor.publishComposite('getDefinitionsFromDictionaryID', function(_dictionaryID){
     check(_dictionaryID, String);
-    var termIDs = [];
-
-    Terms.find({dictionaryID: _dictionaryID}).forEach(function(term) {
-        termIDs.push(term._id);
-    });
-    return Definitions.find({termID: {$in: termIDs}});
-});
-
-//Publish the summaries based upon category id
-Meteor.publish('getSummariesFromCategoryID', function(_categoryID){
-    check(_categoryID, String);
-
-    var posts = Posts.find({categoryID: _categoryID}).fetch();
-
-    var postIDs = [];
-
-    for (var i = posts.length - 1; i >= 0; i--) {
-        postIDs.push(posts[i]._id);
+    return { // All Dictionary Terms
+        'find': function() {
+            return Terms.find({'dictionaryID': _dictionaryID});
+        },
+        'children': [
+            { // Term Definitions
+                'find': function(term) {
+                    return Definitions.find({'termID': term._id});
+                }
+            }
+        ]
     };
-
-    return Summaries.find({postID: {$in: postIDs}});
-});
-
-Meteor.publish('getPostsFromCategoryID', function(_categoryID){
-    check(_categoryID, String);
-    return Posts.find({categoryID: _categoryID});
 });
 
 /****************
@@ -187,170 +124,187 @@ Meteor.publish('retrieveLayout', function() {
 });
 
 // All documents needed to render a postsList template
-Meteor.publish('retrievePostsList', function() {
-    var postsCursor = Posts.find({});
-    var cursors = [
-        postsCursor, // All posts
-    ];
-
-    var summaryIDs = [];
-    var userIDs = [];
-    postsCursor.forEach(function(post) {
-        Summaries.find({postID: post._id}, { sort: {rating: -1}, limit:1 }).forEach(function(summary) {
-            summaryIDs.push(summary._id);
-        });
-        userIDs.push(post.userID);
-    });
-    cursors.push(Summaries.find({_id: {$in: summaryIDs}})); // Top summary for each post
-    cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}})); // Usernames of user for each post
-
-    return cursors;
+Meteor.publishComposite('retrievePostsList', { // All Posts
+    'find': function() {
+        return Posts.find({});
+    },
+    'children': [
+        { // Post Top Summary
+            'find': function(post) {
+                return Summaries.find({'postID': post._id}, {'sort': {'rating': -1}, 'limit':1 });
+            }
+        },
+        { // Poster Username
+            'find': function(post) {
+                return Meteor.users.find(post.userID, {'fields': {'username':1}});
+            }
+        }
+    ]
 });
 
 // All documents needed to render a postPage template
-Meteor.publish('retrievePostPage', function(_postID) {
+Meteor.publishComposite('retrievePostPage', function(_postID) {
     check(_postID, String);
-
-    var post = Posts.findOne({_id: _postID});
-    var cursors = [
-        Posts.find({_id: _postID}), // The post itself
-        Summaries.find({postID: _postID}), // The summaries for the post
-        Comments.find({postID: _postID}), // The comments for the post
-    ];
-
-    var comments = Comments.find({postID: _postID}).fetch();
-    var userIDs = [];
-    var commentIDs = [];
-    for (i = 0; i < comments.length; i++) {
-        userIDs.push(comments[i].userID); // UserID for comment submitter
-        commentIDs.push(comments[i]._id);
-    }
-    if (post) {
-        userIDs.push(post.userID); // UserID for post submitter
-    }
-    cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}}));
-
-    cursors.push(Comment_ratings.find({'commentID': {'$in': commentIDs}}));
-
-    if (post) {
-        var termIdArray = post.definedTermIDArray;
-        for (i = 0; i < post.usedTermIDArray.length; i++) {
-            termIdArray.push(post.usedTermIDArray[i]);
-        }
-        cursors.push(Terms.find({_id: {$in: termIdArray}})); // All terms either used or defined in the post
-    }
-
-    return cursors;
+    return { // Post
+        'find': function() {
+            return Posts.find(_postID);
+        },
+        'children': [
+            { // Post Submitter
+                'find': function(post) {
+                    return Meteor.users.find(post.userID, {'fields': {username :1}})
+                }
+            },
+            { // Post Summaries
+                'find': function(post) {
+                    return Summaries.find({postID: _postID});
+                },
+                'children': [
+                    { // Post Summary Submitter
+                        'find': function(summary, post) {
+                            return Meteor.users.find(summary.userID, {'fields': {username :1}})
+                        }
+                    }
+                ]
+            },
+            { // Post Comments
+                'find': function(post) {
+                    return Comments.find({'postID': _postID});
+                },
+                'children': [
+                    { // Post Comment Submitter
+                        'find': function(comment, post) {
+                            return Meteor.users.find(comment.userID, {'fields': {username :1}})
+                        }
+                    }
+                ]
+            },
+            { // Post Used Terms
+                'find': function(post) {
+                    return Terms.find({'_id': {'$in': post.usedTermIDArray}});
+                }
+            },
+            { // Post Defined Terms
+                'find': function(post) {
+                    return Terms.find({'_id': {'$in': post.definedTermIDArray}});
+                }
+            }
+        ]
+    };
 });
 
 // All documents needed to render a categoryPage template
-Meteor.publish('retrieveCategoryPage', function(_categoryID) {
+Meteor.publishComposite('retrieveCategoryPage', function(_categoryID) {
     check(_categoryID, String);
-
-    var category = Categories.findOne(_categoryID);
-    var cursors = [
-        Categories.find(_categoryID), // The category itself
-    ];
-
-    if (category) {
-        var postCursor = Posts.find({categoryID: category._id});
-        cursors.push(postCursor); // All posts in the category
-
-        var posts = postCursor.fetch();
-        var userIDs = [];
-        var summaryIDs = [];
-        for (i = 0; i < posts.length; i++) {
-            userIDs.push(posts[i].userID);
-
-            var summary = Summaries.findOne({postID: posts[i]._id}, { sort: {rating: -1}});
-            if (summary) {
-                summaryIDs.push(summary._id);
+    return { // Category
+        'find': function() {
+            return Categories.find(_categoryID);
+        },
+        'children': [
+            { // Category Posts
+                'find': function(category) {
+                    return Posts.find({'categoryID': category._id});
+                },
+                'children': [
+                    { // Category Post Submitter
+                        'find': function(post, category) {
+                            return Meteor.users.find(post.userID, {'fields': {username :1}});
+                        },
+                    },
+                    { // Category Post Top Summary
+                        'find': function(post, category) {
+                            return Summaries.find({'postID': post._id});
+                        },
+                    }
+                ]
             }
-        }
-
-        cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}})); // Username of user for post
-        cursors.push(Summaries.find({_id: {$in: summaryIDs}})); // Top summary for each post in the category
-    }
-
-    return cursors;
+        ]
+    };
 });
 
 // All documents needed to render a termPage template
-Meteor.publish('retrieveTermPage', function(_termID) {
+Meteor.publishComposite('retrieveTermPage', function(_termID) {
     check(_termID, String);
-
-    var term = Terms.findOne({_id: _termID});
-    var cursors = [
-        Terms.find({_id: _termID}), // The term itself
-    ];
-
-    if (term) {
-        var labelCursor = Adminlabels.find({dictionaryID: term.dictionaryID})
-        cursors.push(labelCursor); // The Adminlabels for the term's dictionary
-
-        var labelValueIDs = [];
-        labelCursor.forEach(function(label) {
-            Term_label_values.find({termID: term._id, adminlabelsID: label._id}).forEach(function(value) {
-                labelValueIDs.push(value._id);
-            });
-        });
-
-        cursors.push(Term_label_values.find({_id: {$in: labelValueIDs}})); // The values of each Adminlabel for the term
-
-        cursors.push(Definitions.find({termID: _termID})); // All definitions for the term
-    }
-
-    return cursors;
+    return { // Term
+        'find': function() {
+            return Terms.find(_termID);
+        },
+        'children': [
+            { // Term Adminlabels
+                'find': function(term) {
+                    return Adminlabels.find({'dictionaryID': term.dictionaryID});
+                },
+                'children': [
+                    { // Term Adminlabels Values
+                        'find': function(adminlabel, term) {
+                            return Term_label_values.find({'termID': term._id, 'adminlabelsID': adminlabel._id});
+                        }
+                    }
+                ]
+            },
+            { // Term Definitions
+                'find': function(term) {
+                    return Definitions.find({'termID': term._id});
+                }
+            }
+        ]
+    };
 });
 
 // All documents needed to render a newTerm template
-Meteor.publish('retrieveNewTerm', function(_dictID) {
+Meteor.publishComposite('retrieveNewTerm', function(_dictID) {
     check(_dictID, String);
-
-    var cursors = [
-        Dictionaries.find(_dictID), // The dictionary itself
-        Adminlabels.find({'dictionaryID': _dictID}) // The Adminlabels for the dictionary
-    ];
-
-    return cursors;
+    return { // Dictionary
+        'find': function() {
+            return Dictionaries.find(_dictID);
+        },
+        'children': [
+            { // Dictionary Adminlabels
+                'find': function(dictionary) {
+                    return Adminlabels.find({'dictionaryID': dictionary._id});
+                }
+            }
+        ]
+    };
 });
 
 // All documents needed to render a summaryList template
-Meteor.publish('retrieveSummaryList', function() {
-    var postsCursor = Posts.find({});
-    var cursors = [
-        postsCursor, // All posts
-    ];
-
-    var postIDs = [];
-    var userIDs = [];
-    postsCursor.forEach(function(post) {
-        postIDs.push(post._id);
-        userIDs.push(post.userID);
-    });
-    cursors.push(Summaries.find({postID: {$in: postIDs}})); // All summaries for each post
-    cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}})); // Usernames of user for each post
-
-    return cursors;
+Meteor.publishComposite('retrieveSummaryList', { // All Posts
+    'find': function() {
+        return Posts.find({});
+    },
+    'children': [
+        { // Post Submitter
+            'find': function(post) {
+                return Meteor.users.find(post.userID, {'fields': {'username': 1}});
+            }
+        },
+        { // Post Summaries
+            'find': function(post) {
+                return Summaries.find({'postID': post._id});
+            }
+        }
+    ]
 });
 
 // All documents needed to render a summaryListByCategory template
-Meteor.publish('retrieveSummaryListByCategory', function(_categoryID) {
+Meteor.publishComposite('retrieveSummaryListByCategory', function(_categoryID) {
     check(_categoryID, String);
-
-    var postsCursor = Posts.find({categoryID: _categoryID});
-    var cursors = [
-        postsCursor, // All posts in the category
-    ];
-
-    var postIDs = [];
-    var userIDs = [];
-    postsCursor.forEach(function(post) {
-        postIDs.push(post._id);
-        userIDs.push(post.userID);
-    });
-    cursors.push(Summaries.find({postID: {$in: postIDs}})); // All summaries for each post
-    cursors.push(Meteor.users.find({_id: {$in: userIDs} }, {fields: {username :1}})); // Usernames of user for each post
-
-    return cursors;
+    return { // All Category Posts
+        'find': function() {
+            return Posts.find({'categoryID': _categoryID});
+        },
+        'children': [
+            { // Post Submitter
+                'find': function(post) {
+                    return Meteor.users.find(post.userID, {'fields': {'username' : 1}});
+                }
+            },
+            { // Post Summaries
+                'find': function(post) {
+                    return Summaries.find({'postID': post._id});
+                }
+            }
+        ]
+    };
 });

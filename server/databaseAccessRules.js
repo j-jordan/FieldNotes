@@ -100,6 +100,18 @@ function valIsCurrentUserID(_userid, _doc, _field) {
 }
 
 // Validation function factory
+// Returned functions return true IFF the field's value is a number in the range [_min, _max].
+function valIsNumberInRange(_min, _max) {
+    return function(_userid, _doc, _field) {
+        if (!Match.test(_doc[_field], Number)) {
+            return false;
+        }
+
+        return (_min <= _doc[_field] && _doc[_field] <= _max);
+    }
+}
+
+// Validation function factory
 // Returned functions return true IFF the field's value is an integer in the range [_min, _max].
 function valIsIntegerInRange(_min, _max) {
     return function(_userid, _doc, _field) {
@@ -154,6 +166,30 @@ var accessControlList = {
         'update' : aclUserIsAdmin,
         'remove' : aclUserIsAdmin,
     },
+    'Post_quality_ratings' : {
+        'insert' : aclUserIsAuthed,
+        'update' : aclUserIsOwner('userID'),
+        'remove' : aclANY([
+            aclUserIsAdmin,
+            aclUserIsOwner('userID'),
+        ]),
+    },
+    'Post_influence_ratings' : {
+        'insert' : aclUserIsAuthed,
+        'update' : aclUserIsOwner('userID'),
+        'remove' : aclANY([
+            aclUserIsAdmin,
+            aclUserIsOwner('userID'),
+        ]),
+    },
+    'Summary_ratings' : {
+        'insert' : aclUserIsAuthed,
+        'update' : aclUserIsOwner('userID'),
+        'remove' : aclANY([
+            aclUserIsAdmin,
+            aclUserIsOwner('userID'),
+        ]),
+    },
     'Comment_ratings' : {
         'insert' : aclUserIsAuthed,
         'update' : aclUserIsOwner('userID'),
@@ -161,7 +197,7 @@ var accessControlList = {
             aclUserIsAdmin,
             aclUserIsOwner('userID'),
         ]),
-    }
+    },
 };
 
 /************************
@@ -205,6 +241,8 @@ var validationList = {
         'references': [
             {'postID': Comments},
             {'postID': Summaries},
+            {'postID': Post_quality_ratings},
+            {'postID': Post_influence_ratings},
         ]
     },
     'Comments' : {
@@ -252,6 +290,7 @@ var validationList = {
             'numRaters':      valMatches(Number),
         },
         'references': [
+            {'summaryID': Summary_ratings},
         ]
     },
     'Terms' : {
@@ -289,6 +328,36 @@ var validationList = {
         'references': [
         ]
     },
+    'Post_quality_ratings' : {
+        'key': [ 'userID', 'postID' ],
+        'format': {
+            'userID':   valIsCurrentUserID,
+            'postID':   valIsForeignKey(Posts),
+            'rating':   valIsNumberInRange(1, 5),
+        },
+        'references': [
+        ]
+    },
+    'Post_influence_ratings' : {
+        'key': [ 'userID', 'postID' ],
+        'format': {
+            'userID':    valIsCurrentUserID,
+            'postID':    valIsForeignKey(Posts),
+            'isUpvote':  valMatches(Boolean),
+        },
+        'references': [
+        ]
+    },
+    'Summary_ratings' : {
+        'key': [ 'userID', 'summaryID' ],
+        'format': {
+            'userID':    valIsCurrentUserID,
+            'summaryID': valIsForeignKey(Summaries),
+            'rating':    valIsNumberInRange(0, 5),
+        },
+        'references': [
+        ]
+    },
     'Comment_ratings' : {
         'key': [ 'userID', 'commentID' ],
         'format': {
@@ -298,7 +367,7 @@ var validationList = {
         },
         'references': [
         ]
-    }
+    },
 };
 
 /*********************
@@ -488,6 +557,15 @@ Definitions.deny(denyThunkFactory(Definitions, 'Definitions'));
 
 Term_label_values.allow(allowThunkFactory('Term_label_values'));
 Term_label_values.deny(denyThunkFactory(Term_label_values, 'Term_label_values'));
+
+Post_quality_ratings.allow(allowThunkFactory('Post_quality_ratings'));
+Post_quality_ratings.deny(denyThunkFactory(Post_quality_ratings, 'Post_quality_ratings'));
+
+Post_influence_ratings.allow(allowThunkFactory('Post_influence_ratings'));
+Post_influence_ratings.deny(denyThunkFactory(Post_influence_ratings, 'Post_influence_ratings'));
+
+Summary_ratings.allow(allowThunkFactory('Summary_ratings'));
+Summary_ratings.deny(denyThunkFactory(Summary_ratings, 'Summary_ratings'));
 
 Comment_ratings.allow(allowThunkFactory('Comment_ratings'));
 Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));

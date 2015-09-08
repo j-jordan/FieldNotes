@@ -13,9 +13,6 @@
                 <div class="col-md-3">
                     <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
                 </div>
-                <div class="col-md-2">
-                    <span>{{> postDataUneditableRateItTemplate}}</span>
-                </div>
             </div>
             <div class="col-md-2">
                 {{#if isAdmin}}
@@ -53,9 +50,11 @@
                     {{/if}}
                 </div>
             </div>
-            <div class="col-md-4 text-center">
-                <label for="">Rate this paper: </label>
-                <div>{{> rateitTemplate}}</div>
+            <div class="col-md-3 text-center">
+                <label for="">Community Quality Rating:</label>
+                {{> starsRating class='center-block' rating=community_quality_rating}}
+                <label for="">Rate this paper's Quality: </label>
+                {{> starsRating id='user-rating' class='center-block' rating=user_quality_rating mutable=true}}
             </div>
         </div>
 

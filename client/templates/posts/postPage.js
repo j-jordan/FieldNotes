@@ -12,38 +12,6 @@ Template.postPage.events({
         var sas = Template.instance().showAllSummaries;
         sas.set(!sas.get());
     },
-    
-    //Beforerated event for the rate stars on the post page
-    //Used to rebind the 'rated' event before it fires.
-    //TODO(James): horribly broken. post/summary ratings need to be redone.
-    'beforerated .rateit': function(event,value){
-        //Make sure we only change the rated event of the correct item. In this case we want to change summaries
-        if(! event.target.hasClass("summaryRating")) {
-
-            //Get the old data, and any new data that doesn't require the actual rating from the user
-            var postID = this._id;
-
-            var foundPost = Posts.findOne(postID);
-
-            var oldProduct = foundPost.quality_rating * foundPost.numRaters;
-
-            var updatedNumRaters = foundPost.numRaters + 1;
-
-            //Bind the rated event and compute the new values with 'value'
-            $("#rateitDiv"+this._id).bind('rated', function (event, value) {
-
-                var newProduct = oldProduct + value;
-
-                var updatedValue = newProduct / updatedNumRaters;
-
-                //Update the rating
-                Posts.update({_id: postID}, {$set: {quality_rating: updatedValue, numRaters: updatedNumRaters}});
-
-                //Update the template so that it appears reactive
-                $('#uneditableRateItTemplate').rateit('value',updatedValue);
-            });
-        }
-    },
 
     //Click event for the edit post button
     "click .editPostButton": function(event) {
@@ -76,7 +44,27 @@ Template.postPage.events({
 
         //Update
         Posts.update(this._id, updatedPost);
-    }
+    },
+
+    'click #user-rating': function(e) {
+        var user_rating = Post_quality_ratings.findOne({'userID': Meteor.userId()});
+
+        if (!user_rating) {
+            Post_quality_ratings.insert({
+                'userID': Meteor.userId(),
+                'postID': Template.instance().data._id,
+                'rating': Template.instance().$('#user-rating').data('userrating'),
+            });
+        } else if (user_rating.rating != Template.instance().$('#user-rating').data('userrating')) {
+            Post_quality_ratings.update(user_rating._id, {
+                '$set': {
+                    'rating': Template.instance().$('#user-rating').data('userrating'),
+                }
+            });
+        } else {
+            Post_quality_ratings.remove(user_rating._id);
+        }
+    },
 });
 
 Template.postPage.helpers({
@@ -112,5 +100,38 @@ Template.postPage.helpers({
 
     'editMode': function() {
         return Template.instance().editMode.get();
+    },
+    
+    'community_quality_rating': function() {
+        var all_ratings = Post_quality_ratings.find({
+            'postID': Template.instance().data._id,
+        });
+        
+        if (all_ratings.count() == 0) {
+            return -1;
+        }
+        
+        var total = 0;
+        all_ratings.forEach(function(current) {
+            total += current.rating;
+        });
+        
+        return (total / all_ratings.count());
+    },
+
+    'user_quality_rating': function() {
+        if (!Meteor.userId()) {
+            return -1;
+        } else {
+            var user_rating = Post_quality_ratings.findOne({
+                'userID': Meteor.userId(),
+                'postID': Template.instance().data._id,
+            });
+            if (user_rating) {
+                return user_rating.rating;
+            } else {
+                return -1;
+            }
+        }
     },
 });

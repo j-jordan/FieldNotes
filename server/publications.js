@@ -155,6 +155,16 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                     return Meteor.users.find(post.userID, {'fields': {username :1}})
                 }
             },
+            { // Post Quality Ratings (Public)
+                'find': function(post) {
+                    return Post_quality_ratings.find({postID: _postID}, {'fields': {userID :0}});
+                },
+            },
+            { // Post Quality Ratings (Private)
+                'find': function(post) {
+                    return Post_quality_ratings.find({postID: _postID, userID: this.userId});
+                },
+            },
             { // Post Summaries
                 'find': function(post) {
                     return Summaries.find({postID: _postID});

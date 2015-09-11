@@ -1,9 +1,16 @@
 <template name="searchTemplate">
-    <div class="search-input">
+
+    <div class="search-input" id="searchfield">
         <!-- Search Box -->
+        <form>
         {{> esInput index=indexes placeholder="Search..." }}
+        </form>
     </div>
+   
+    <!--<div class ="jumbotron">-->
     <div class="results-wrapper">
+           
+  
         <ul>
             <!-- Loop over the results from posts -->
             {{#esEach index="posts"}}
@@ -21,7 +28,9 @@
             {{#esEach index="terms"}}
                 <li>Term Name: <a href="{{pathFor 'termPage'}}"> {{term_name}} </a></li>
             {{/esEach}}
-        </ul>
+        
+       </ul>
+       
     </div>
 
     <!-- Load more results from posts if we have more than the limit set in search.js -->
@@ -37,3 +46,6 @@
             <div>Loading...</div>
     {{/ifEsIsSearching}}
 </template>
+
+
+

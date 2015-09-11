@@ -3,43 +3,60 @@
     <div class="navbar navbar-default navbar-inverse navbar-static-top" id="navbar">
         <div class="container">
             <div class="navbar-header">
+            
                 <span class="navbar-left"><a href="{{pathFor 'postsList'}}" id="siteTitle">FieldNotes</a></span>
                 <span></span>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+               
+
+               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
+           <!-- <p id="navTabs">--><div>
+        <ul class="nav nav-tabs nav-justified">
+            <!-- <li role="presentation"><a href="{{pathFor 'postsList'}}">Home</a></li> -->
+            <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'submitPage'}}"><h4>Submit Paper</h4></a></li></div>
+            <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'dictionaries'}}"><h4>Dictionary</h4></a></li></div>
+            <div class="col-sm-2"><li role="presentation"><a href="{{pathFor 'searchTemplate'}}"><h4>Search</h4></a></li></div>
+       
+    
+            <div class="col-sm-2"><li class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     {{> loginButtons align="right"}}
                     {{setNewUserRole}}
                 </ul>
+            </li></div>
+             </ul>
             </div>
         </div>
     </div> <!-- /Nav bar -->
-    <p id="navTabs">
-        <ul class="nav nav-tabs nav-justified">
-            <!-- <li role="presentation"><a href="{{pathFor 'postsList'}}">Home</a></li> -->
-            <li role="presentation"><a href="{{pathFor 'submitPage'}}">Submit Paper</a></li>
-            <li role="presentation"><a href="{{pathFor 'dictionaries'}}">Dictionary</a></li>
-            <li role="presentation"><a href="{{pathFor 'searchTemplate'}}">Search</a></li>
-        </ul>
-    </p>
-   <div class="jumbotron" id="jumbo"> <!-- JUMBO TRON -->
+    
+   <div class="jumbotron" id="jumbo" > <!-- JUMBO TRON -->
 
         <p>
+            
+  
 
-            <ul class="nav nav-tabs nav-justified">
+           <ul class="nav nav-tabs nav-justified">
                 {{#each categories}}
                     <li role="presentation"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
                 {{/each}}
                 <li role="presentation" class="text-right"><a><span class="glyphicon glyphicon-plus"></span></a></li>
-                <li role="presentation"><a><span class="glyphicon glyphicon-chevron-down"></span></a></li>
-            </ul>
+                
+                <li class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="">Category
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a href="#">Category1</a></li>
+    <li><a href="#">Category2</a></li>
+    <li><a href="#">Category3</a></li>
+  </ul>
+  </li>
 
+</ul>
         </p>
     </div> <!-- /JUMBO TRON -->
     <section>

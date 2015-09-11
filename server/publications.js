@@ -177,6 +177,11 @@ Meteor.publishComposite('retrievePostPage', function(_postID) {
                     }
                 ]
             },
+            { // Post Tags
+                'find': function(post) {
+                    return Post_tags.find({postID: _postID});
+                },
+            },
             { // Post Comments
                 'find': function(post) {
                     return Comments.find({'postID': _postID});

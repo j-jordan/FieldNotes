@@ -3,6 +3,8 @@ Template.postPage.onCreated(function() {
     this.showAllSummaries = new ReactiveVar(false);
     // flag for toggling edit mode
     this.editMode = new ReactiveVar(false);
+    // flag for mode to add a new tag
+    this.addTagMode = new ReactiveVar(false);
 });
 
 Template.postPage.events({
@@ -64,6 +66,45 @@ Template.postPage.events({
         } else {
             Post_quality_ratings.remove(user_rating._id);
         }
+    },
+
+    'click #remove_tag': function(e) {
+        if (!confirm("Are you sure you want to remove the '" + e.target.attributes['tag'].value + "' tag from this paper?")) {
+            return;
+        }
+
+        Post_tags.remove(e.target.attributes['tag_id'].value);
+    },
+
+    'click #add_tag': function(e) {
+        Template.instance().addTagMode.set(true);
+    },
+
+    'click #cancel_tag': function(e) {
+        Template.instance().addTagMode.set(false);
+    },
+
+    'click #submit_tag': function(e) {
+        var new_tag = Template.instance().$('#tag_input').val();
+
+        var existing_tag = Post_tags.findOne({
+            'postID': Template.instance().data._id,
+            'tag': new_tag,
+        });
+
+        if (existing_tag) {
+            alert("This paper already has that tag.");
+            return;
+        }
+
+        if (new_tag) {
+            Post_tags.insert({
+                'postID': Template.instance().data._id,
+                'tag': new_tag,
+            });
+        }
+
+        Template.instance().addTagMode.set(false);
     },
 });
 
@@ -134,4 +175,12 @@ Template.postPage.helpers({
             }
         }
     },
+
+    'tags': function() {
+        return Post_tags.find({ 'postID': Template.instance().data._id });
+    },
+
+    'add_tag_mode': function() {
+        return Template.instance().addTagMode.get();
+    }
 });

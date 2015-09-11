@@ -108,6 +108,37 @@
 
         <div class="row">
             <div class="col-md-1">
+                <label>Tags:</label>
+            </div>
+            <div class="col-md-4">
+                {{#each tags}}
+                <a href="#" tag="{{tag}}" tag_id="{{_id}}">{{tag}}</a>
+                {{#if loggedIn}}
+                <span id="remove_tag" tag="{{tag}}" tag_id="{{_id}}" class="glyphicon glyphicon-remove" style="color:red"></span>
+                {{/if}}
+                &nbsp;
+                {{/each}}
+                {{#if loggedIn}}
+                <a id="add_tag">new tag...</a>
+                {{/if}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {{#if add_tag_mode}}
+                <input class="form-control" type="text" id="tag_input" value=""/>
+                <button class="btn btn-default" id="cancel_tag" type="button">
+                Cancel
+                </button>
+                <button class="btn btn-default" id="submit_tag" type="button" style="float: right">
+                Submit Tag
+                </button>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-1">
                 <label for="summaries">Summary: </label>
             </div>
             <div class="col-md-3">

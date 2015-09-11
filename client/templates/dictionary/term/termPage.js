@@ -1,216 +1,95 @@
-var label = [];
-var label_values = [];
-
-//Instantiate the reactive boolean variable
-var showAllDefinitions = new ReactiveVar(false);
-var definitionsShown = false;
-
-//Everytime termpage template is rendered
-Template.termPage.rendered = function(){
-
-	//Instantiate the flags back to false
-	definitionsShown = false;
-	showAllDefinitions.set(false);
-	
-	//Get the termID from the URL because Terms collection somehow resets to [] on refresh
-	//But we still have the ID in the URL
-	var url = Router.current().url,
-	delimeter = '/',
-	start = 1,
-	tokens = url.split(delimeter).slice(start),
-	result = tokens.join(delimeter);
-	var termID =  tokens[tokens.length-1];
-
-	//Resubscribe with the ID
-	Meteor.subscribe('term', termID);
-}
+Template.termPage.onCreated(function() {
+    this.showAllDefinitions = new ReactiveVar(false);
+    this.editMode = new ReactiveVar(false);
+});
 
 Template.termPage.helpers({
-	//Set the session variable dictionaryID
-	'getDynamicFields': function(_dictionaryID){
-		if(_dictionaryID){
-			Session.set('dictionaryID', _dictionaryID);
-		}
-	},
-	//Set the session variable termID
-	'getLabelValue': function(termID) {
-		Session.set("termID", termID);			
-	},
+    'editMode' : function() {
+        return Template.instance().editMode.get();
+    },
 
-	//Return the admin labels for a dictionary
-	'labels': function(dictionaryID){
+    'showAllDefinitions' : function() {
+        return Template.instance().showAllDefinitions.get();
+    },
 
-		//Subscribe to the subset of admin_term_fields for this dictionary
-		Meteor.subscribe('admin_fields', dictionaryID);
+    //Return the admin labels for a dictionary
+    'labels' : function() {
+        return Adminlabels.find({'dictionaryID': this.dictionaryID});
+    },
 
-		return Adminlabels.find({});
-	},
+    //Return the correct value for a label
+    'labelDescription' : function() {
+        var _labelID = this._id;
+        var _termID = Template.parentData(1)._id;
 
-	//Return the correct value for a label
-	'labelDescription' : function(labelId){
-		
-		var termID = Session.get("termID");
+        //Get the label value
+        var value = Term_label_values.findOne({ 'termID': _termID, 'adminlabelsID': _labelID });
 
-		//Subscribe to the subset of term_label_values for this term
-		Meteor.subscribe('labelValuesForTerms',termID);
+        if (!value) {
+            console.log("WARN: No value found for term/label combination:", _termID, _labelID);
+            return "";
+        }
 
-		//Get the label values
-		label_values = Term_label_values.find({}).fetch();
+        return value.value;
+    },
 
-		for(var i = 0; i < label_values.length; i++)
-		{
-			//If the label value's adminID is equal to our labelID then we've found the right one
-			if(label_values[i].adminlabelsID === labelId)
-			{
-				//Return the first label value that matches, they will all be the same
-				return label_values[i].value;
-			}
-		}
-	},
+    //Find all definitions for this term's id
+    'allDefinitions' : function() {
+        return Definitions.find({'termID': this._id});
+    },
 
-	//Find all definitions for given term id
-	'findDefinitions' : function(termID){
-	
-		//Subscribe to the subset of definitions for this term
-		Meteor.subscribe('allTermDefinitions', termID);
-
-		//If showallDefinitions is true, we want to show all definitions
-    	if(showAllDefinitions.get()) {
-    		
-    		return Definitions.find({});
-    	}
-    	//else we want to show the top rated definition
-   		else {
-   			//Sort the definitions by quality_rating, highest at top, then grab the first one
-			return Definitions.find({}, {sort: {quality_rating: -1}, limit: 1});
-    	}
-	},
-
-	//If a user is a guest(or not logged in) return hidden
-	'isGuest' : function(){
-		if(Meteor.user()){
-			return '';
-		} else {
-			return 'hidden';
-		}
-	}
+    'topDefinition' : function() {
+        return Definitions.findOne({'termID': this._id}, {'sort': {'quality_rating': -1}});
+    },
 });
 
 Template.termPage.events({
-	//Click event for editing a term page
-	'click .editTermButton': function(e){
+    //Click event for editing a term page
+    'click button[name=editTermButton]': function(e){
+        Template.instance().editMode.set(true);
+    },
 
-		//Save the edit button
-		$editableButton = $('.editTermButton');
+    'click button[name=saveChangesButton]': function(e){
+        Template.instance().editMode.set(false);
 
-		//Toggle the edit class
-        $editableButton.toggleClass('edit');
+        var termID = this._id;
 
-        //Start editing
-        if($editableButton.hasClass('edit')){
-        	//Hide all elements with the name uneditableField
-            $('[name=uneditableField]').attr('hidden','true');
-
-            //Hide all elements with the name labelDesc
-            $('[name=labelDesc]').attr('hidden','true');
-
-            //Show all elements with the name editableInputField
-            $('[name=editableInputField').removeAttr('hidden');
-
-            //Change the look of the button
-            $editableButton.removeClass('btn-warning');
-            $editableButton.addClass('btn-success');
-            $editableButton.html('Save changes <span class="glyphicon glyphicon-pencil"></span>');
-            //Change the type of the button to 'type=button' so that the form won't auto-submit
-            $editableButton.attr('type','button');
-            
+        //update the term from terms
+        var updateTermData = {
+            $set : {
+                'term_name': Template.instance().$('[name=term_name]').val(),
+            }
         }
-        //Finish editing
-        else {
-        	
-        	//Show all elements with the name uneditableField
-        	$('[name=uneditableField').removeAttr('hidden');
 
-        	//Show all elements with the name labelDesc
-            $('[name=labelDesc]').removeAttr('hidden');
+        Terms.update(this._id, updateTermData);
 
-            //Hide all elements with the name editableInputField
-            $('[name=editableInputField]').attr('hidden','true');
+        var labelsID = [];
 
-            //Change the look of the button
-            $editableButton.removeClass('btn-success');
-            $editableButton.addClass('btn-warning');
-            $editableButton.html('Edit Term <span class="glyphicon glyphicon-pencil"></span>');
-        	//Change the type of the button to 'type=submit' so that the form auto-submits
-            $editableButton.attr('type','submit');
-        }
-	},
+        Template.instance().$('[name=adminLabelID]').each(function(){
+            labelsID.push($(this).val());
+        });
 
-	'click .deleteDefinitionButton': function(e){
+        //update the terms_label_values collection
+        Template.instance().$('[name="labelValue"]').each(function(index){
+            //updated term_label_value data
+            var updateValueData = {
+                $set : {
+                    'termID' : termID,
+                    'adminlabelsID' : labelsID[index],
+                    'value' : $(this).val()
+                }
+            };
 
-		e.preventDefault();
+            var id = Term_label_values.findOne({'adminlabelsID': labelsID[index], 'termID': termID})._id;
+            Term_label_values.update(id, updateValueData);
+        });
+    },
 
-  		if(confirm("Are you sure you want to delete this term?")){
-            
-            //Remove the defintions collection
-            Definitions.remove(this._id);
+    'click button[name=showAllDefinitions]': function(e){
+        Template.instance().showAllDefinitions.set(true);
+    },
 
-            //Remove from the pivot table
-            var termDefs = Term_definition.findOne({definitionID: this._id});
-
-            Term_definition.remove(termDefs._id);
-        }
-	},
-
-	'submit form': function(e){
-		e.preventDefault();
-
-		var termID = this._id;
-
-		//update the term from terms
-		var updateTermData = {
-			term_name: $(e.target).find('[name=term_name]').val(),
-			dictionaryID: this.dictionaryID
-		}
-		
-		Terms.update(this._id, updateTermData);
-
-		//updated term_label_value data
-		var updateValueData = {
-			termID: termID
-		};
-
-		var labelsID = [];
-
-		$(e.target).find('[name=adminLabelID]').each(function(){
-			labelsID.push($(this).val());
-		});
-
-		//update the terms_label_values collection
-		$(e.target).find('[name="labelValue"]').each(function(index){
-			
-			updateValueData.adminlabelsID = labelsID[index];
-			updateValueData.value = $(this).val();
-
-			var id = Term_label_values.findOne({adminlabelsID: labelsID[index], termID: termID})._id;
-			Term_label_values.update(id, updateValueData);
-		});
-	},
-
-	'click .definition-button': function(e){
-        var $definitionButton = $('.definition-button');
-
-        definitionsShown = !definitionsShown;
-
-        showAllDefinitions.set(definitionsShown);  
-
-        $definitionButton.toggleClass('show');
-
-        if($definitionButton.hasClass('show')){
-            $definitionButton.text('Show top Definition');
-        } else {
-            $definitionButton.text('Show all Definitions');
-        }
-	}
-
+    'click button[name=showTopDefinition]': function(e){
+        Template.instance().showAllDefinitions.set(false);
+    },
 });

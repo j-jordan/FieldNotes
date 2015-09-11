@@ -1,24 +1,28 @@
 <template name="commentItem">
-{{pop_rating}}
-<div class="row">
-    <div class="col-md-1">
-	    <button name="upArrow{{_id}}" class="btn-default">
-	        <span name="upArrowButton{{_id}}" class="upArrowButton glyphicon glyphicon-arrow-up"></span>
-	    </button>
-	    <button name="downArrow{{_id}}" class="btn-default">
-	        <span name="downArrowButton{{_id}}" class="downArrowButton glyphicon glyphicon-arrow-down"></span>
-	    </button>
+    {{rating}}
+    <div class="row">
+        {{#if loggedIn}}
+        <div class="col-md-1">
+            <button name="upArrow" class="btn-default {{#if upPressed}}pressed btn-info{{/if}}">
+                <span name="upArrowButton" class="upArrowButton glyphicon glyphicon-arrow-up"></span>
+            </button>
+            <button name="downArrow" class="btn-default {{#if downPressed}}pressed btn-danger{{/if}}">
+                <span name="downArrowButton" class="downArrowButton glyphicon glyphicon-arrow-down"></span>
+            </button>
+        </div>
+        {{/if}}
+        <div class="col-md-9">
+            <div class="well">
+                <div>
+                    {{#if isAdmin}}
+                    <button class="btn btn-sm btn-danger deleteComment" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
+                </div>
+                <h4>
+                    <span>{{text}}</span>
+                </h4>
+                <p>&nbsp; Author: {{username}}</p>
+            </div>
+        </div>
     </div>
-	<div class="col-md-9">
-		<div class="well">
-			<div class="" {{isAdmin}}>
-				<button class="btn btn-sm btn-danger deleteComment" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
-			</div>
-			<h4>
-				<span>{{text}}</span>
-			</h4>
-			<p>&nbsp; Author: {{findUser userID}}</p>
-		</div>
-	</div>
-</div>
 </template>

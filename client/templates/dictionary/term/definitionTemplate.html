@@ -1,19 +1,20 @@
 <template name="definitionTemplate">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Insert the uneditable rate template -->
-			{{> uneditableRateItTemplate}}		
-			<div class="well well-lg">
-				<div class="" {{isAdmin}}>
-					<button class="btn btn-sm btn-danger deleteDefinitionButton" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
-				</div>
-				{{text}}
-				<div>
-					<!-- Insert the editable rate template -->
-					{{> rateitTemplate}}
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Insert the uneditable rate template -->
+            {{> uneditableRateItTemplate}}        
+            <div class="well well-lg">
+                <div>
+                    {{#if isAdmin}}
+                    <button class="btn btn-sm btn-danger deleteDefinitionButton" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
+                </div>
+                {{#markdown}}{{{markdownedText}}}{{/markdown}}
+                <div>
+                    <!-- Insert the editable rate template -->
+                    {{> rateitTemplate}}
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
-

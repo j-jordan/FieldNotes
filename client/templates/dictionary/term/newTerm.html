@@ -1,46 +1,53 @@
 <template name="newTerm">
-	<form>
-	<div class="container">
-		<div class="row">		
-			<div class="col-md-12">
-				<div>
-					<h2>New Dictionary Term for {{name}}</h2>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-				<div class="col-md-2">
-	   				<label for="name">Entry Name: </label>
-		   		</div>
-		   		<div class="col-md-5">
-				  	<input type="text" id="title" name="term_name" value="" class="form-control" placeholder="Name">
-		   		</div>
-		</div>
-		<div class="row"><p></p></div>
-		<div class="row">
-			<div class="col-md-7">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						Definition:
-					</div>	
-					<div class="panel-body">
-					<textarea name="definition" value=""></textarea>>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row"><p></p></div>
-		<div class="row">
-			<div class="col-md-12">
-				<p>Required Information: *</p>
-			</div>
-		</div>
-		
-		{{#each getDynamicFields _id}}
-			{{> dynamicField}}
-		{{/each}}
-		<!-- LOOP THROUGH THE DYNAMIC FIELDS FOR THIS DICTIONARY -->
-		<div><input type='submit' class='btn btn-primary'/></div>
-	</div>
-	</form>
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <h2>New Dictionary Term for {{name}}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="name">Entry Name: </label>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" id="title" name="term_name" value="" class="form-control" placeholder="Name">
+                </div>
+            </div>
+            <div class="row"><p></p></div>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Definition:
+                        </div>
+                        <div class="panel-body">
+                            <textarea name="definition" value=""></textarea>>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><p></p></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Required Information: *</p>
+                </div>
+            </div>
+            {{#each getLabels}}
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="complexityID">{{label}}</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" label_id="{{_id}}" name="labelValue" id="complexityID" value="">
+                </div>
+            </div>
+            {{/each}}
+            <div>
+                <button type="button" name="submitButton" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
 </template>

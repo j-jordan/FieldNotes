@@ -198,6 +198,10 @@ var accessControlList = {
             aclUserIsOwner('userID'),
         ]),
     },
+    'Post_tags' : {
+        'insert' : aclUserIsAuthed,
+        'remove' : aclUserIsAuthed,
+    },
 };
 
 /************************
@@ -364,6 +368,15 @@ var validationList = {
             'userID':    valIsCurrentUserID,
             'commentID': valIsForeignKey(Comments),
             'isUpvote':  valMatches(Boolean),
+        },
+        'references': [
+        ]
+    },
+    'Post_tags' : {
+        'key': [ 'postID', 'tag' ],
+        'format': {
+            'postID':  valIsForeignKey(Posts),
+            'tag':     valMatches(String),
         },
         'references': [
         ]
@@ -569,3 +582,6 @@ Summary_ratings.deny(denyThunkFactory(Summary_ratings, 'Summary_ratings'));
 
 Comment_ratings.allow(allowThunkFactory('Comment_ratings'));
 Comment_ratings.deny(denyThunkFactory(Comment_ratings, 'Comment_ratings'));
+
+Post_tags.allow(allowThunkFactory('Post_tags'));
+Post_tags.deny(denyThunkFactory(Post_tags, 'Post_tags'));

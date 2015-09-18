@@ -14,7 +14,7 @@
         <ul>
             <!-- Loop over the results from posts -->
             {{#esEach index="posts"}}
-                <li>Post: <a href="{{pathFor 'postPage'}}"> {{title}} {{author}} </a></li>
+                <li>Post: <a href="{{pathFor 'postPage'}}"> {{>titleTemplate}} {{author}} </a></li>
             {{/esEach}}
         </ul>
         <ul>
@@ -26,7 +26,7 @@
         <ul>
             <!-- Loop over the results from terms -->
             {{#esEach index="terms"}}
-                <li>Term Name: <a href="{{pathFor 'termPage'}}"> {{term_name}} </a></li>
+                <li>Term Name: <a href="{{pathFor 'termPage'}}"> {{>nameTemplate}} </a></li>
             {{/esEach}}
         
        </ul>

@@ -38,7 +38,9 @@
             {{#each getLabels}}
             <div class="row">
                 <div class="col-md-3">
+                    {{#mathjax}}
                     <label for="complexityID">{{label}}</label>
+                    {{/mathjax}}
                 </div>
                 <div class="col-md-9">
                     <input type="text" label_id="{{_id}}" name="labelValue" id="complexityID" value="">

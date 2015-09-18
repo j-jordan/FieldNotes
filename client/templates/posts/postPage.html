@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="col-md-7">
-                    <span> <h2 style="display: inline;">{{title}}</h2></span>
+                    <span>{{#mathjax}}<h2 style="display: inline;">{{>titleTemplate}}</h2>{{/mathjax}}</span>
                 </div>
                 <div class="col-md-3">
                     <span> <h3 style="display: inline;">Posted by: {{ findUser userID }}</h3></span>
@@ -96,12 +96,12 @@
         <div class="row">
             <div class="col-md-4">
                 {{#each terms_used}}
-                    <li> {{term_name}} </li>
+                    <li> {{>nameTemplate}} </li>
                 {{/each}}
             </div>
             <div class="col-md-4">
                 {{#each terms_defined}}
-                    <li> {{term_name}} </li>
+                    <li> {{>nameTemplate}} </li>
                 {{/each}}
             </div>
         </div>

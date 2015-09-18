@@ -64,7 +64,7 @@ var DictionaryData = Dictionaries.find().fetch();
 
 if(Terms.find().count() === 0) {
     Terms.insert({
-        term_name : 'Binary Tree',
+        term_name : 'Binary Tree $(X^y)$',
         dictionaryID : Dictionaries.find().fetch()[0]['_id']
     });
     Terms.insert({
@@ -116,7 +116,7 @@ if(Posts.find().count() === 0) {
         userID : UsersData[0]['_id'],
         createdAt: moment(),
         modifiedAt: moment(),
-        title : "This and That, Algorithms united.",
+        title : "This and That, Algorithms united. $(X^y)$",
         pop_rating : 29,
         quality_rating : 4,
         numRaters : 20,
@@ -169,7 +169,7 @@ if(Comments.find().count() === 0) {
         userID : UsersData[0]['_id'],
         parentID : '0', //No parent
         postID : PostsData[0]['_id'],
-        text : "This is the coolest paper ever. amirite?",
+        text : "This is the coolest paper ever. amirite? $(X^y)$",
         date : "3/2/2015"
     });
     Comments.insert({
@@ -215,7 +215,7 @@ if(Summaries.find().count() === 0) {
     Summaries.insert({
         userID : UsersData[1]['_id'],
         postID : PostsData[0]['_id'],
-        text : "3 Dimensional Shadow: A shadow cast by a 4 dimensional object.",
+        text : "3 Dimensional Shadow: A shadow cast by a 4 dimensional object. $(X^y)$",
         quality_rating : 4.3,
         numRaters : 4
     });
@@ -240,7 +240,7 @@ if(Definitions.find().count() === 0) {
     Definitions.insert({
         termID : TermsData[0]['_id'],
         userID : UsersData[0]['_id'],
-        text : "A tree data structure in which each node has at most two children, which are referred to as the left child and the right child.",
+        text : "A tree data structure in which each node has at most two children, which are referred to as the left child and the right child. $(X^y)$",
         quality_rating : 5,
         numRaters : 10
     });
@@ -280,7 +280,7 @@ var DefinitionData = Definitions.find().fetch();
 if(Adminlabels.find().count() === 0) {
     Adminlabels.insert({
         dictionaryID : DictionaryData[0]['_id'],
-        label : 'Running time big-O',
+        label : 'Running time big-O $(X^y)$',
         description : 'Running time is required for this term to be added to this dictionary'
     });
     Adminlabels.insert({
@@ -302,7 +302,7 @@ if(Term_label_values.find().count() === 0) {
     Term_label_values.insert({
         termID : TermsData[0]['_id'],
         adminlabelsID : AdminLabelsData[0]['_id'],
-        value : "n^2"
+        value : "$n^2$"
     });
     Term_label_values.insert({
         termID : TermsData[0]['_id'],

@@ -14,7 +14,7 @@
                         </div>
                         {{else}}
                         <div id="titleID">
-                            <h3 style="margin-top: 5px;">Definition(s) for: {{term_name}}</h3>
+                            <h3 style="margin-top: 5px;">Definition(s) for: {{>nameTemplate}}</h3>
                         </div>
                         {{/if}}
                     </div>
@@ -70,14 +70,18 @@
                 <div class="row">
                     <input type="hidden" name="adminLabelID" value="{{_id}}"/>
                     <div class="col-md-3">
+                        {{#mathjax}}
                         <label for="complexityID">{{label}}</label>
+                        {{/mathjax}}
                     </div>
                     <div>
                         <div class="col-md-9">
                             {{#if editMode}}
                             <input class="form-control" type="text" id="complexityID" name="labelValue" value="{{labelDescription}}" />
                             {{else}}
+                            {{#mathjax}}
                             <span type="text" id="complexityID">{{labelDescription}}</span>
+                            {{/mathjax}}
                             {{/if}}
                         </div>
                     </div>

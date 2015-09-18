@@ -66,7 +66,9 @@
                         {{#each terms}}
                         <div name="termLink">
                             <div class="col-md-8">
-                                <a id="name" href="{{pathFor 'termPage'}}">{{term_name}}</a>
+                                {{#mathjax}}
+                                <a id="name" href="{{pathFor 'termPage'}}"> {{term_name}} </a>
+                                {{/mathjax}}
                             </div>
                             {{#if editMode}}
                             <div class="col-md-4">

@@ -41,24 +41,24 @@
    <div class="jumbotron" id="jumbo" > <!-- JUMBO TRON -->
 
         <p>
-            
-        
-           <ul class="nav nav-tabs nav-justified">
-           
-            <li> <a href="{{pathFor 'categoryPage'}}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a></li>           
+         <ul class="nav nav-tabs nav-justified">
+          <button class="scroller scroller-left" type="button" style="float: left">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </button>
+              
                 {{#each categories}}
+                 
                     <li role="presentation"><a href="{{pathFor 'categoryPage'}}">{{category_name}}</a></li>
+                
                 {{/each}}
-               <li>
-               
-      <a href="{{pathFor 'categoryPage'}}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-                    
-                <li role="presentation" class="text-right"><a><span class="glyphicon glyphicon-plus"></span></a></li>
+              
+             
+             <li class="scroller scroller-right" type="button">
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </li>
+                   {{#if isAdmin}}
+                <li role="presentation" class="text-right" ><a  href="{{pathFor 'newCategory'}}"><span class="glyphicon glyphicon-plus"></span></a></li>
+                {{/if}}
         
                 <li class="dropdown">
   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="">Category

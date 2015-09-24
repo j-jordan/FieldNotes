@@ -1,19 +1,30 @@
 Template.summaryItem.helpers({
-	//Return the title of a post for the summaryItems
-	'title': function(summaryID){
+    //Return the title of a post for the summaryItems
+    'title': function(_summaryID){
+        var summary = Summaries.findOne({_id: _summaryID});
+        if (!summary) {
+            return "SID:" + _summaryID;
+        }
 
-		//Subscribe to the correct cursor from post_summary for this summary
-		Meteor.subscribe('postIDfromSummaryID', summaryID);
+        var post = Posts.findOne({_id: summary.postID});
+        if (!post) {
+            return "PID:" + summary.postID;
+        }
 
-		//Get the post_id. There might be more than one, but they will all be the same
-		var post_id = Post_summary.findOne({summaryID: summaryID}).postID;
+        return post.title;
+    },
+    //Return the username from a user id
+    'userName': function(userID){
+        var user = Meteor.users.findOne(userID)
+        if (!user) {
+            return "UID:" + userID;
+        }
+        return user.username;
+    },
 
-		//Return the post
-		return Posts.findOne({_id: post_id}).title;
-	},
-	//Return the username from a user id
-	'userName': function(userID){
-		return Meteor.users.findOne(userID).username;
-	}
+    'postLinkData': function() {
+        var summary = Summaries.findOne({_id: this._id});
+        return {_id: summary.postID};
+    }
 
 });

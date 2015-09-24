@@ -1,11 +1,8 @@
-//Subscribe to the cursor of dictionaries
-Meteor.subscribe("dictionaries");
-
 Template.dictionaries.helpers({
     //Return all the dictionaries
-	'dictionaries': function(){
-		return Dictionaries.find();
-	}
+    'dictionaries': function(){
+        return Dictionaries.find();
+    }
 });
 
 Template.dictionaries.events({
@@ -45,7 +42,30 @@ Template.dictionaries.events({
     //Click on the delete dictionary button
     'click .deleteDictionary': function(e){
         if(confirm("Are you sure you want to delete this dictionary?")){
-            Dictionaries.remove(this._id);
+            var dictID = this._id;
+            Tracker.autorun(function (computation) {
+                var termSub = Meteor.subscribe('getTermsFromDictionaryID', dictID);
+                var labelSub = Meteor.subscribe('getAdminlabelsFromDictionaryID', dictID);
+                var valSub = Meteor.subscribe('getLabelValuesFromDictionaryID', dictID);
+                var defSub = Meteor.subscribe('getDefinitionsFromDictionaryID', dictID);
+                if (!termSub.ready() || !labelSub.ready() || !valSub.ready() || !defSub.ready()) {
+                    return;
+                }
+                Terms.find({dictionaryID: dictID}).forEach(function(term) {
+                    Term_label_values.find({ termID: term._id }).forEach(function(val) {
+                        Term_label_values.remove(val._id);
+                    });
+                    Definitions.find({ termID: term._id }).forEach(function(def) {
+                        Definitions.remove(def._id);
+                    });
+                Terms.remove(term._id);
+                });
+                Adminlabels.find({dictionaryID: dictID}).forEach(function(label) {
+                    Adminlabels.remove(label._id);
+                });
+                Dictionaries.remove(dictID);
+                computation.stop();
+            });
         }
     }
 });

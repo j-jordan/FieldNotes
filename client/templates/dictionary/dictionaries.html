@@ -1,55 +1,61 @@
 <template name="dictionaries">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="row">
-					<div class="input-group input-group-lg">
-						<input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon">
-						<span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row" {{isAdmin}}>
-			<div class="col-md-6">
-				<div class="row">
-					<p></p>
-					<a class="btn btn-primary" href="{{pathFor 'newDictionary'}}">Create a new Dictionary</a>	
-				</div>				
-			</div>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" placeholder="Search for a definition" aria-describedby="searchbuttonaddon">
+                        <span class="input-group-addon" id="searchbuttonaddon"><a class="glyphicon glyphicon-search"></a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <p></p>
+                    {{#if isAdmin}}
+                    <a class="btn btn-primary" href="{{pathFor 'newDictionary'}}">Create a new Dictionary</a>
+                    {{/if}}
+                </div>
+            </div>
 
-			<div class="col-md-6">
-				<div class="row">
-					<p></p>
-					<button class="editDictionariesButton btn btn-warning" type="button" style="float: right">Remove Dictionary
-          			<span class="glyphicon glyphicon-pencil"></span></button>
-				</div>
-			</div>
-		</div>
-		<p></p>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="row">
-					Pick a dictionary to explore it further, or use the search field to find the definition you are looking for.
-				</div>
-				<div class="row">
-					<h4>List of available dictionaries:</h4>					
-				</div>
-				<div class="row">
-					{{#each dictionaries}}
-						<div>	
-							<a href="{{pathFor 'dictionaryPage'}}">{{name}}</a>
-							
-							<div name="editableInputField" hidden>
-								<input class="form-control" id="name" disabled value="{{ name }}"/>
-								<button class="btn btn-sm btn-danger deleteDictionary" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
-								<hr>
-							</div>
-						</div>
-					{{/each}}						
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="col-md-6">
+                <div class="row">
+                    <p></p>
+                    {{#if isAdmin}}
+                    <button class="editDictionariesButton btn btn-warning" type="button" style="float: right">
+                        Remove Dictionary
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    Pick a dictionary to explore it further, or use the search field to find the definition you are looking for.
+                </div>
+                <div class="row">
+                    <h4>List of available dictionaries:</h4>
+                </div>
+                <div class="row">
+                    {{#each dictionaries}}
+                        <div>
+                            <a href="{{pathFor 'dictionaryPage'}}">{{name}}</a>
+
+                            <div name="editableInputField" hidden>
+                                <input class="form-control" id="name" disabled value="{{ name }}"/>
+                                <button class="btn btn-sm btn-danger deleteDictionary" style="float: right"><span class="glyphicon glyphicon-remove"></span></button>
+                                <hr>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

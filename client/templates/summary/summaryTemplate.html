@@ -1,14 +1,18 @@
 <template name="summaryTemplate">
-<div class="row">
-	<div class="col-md-8">
-	<div></div>
-		{{> rateitTemplate}}		
-		<div class="well well-lg">
-			<div class="" {{isAdmin}}>
-				<button class="btn btn-sm btn-danger deleteSummary" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
-			</div>
-			{{text}}
-		</div>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-md-8">
+            <div></div>
+            {{> rateitTemplate}}
+            <div class="well well-lg">
+                <div>
+                    {{#if isAdmin}}
+                    <button class="btn btn-sm btn-danger deleteSummary" style="float: right">Delete<span class="glyphicon glyphicon-remove"></span></button>
+                    {{/if}}
+                </div>
+                {{#mathjax}}
+                {{#markdown}}{{{markdownedText}}}{{/markdown}}
+                {{/mathjax}}
+            </div>
+        </div>
+    </div>
 </template>

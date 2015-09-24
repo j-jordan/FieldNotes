@@ -1,119 +1,24 @@
-//PostPage flags for toggeling summaries
-var showAllSummaries = new ReactiveVar(false);
-var summeriesShown = false;
+Template.postPage.onCreated(function() {
+    // flag for toggling summaries
+    this.showAllSummaries = new ReactiveVar(false);
+    // flag for toggling edit mode
+    this.editMode = new ReactiveVar(false);
+    // flag for mode to add a new tag
+    this.addTagMode = new ReactiveVar(false);
+});
 
-postData = {};
-submitSummaryID = {};
-
-//Run everytime postPage template is rendered. More or less a constructor
-Template.postPage.rendered = function() {
-    //Reset flags
-    summeriesShown = false;
-    showAllSummaries.set(false);
-
-    //Resubscribe to the cursor for post_summary incase it has changed
-    Meteor.subscribe('postIDfromSummaryID', this.data.selectedSummaryID);
-}
-
- 
 Template.postPage.events({
     //Click event for showing all summaries
-	"click .summary-button": function(event, template) {
-        
-        //Save the button
-        var $summaryButton = $('.summary-button');
-
-        //Toggle our flag
-        summeriesShown = !summeriesShown;
-
+    "click .summary-button": function(event, template) {
         //Update the reactive flag
-        showAllSummaries.set(summeriesShown);  
-
-        //Toggle class 'show' used to display the correct text
-        $summaryButton.toggleClass('show');
-
-        if($summaryButton.hasClass('show')){
-            //If summary button has the class show, we're showing all summaires
-            // display 'show top summary'
-            $summaryButton.text('Show top Summary');
-        } else {
-            //If summary button has the class show, we're showing the top summary
-            // display 'show all summaries'
-            $summaryButton.text('Show all Summaries');
-        }
-	},
+        var sas = Template.instance().showAllSummaries;
+        sas.set(!sas.get());
+    },
 
     //Click event for the edit post button
     "click .editPostButton": function(event) {
-        //Save the edit button
-        $editableButton = $('.editPostButton');
-
-        //Toggle the class edit. If the button has class edit, we're in editing mode
-        $editableButton.toggleClass('edit');
-
-        if($editableButton.hasClass('edit')){
-            //Change the type of every editable input field to text instead of hidden
-            $('[name=editableInputField]').attr('type','text');
-
-            //Hide every element with class viewspan. These are the 'uneditable input fields'
-            $('.viewSpan').attr('hidden','true');
-
-            //Change the look of the edit button
-            $editableButton.removeClass('btn-warning')
-            $editableButton.addClass('btn-success');
-            $editableButton.html('Save changes <span class="glyphicon glyphicon-pencil"></span>');
-            
-            //Change the type of the button to 'button' so that the form doesn't auto-submit
-            $editableButton.attr('type','button');
-            
-        } else {
-            //Change the type of every editable input field to hidden
-            $('[name=editableInputField]').attr('type','hidden');
-
-            //Show every element with the class name containing viewSpan
-            $('.viewSpan').removeAttr('hidden');
-
-            //Change the look of the button
-            $editableButton.removeClass('btn-success');
-            $editableButton.addClass('btn-warning');
-            $editableButton.html('Edit Post <span class="glyphicon glyphicon-pencil"></span>');
-            
-            //Change the type to 'submit' so that the form auto-submits
-            $editableButton.attr('type','submit');
-        }
-
-    }, 
-
-    //Beforerated event for the rate stars on the post page
-    //Used to rebind the 'rated' event before it fires.
-    'beforerated .postDataRateItTemplate': function(event,value){
-
-        //Make sure we only change the rated event of the correct item. In this case we want to change summaries
-        if(! $('[id=rateitDiv'+this.postData._id+']').hasClass("summaryRating")){
-
-            //Get the old data, and any new data that doesn't require the actual rating from the user
-            var postID = this.postData._id;
-            
-            var foundPost = Posts.findOne(postID);
-
-            var oldProduct = foundPost.quality_rating * foundPost.numRaters;
-
-            var updatedNumRaters = foundPost.numRaters + 1;
-
-            //Bind the rated event and compute the new values with 'value'
-            $("#rateitDiv"+this.postData._id).bind('rated', function (event, value) { 
-
-                var newProduct = oldProduct + value;
-
-                var updatedValue = newProduct / updatedNumRaters;
-
-                //Update the rating
-                Posts.update({_id: postID}, {$set: {quality_rating: updatedValue, numRaters: updatedNumRaters}});
-
-                //Update the template so that it appears reactive
-                $('#uneditableRateItTemplate').rateit('value',updatedValue);
-            });
-        }
+        // Enable edit mode
+        Template.instance().editMode.set(true);
     },
 
     //Click event for deleting a summary
@@ -121,109 +26,161 @@ Template.postPage.events({
         if(confirm("Are you sure you want to delete this summary?")){
             Summaries.remove(this._id);
         }
-    }, 
-
-    //Click event for deleting a comment
-    'click .deleteComment': function(e){
-        if(confirm("Are you sure you want to delete this comment?")){
-            Comments.remove(this._id);
-        }
     },
 
-    //Submit form for editing a post
-    'submit form': function(e){
-        //Prevent the default form actions
-        e.preventDefault();
+    //Click event for saving changes to a post
+    'click .savePostButton': function(e) {
+        // Disable edit mode
+        Template.instance().editMode.set(false);
 
         //Update data. For fields that aren't updated, grab their old value
-        var post = {
-            userID: Meteor.user()._id,
-            title: this.postData.title,
-            pop_rating: this.postData.pop_rating,
-            quality_rating: this.postData.quality_rating,
-            doi: $(e.target).find('[id=doi]').val(),
-            author: $(e.target).find('[id=author]').val(),
-            publisher : $(e.target).find('[id=publisher]').val(),
-            publish_date: $(e.target).find('[id=publish_date]').val(),
-            publisher: $(e.target).find('[id=publisher]').val(),
-            categoryID: this.postData.categoryID
+        var updatedPost = {
+            $set : {
+                'doi': Template.instance().$('[id=doi]').val(),
+                'author': Template.instance().$('[id=author]').val(),
+                'publisher': Template.instance().$('[id=publisher]').val(),
+                'publish_date': Template.instance().$('[id=publish_date]').val(),
+                'modifiedAt': moment(),
+            }
         };
 
         //Update
-        Posts.update(this.postData._id,post);
-    }
+        Posts.update(this._id, updatedPost);
+    },
+
+    'click #user-rating': function(e) {
+        var user_rating = Post_quality_ratings.findOne({'userID': Meteor.userId()});
+
+        if (!user_rating) {
+            Post_quality_ratings.insert({
+                'userID': Meteor.userId(),
+                'postID': Template.instance().data._id,
+                'rating': Template.instance().$('#user-rating').data('userrating'),
+            });
+        } else if (user_rating.rating != Template.instance().$('#user-rating').data('userrating')) {
+            Post_quality_ratings.update(user_rating._id, {
+                '$set': {
+                    'rating': Template.instance().$('#user-rating').data('userrating'),
+                }
+            });
+        } else {
+            Post_quality_ratings.remove(user_rating._id);
+        }
+    },
+
+    'click #remove_tag': function(e) {
+        if (!confirm("Are you sure you want to remove the '" + e.target.attributes['tag'].value + "' tag from this paper?")) {
+            return;
+        }
+
+        Post_tags.remove(e.target.attributes['tag_id'].value);
+    },
+
+    'click #add_tag': function(e) {
+        Template.instance().addTagMode.set(true);
+    },
+
+    'click #cancel_tag': function(e) {
+        Template.instance().addTagMode.set(false);
+    },
+
+    'click #submit_tag': function(e) {
+        var new_tag = Template.instance().$('#tag_input').val();
+
+        var existing_tag = Post_tags.findOne({
+            'postID': Template.instance().data._id,
+            'tag': new_tag,
+        });
+
+        if (existing_tag) {
+            alert("This paper already has that tag.");
+            return;
+        }
+
+        if (new_tag) {
+            Post_tags.insert({
+                'postID': Template.instance().data._id,
+                'tag': new_tag,
+            });
+        }
+
+        Template.instance().addTagMode.set(false);
+    },
 });
 
 Template.postPage.helpers({
-
     'findUser': function(_userID) {
-
-        //Find the username that matches the passed in _userID
         return Meteor.users.findOne(_userID).username;
     },
 
-    'findSummaries': function(postID, summaryID) {
-
-        //Subscribe to the subset of summaries that belong to this post
-        Meteor.subscribe('getSummaries', postID);
-
-        //showAllSummaries is reactiveBoolean if you want to show all summaries
-    	if(showAllSummaries.get()) {
-
-    		return Summaries.find();
-    	}
-   		else {
-
-            //if summaryID is undefined, there is no specific summary to load -> find the top-rated summary through the post id
-            if(typeof summaryID === 'undefined'){
-                return Summaries.find({}, {sort: {quality_rating: -1}, limit: 1});
-
-            } else {
-                return Summaries.find({_id: summaryID});
-            }    		
-    	}
+    'allSummaries': function() {
+        return Summaries.find({postID: this._id});
+    },
+    
+    'topSummary': function() {
+        return Summaries.find({postID: this._id}, {sort: {quality_rating: -1}, limit: 1});
     },
 
-    comments: function() {
-
-        //Subscribe to the subset of comments that belong to this post
-        Meteor.subscribe('getComments', postData._id);
-
-        return Comments.find();
+    'comments': function() {
+        return Comments.find({postID: this._id});
     },
 
     //Return all the terms used in this paper
-    'terms_used': function(_postID){
-
-        //Subscribe to the subset of terms used in this paper
-        Meteor.subscribe('terms', _postID);
-        Meteor.subscribe('terms_used', _postID);
-
-        var term_used_IDs = Post_terms_used.find().fetch();
-
-        var termsUsed = [];
-
-        for (var i = term_used_IDs.length - 1; i >= 0; i--) {
-            termsUsed.push(Terms.findOne(term_used_IDs[i].termID));
-        };
-
-        return termsUsed;
+    'terms_used': function() {
+        return Terms.find({_id: {$in: this.usedTermIDArray}});
     },
 
     //Return all terms defined in this paper
-    'terms_defined': function(_postID){
+    'terms_defined': function() {
+        return Terms.find({_id: {$in: this.definedTermIDArray}});
+    },
+
+    'showAllSummaries': function() {
+        return Template.instance().showAllSummaries.get();
+    },
+
+    'editMode': function() {
+        return Template.instance().editMode.get();
+    },
+    
+    'community_quality_rating': function() {
+        var all_ratings = Post_quality_ratings.find({
+            'postID': Template.instance().data._id,
+        });
         
-        //Subscribe to the subset of terms defined in this paper
-        Meteor.subscribe('terms_defined', _postID);
-
-        var term_defined_IDs = Post_terms_defined.find().fetch();
-
-        var termsDefined = [];
-
-        for (var i = term_defined_IDs.length - 1; i >= 0; i--) {
-            termsDefined.push(Terms.findOne(term_defined_IDs[i].termID));
-        };
+        if (all_ratings.count() == 0) {
+            return -1;
+        }
         
-        return termsDefined;
+        var total = 0;
+        all_ratings.forEach(function(current) {
+            total += current.rating;
+        });
+        
+        return (total / all_ratings.count());
+    },
+
+    'user_quality_rating': function() {
+        if (!Meteor.userId()) {
+            return -1;
+        } else {
+            var user_rating = Post_quality_ratings.findOne({
+                'userID': Meteor.userId(),
+                'postID': Template.instance().data._id,
+            });
+            if (user_rating) {
+                return user_rating.rating;
+            } else {
+                return -1;
+            }
+        }
+    },
+
+    'tags': function() {
+        return Post_tags.find({ 'postID': Template.instance().data._id });
+    },
+
+    'add_tag_mode': function() {
+        return Template.instance().addTagMode.get();
     }
 });
